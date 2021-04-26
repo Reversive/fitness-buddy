@@ -9,6 +9,8 @@ const router = new Router({
         { path: '/profile', component: () => import('./views/Profile') },
         { path: '/login', component: () => import('./views/Login') },
         { path: '/register', component: () => import('./views/Register') },
+        { path: '/personal-routines', component: () => import('./views/PersonalRoutines') },
+        { path: '/community-routines', component: () => import('./views/CommunityRoutines') }
     ]
 });
 

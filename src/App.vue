@@ -1,14 +1,29 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/profile">Profile</router-link> |
-      <router-link to="/login">Login</router-link> |
-      <router-link to="/register">Register</router-link>
-    </div>
-    <router-view/>
+  <div id="app" data-app>
+    <v-app>
+      <CHeaderNavBar></CHeaderNavBar>
+      <router-view/>
+      <CFooter></CFooter>
+    </v-app>
   </div>
 </template>
+
+
+
+<script>
+
+  import Footer from "./components/Footer";
+  import HeaderNavBar from "./components/HeaderNavBar";
+  export default {
+    name: 'App',
+    components: {
+      CFooter : Footer,
+      CHeaderNavBar : HeaderNavBar
+    }
+  }
+</script>
+
+
 
 <style lang="scss">
 #app {
