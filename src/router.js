@@ -10,7 +10,8 @@ const router = new Router({
         { path: '/login', component: () => import('./views/Login') },
         { path: '/register', component: () => import('./views/Register') },
         { path: '/personal-routines', component: () => import('./views/PersonalRoutines') },
-        { path: '/community-routines', component: () => import('./views/CommunityRoutines') }
+        { path: '/community-routines', component: () => import('./views/CommunityRoutines') },
+        { path: '/create-routine', component: () => import('./views/CreateRoutine')},
     ]
 });
 

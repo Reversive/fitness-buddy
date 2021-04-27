@@ -1,9 +1,14 @@
 <template>
-  <div id="app" data-app>
+  <div id="app">
     <v-app>
-      <CHeaderNavBar></CHeaderNavBar>
-      <router-view/>
-      <CFooter></CFooter>
+      <CHeaderNavBar />
+      <CLogin/>
+      <v-main>
+        <router-view>
+          <CCommunityRoutines/>
+        </router-view>
+      </v-main>
+      <CFooter/>
     </v-app>
   </div>
 </template>
@@ -11,14 +16,17 @@
 
 
 <script>
-
+  import CommunityRoutines from "./views/CommunityRoutines";
+  import Login from "./views/Login";
   import Footer from "./components/Footer";
   import HeaderNavBar from "./components/HeaderNavBar";
   export default {
     name: 'App',
     components: {
       CFooter : Footer,
-      CHeaderNavBar : HeaderNavBar
+      CHeaderNavBar : HeaderNavBar,
+      CLogin: Login,
+      CCommunityRoutines: CommunityRoutines,
     }
   }
 </script>

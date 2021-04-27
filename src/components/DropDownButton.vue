@@ -7,11 +7,12 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn
             x-large
+            class="white--text"
             text
             v-bind="attrs"
             v-on="on"
         >
-          <v-icon left>
+          <v-icon left large>
             {{ payload.icon }}
           </v-icon> {{ payload.caption }} <v-icon> mdi-menu-down</v-icon>
         </v-btn>
@@ -26,7 +27,7 @@
                   @click="$router.push(item.route)"
                   text
           >
-            <v-icon left>
+            <v-icon left >
               {{ item.icon }}
             </v-icon> {{ item.caption }}
           </v-btn>
