@@ -2,7 +2,6 @@
   <div id="app">
     <v-app>
       <CHeaderNavBar />
-      <CLogin/>
       <v-main>
         <router-view>
           <CCommunityRoutines/>
@@ -17,7 +16,6 @@
 
 <script>
   import CommunityRoutines from "./views/CommunityRoutines";
-  import Login from "./views/Login";
   import Footer from "./components/Footer";
   import HeaderNavBar from "./components/HeaderNavBar";
   export default {
@@ -25,7 +23,6 @@
     components: {
       CFooter : Footer,
       CHeaderNavBar : HeaderNavBar,
-      CLogin: Login,
       CCommunityRoutines: CommunityRoutines,
     }
   }
