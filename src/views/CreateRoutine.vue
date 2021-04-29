@@ -1,5 +1,18 @@
 <template>
+
   <div class="my-6 mx-15">
+    <v-btn
+        v-scroll="onScroll"
+        v-show="fab"
+        fab
+        fixed
+        bottom
+        right
+        color="primary"
+        @click="toTop"
+    >
+      <v-icon>mdi-chevron-up</v-icon>
+    </v-btn>
     <v-sheet
         class="rounded-lg pb-5"
         color="#6F2DBD"
@@ -32,34 +45,49 @@
       <CAddCycleCard @addCyclePressed="addCycle(cycle_type)"/>
     </div>
 
-    <v-container>
-    <h2 class="text-left category mb-1">
-      Select category:
-    </h2>
-      <v-autocomplete
-          :items="categories"
-          v-model="selectedCategories"
-          color="white"
-          chips
-          full-width
-          item-color="green"
-          deletable-chips
-          hide-details
-          hide-no-data
-          hide-selected
-          outlined
-          multiple
-          single-line
-          style="width: 50%"
-      ><template #selection="{ item }">
-        <v-chip
-            close
-            color="#A663CC"
-            @click:close="deleteChip(item, selectedCategories)"
-            class="white--text"
-        >{{ item }}</v-chip>
-      </template></v-autocomplete>
+    <v-container class="mt-2">
 
+    <h2 class="white--text d-inline-block">
+    Select category:
+    </h2>
+    <v-autocomplete
+        :items="categories"
+        v-model="selectedCategories"
+        class="white--text d-inline-block ml-2"
+        chips
+        full-width
+        deletable-chips
+        hide-details
+        hide-no-data
+        hide-selected
+        outlined
+        multiple
+        single-line
+    ><template #selection="{ item }">
+      <v-chip
+          close
+          color="#A663CC"
+          @click:close="deleteChip(item, selectedCategories)"
+          class="white--text"
+      >{{ item }}</v-chip>
+    </template></v-autocomplete>
+
+    <span class="pl-2 float-right mr-5">
+        <h2 class="white--text text-right d-inline-block">
+          Select Difficulty:
+        </h2>
+        <v-autocomplete
+            :items="difficulties"
+            v-model="routine.difficulty"
+            class="white--text d-inline-block ml-2"
+            full-width
+            hide-details
+            hide-no-data
+            hide-selected
+            outlined
+            single-line
+        />
+    </span>
     </v-container>
     </v-sheet>
   </div>
@@ -83,7 +111,10 @@ export default {
       selectedCategories: [],
       cycleTypes: [{ name: 'WARMUP', icon: 'mdi-run' },{ name: 'EXERCISE', icon: 'mdi-dumbbell' }, { name: 'COOLDOWN', icon: 'mdi-water'}],
       cycles : [],
-      routineIdentifier: 0
+      routineIdentifier: 0,
+      fab: false,
+      routine: {},
+      difficulties: ['rookie', 'beginner', 'intermediate', 'advanced', 'expert'],
     }
   },
   methods : {
@@ -114,6 +145,14 @@ export default {
       console.log(order);
       let index = this.cycles.findIndex(c => c.cycle.order === order);
       this.cycles.splice(index, 1);
+    },
+    onScroll (e) {
+      if (typeof window === 'undefined') return
+      const top = window.pageYOffset ||   e.target.scrollTop || 0
+      this.fab = top > 20
+    },
+    toTop () {
+      this.$vuetify.goTo(0)
     }
 
   }
@@ -132,10 +171,6 @@ export default {
     color: white;
   }
   .v-text-field--outlined >>> input {
-    color: white;
-  }
-
-  .category {
     color: white;
   }
 

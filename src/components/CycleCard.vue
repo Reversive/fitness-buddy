@@ -1,15 +1,15 @@
 <template>
   <v-container>
   <v-card
-      class="rounded-lg pt-3"
+      class="rounded-lg"
       elevation="8"
       width="100%"
-      color="#A663CC"
+      color="white"
   >
-    <div class="mx-5"><span class="float-right"><v-btn class="ml-5" icon
+    <div class="mx-5 pt-1"><span class="float-right"><v-btn class="ml-5" icon
                                                                       x-large
                                                                       @click="$emit('cycleTrashClicked', cycle.order)">
-        <v-icon class="white--text" x-large>mdi-trash-can</v-icon>
+        <v-icon color="red" x-large>mdi-trash-can</v-icon>
       </v-btn></span></div>
     <v-slide-group
         class="pt-4 pl-4 pr-4 pb-0"
@@ -22,20 +22,13 @@
           :key="n"
           v-slot="{ }"
       >
-        <v-card
-            color="#6F2DBD"
-            class="ma-4 rounded-lg"
-            height="200"
-            width="200"
-        >
-          <v-img class="rounded-lg"></v-img>
-        </v-card>
+        <CExerciseCard/>
       </v-slide-item>
       <v-slide-item>
         <CAddExerciseCard/>
       </v-slide-item>
     </v-slide-group>
-    <div class="white--text mx-5">
+    <div class="white--text cycle-footer-bg">
       <h3 class="d-inline-block ml-3">CYCLE NAME:</h3>
       <v-text-field
           class="pa-4 d-inline-block mb-0"
@@ -61,13 +54,14 @@
 
 <script>
 import AddExerciseCard from "./AddExerciseCard";
-
+import ExerciseCard from "./ExerciseCard"
 export default {
 
   name: "CycleCard",
-  data: function () {
+  data: () => {
     return {
-      exercises : []
+      exercises : [],
+      numbers: 0
     }
   },
   props: {
@@ -76,6 +70,7 @@ export default {
   },
   components: {
     CAddExerciseCard : AddExerciseCard,
+    CExerciseCard : ExerciseCard
   }
 }
 </script>
@@ -93,6 +88,10 @@ export default {
 
 .reps {
   width: 45px!important;
+}
+
+.cycle-footer-bg {
+  background-color: #6F2DBD;
 }
 
 
