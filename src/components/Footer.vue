@@ -1,10 +1,10 @@
 <template>
-  <v-footer padless class="light-blue darken-2">
+  <v-footer padless color="#6F2DBD">
     <v-col
-        class="text-center"
+        class="text-center white--text"
         cols="12"
     >
-      {{ new Date().getFullYear() }} — <strong>Fitness Buddy</strong>
+      {{ new Date().getFullYear() }} - <h2 class="d-inline-flex white--text">FITNESS BUDDY</h2>
     </v-col>
   </v-footer>
 </template>
@@ -16,5 +16,10 @@ export default {
 </script>
 
 <style scoped>
+
+* {
+  font-family: 'Open Sans', sans-serif;
+  font-size: large;
+}
 
 </style>

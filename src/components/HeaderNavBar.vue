@@ -1,17 +1,18 @@
 <template>
-  <v-app-bar app
-             fixed
+  <v-app-bar
              height="80px"
              flat
-             class="light-blue darken-1">
+             hide-on-scroll
+             app
+             color="#6F2DBD">
 
-    <v-app-bar-nav-icon class="justify-center align-center pl-9 ml-7">
-      <v-img src="../assets/header_logo.png"
+    <v-app-bar-nav-icon class="pl-10 ml-10">
+      <v-img src="../assets/test.png"
              alt="Fitness Buddy Logo" contain height="60px"/>
     </v-app-bar-nav-icon>
-    <span class="text-uppercase pl-9">
-      <span class="font-weight-light white--text">Fitness</span>
-      <span class="black--text">Buddy</span>
+    <span class="text-uppercase pl-9 font-weight-bold">
+      <span class="white--text">Fitness </span>
+      <span class="white--text">Buddy</span>
     </span>
     <v-spacer/>
     <v-toolbar-items class="toolbar-items justify-center align-center">
@@ -51,5 +52,9 @@ export default {
 
 <style scoped>
 
+ span {
+   font-family: 'Open Sans', sans-serif;
+   font-size: large;
+ }
 
 </style>
