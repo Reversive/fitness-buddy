@@ -136,13 +136,11 @@ export default {
       this.cycles.splice(index, 0, ({cycle: cycle, exists: false}));
       this.cycles.reverse();
       this.sortCycles();
-      console.log(this.cycles);
     },
     sortCycles() {
       this.cycles.forEach((c, i) => c.cycle.order = i + 1);
     },
     removeSection(order) {
-      console.log(order);
       let index = this.cycles.findIndex(c => c.cycle.order === order);
       this.cycles.splice(index, 1);
     },

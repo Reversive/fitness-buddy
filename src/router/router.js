@@ -12,6 +12,7 @@ const router = new Router({
         { path: '/personal-routines', component: () => import('../views/PersonalRoutines') },
         { path: '/community-routines', component: () => import('../views/CommunityRoutines') },
         { path: '/create-routine', component: () => import('../views/CreateRoutine')},
+        { path: '/test-view', component: () => import('../views/TestingView')}
     ]
 });
 

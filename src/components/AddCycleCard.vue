@@ -12,7 +12,7 @@
                  @click="$emit('addCyclePressed')"
                  class="font-weight-bold green--text"
           >
-            <v-icon color="green" size="30" class="mr-2" >mdi-plus-circle</v-icon><h3>ADD CYCLE</h3>
+            <v-icon color="success" size="30" class="mr-2" >mdi-plus-circle</v-icon><h3>ADD CYCLE</h3>
           </v-btn>
         </v-col>
       </v-row>

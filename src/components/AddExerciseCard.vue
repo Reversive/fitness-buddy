@@ -9,7 +9,7 @@
   > <v-container fill-height fluid>
       <v-row align="center" justify="center">
         <v-col>
-          <v-dialog max-width="60%">
+          <v-dialog max-width="70%" v-model="dialog" >
             <template v-slot:activator="{on}">
               <v-btn icon
                      v-on="on"
@@ -18,7 +18,7 @@
                 <v-icon class="mr-2" color="white" size="30">mdi-plus-circle</v-icon><h3>ADD EXERCISE</h3>
               </v-btn>
             </template>
-            <CExerciseDialog/>
+            <CExerciseDialog v-on:close-dialog="closeDialog"/>
 
           </v-dialog>
 
@@ -35,6 +35,16 @@ export default {
 name: "AddExerciseCard",
   components: {
   CExerciseDialog : AddExerciseDialog,
+  },
+  data: () => {
+  return {
+    dialog: false,
+  }
+  },
+  methods: {
+    closeDialog: function(){
+      this.dialog = false;
+    }
   }
 }
 </script>

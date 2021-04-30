@@ -9,7 +9,7 @@
     <div class="mx-5 pt-1"><span class="float-right"><v-btn class="ml-5" icon
                                                                       x-large
                                                                       @click="$emit('cycleTrashClicked', cycle.order)">
-        <v-icon color="red" x-large>mdi-trash-can</v-icon>
+        <v-icon color="error" x-large>mdi-trash-can</v-icon>
       </v-btn></span></div>
     <v-slide-group
         class="pt-4 pl-4 pr-4 pb-0"
@@ -20,8 +20,7 @@
       <v-slide-item
           v-for="n in 0"
           :key="n"
-          v-slot="{ }"
-      >
+         >
         <CExerciseCard/>
       </v-slide-item>
       <v-slide-item>
@@ -60,7 +59,7 @@ export default {
   name: "CycleCard",
   data: () => {
     return {
-      exercises : [],
+      cycleExercises : [],
       numbers: 0
     }
   },

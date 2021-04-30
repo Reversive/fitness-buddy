@@ -88,7 +88,7 @@
                           </v-form>
                         </v-card-text>
                         <div class="text-center ">
-                          <v-btn rounded class="mb-7" color="purple accent-9" dark :disabled="!valid">SIGN UP</v-btn>
+                          <v-btn rounded class="mb-7" color="purple accent-9" dark >SIGN UP</v-btn>
                         </div>
                       </v-col>
                     </v-row>
