@@ -35,7 +35,7 @@
               text
               @click="dialog = false"
           >
-            Register
+            <RouterLink to="/register" ><v-btn>Register</v-btn></RouterLink>
           </v-btn>
           <v-spacer></v-spacer>
 
