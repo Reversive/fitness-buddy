@@ -7,8 +7,10 @@
         fab
         fixed
         bottom
+        elevation="10"
         right
-        color="primary"
+        dark
+        color="#6F2DBD"
         @click="toTop"
     >
       <v-icon>mdi-chevron-up</v-icon>
@@ -19,10 +21,30 @@
         elevation="15"
         width="100%"
     >
-    <v-container>
-    <h2 class="text-left pt-2 " style="color: white">
-      <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-text</v-icon>ROUTINE CREATION
-    </h2>
+    <v-container class="pr-0">
+      <div>
+        <h2 class="text-left pt-2 d-inline-block" style="color: white">
+          <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-text</v-icon>ROUTINE CREATION
+        </h2>
+        <span class="float-right d-inline-block">
+          <v-btn
+              depressed
+              color="error"
+              @click="$router.push('/personal-routines')"
+              class="font-weight-bold mr-5"
+          >
+      CANCEL
+    </v-btn>
+          <v-btn
+              depressed
+              color="success"
+              class="font-weight-bold"
+              @click="handleRoutineCreation"
+          >
+      CREATE ROUTINE
+    </v-btn>
+        </span>
+      </div>
 
     <v-text-field
         v-model="routine.name"
@@ -175,6 +197,9 @@ export default {
     },
     toTop () {
       this.$vuetify.goTo(0)
+    },
+    handleRoutineCreation() {
+      console.log("To-do.");
     }
 
   }

@@ -5,14 +5,11 @@ Vue.use(Router);
 
 const router = new Router({
     routes: [
-        { path: '/', component: () => import('../views/CommunityRoutines') },
+        { path: '/', component: () => import('../views/Login'), name: 'login' },
         { path: '/profile', component: () => import('../views/Profile') },
-        { path: '/login', component: () => import('../views/Login') },
-        { path: '/register', component: () => import('../views/Register') },
         { path: '/personal-routines', component: () => import('../views/PersonalRoutines') },
         { path: '/community-routines', component: () => import('../views/CommunityRoutines') },
         { path: '/create-routine', component: () => import('../views/CreateRoutine')},
-        { path: '/test-view', component: () => import('../views/TestingView')}
     ]
 });
 

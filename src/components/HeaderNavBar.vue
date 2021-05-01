@@ -18,8 +18,7 @@
     <v-toolbar-items class="toolbar-items justify-center align-center">
       <CTopIconButton v-bind:payload="menu_items[0]"/>
       <CTopIconButton v-bind:payload="menu_items[1]"/>
-      <CTopIconButton v-bind:payload="menu_items[2]"/>
-      <CDropDownButton v-bind:payload="menu_items[3]"/>
+      <CDropDownButton v-bind:payload="menu_items[2]"/>
     </v-toolbar-items>
   </v-app-bar>
 </template>
@@ -34,12 +33,11 @@ export default {
       menu_items: [
         {caption: "ROUTINES", title: "Go to the Community Routines Page", icon: "mdi-account-group", route: "/community-routines" },
         {caption: "CREATE ROUTINE", tile: "Go to the routine creation page", icon: "mdi-clipboard-text", route: "/create-routine"},
-        {caption: "TEST VIEW", tile: "Go to the test view page", icon: "mdi-cog", route: "/test-view"},
         {caption: "", title: "Go to the Profile Page", route: "/profile", icon: "mdi-account-circle",
           sub_menu_items: [
             {id: 2, caption: "MY ROUTINES", title: "Go to the Personal Routines Page", icon: "mdi-account", route: "/personal-routines"},
             {id: 3, caption: "MY PROFILE", title: "Go to My Profile", icon: "mdi-card-account-details", route: "/profile"},
-            {id: 4, caption: "LOG OUT", title: "Log Out", icon: "mdi-logout", route: "/login"}
+            {id: 4, caption: "LOG OUT", title: "Log Out", icon: "mdi-logout", route: "/"}
 
           ]}
       ]
