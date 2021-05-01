@@ -25,6 +25,7 @@
     </h2>
 
     <v-text-field
+        v-model="routine.name"
         label="Routine Name"
         class="mt-2 text--white"
         color="white"
@@ -33,12 +34,11 @@
         hide-details
     />
     </v-container>
-    <div v-for="cycle_type in cycleTypes" :key="cycle_type.name" class="mt-0">
+    <div v-for="cycle_type in types.cycleTypes" :key="cycle_type.name" class="mt-0">
       <CCycleCardTitle :text="cycle_type.name" :icon="cycle_type.icon" />
-      <div v-for="c in cycles" :key="c.cycle.order" >
+      <div v-for="c in routine.cycles" :key="c.cycle.order" >
         <CCycleCard   v-if="c.cycle.type === cycle_type"
-                      :cycle="c.cycle"
-                      :identifier="routineIdentifier"
+                      :identifier="c.cycle.order"
                       v-on:cycleTrashClicked="removeSection"
                       />
       </div>
@@ -51,8 +51,8 @@
     Select category:
     </h2>
     <v-autocomplete
-        :items="categories"
-        v-model="selectedCategories"
+        :items="types.categories"
+        v-model="routine.categories"
         class="white--text d-inline-block ml-2"
         chips
         full-width
@@ -67,7 +67,7 @@
       <v-chip
           close
           color="#A663CC"
-          @click:close="deleteChip(item, selectedCategories)"
+          @click:close="deleteChip(item, routine.categories)"
           class="white--text"
       >{{ item }}</v-chip>
     </template></v-autocomplete>
@@ -77,7 +77,7 @@
           Select Difficulty:
         </h2>
         <v-autocomplete
-            :items="difficulties"
+            :items="types.difficulties"
             v-model="routine.difficulty"
             class="white--text d-inline-block ml-2"
             full-width
@@ -90,6 +90,20 @@
     </span>
     </v-container>
     </v-sheet>
+    <v-snackbar v-model="cycleSuccessDeleteSnackbar.visible" :color="cycleSuccessDeleteSnackbar.color" :multi-line="cycleSuccessDeleteSnackbar.mode === 'multi-line'" :timeout="cycleSuccessDeleteSnackbar.timeout" :top="cycleSuccessDeleteSnackbar.position === 'top'">
+      <v-layout align-center pr-4>
+        <v-icon class="pr-3" dark large>{{ cycleSuccessDeleteSnackbar.icon }}</v-icon>
+        <v-layout column>
+          <div>
+            <strong>{{ cycleSuccessDeleteSnackbar.title }}</strong>
+          </div>
+          <div>{{ cycleSuccessDeleteSnackbar.text }}</div>
+        </v-layout>
+      </v-layout>
+      <v-btn v-if="cycleSuccessDeleteSnackbar.timeout === 0" icon @click="cycleSuccessDeleteSnackbar.visible = false">
+        <v-icon>clear</v-icon>
+      </v-btn>
+    </v-snackbar>
   </div>
 
 </template>
@@ -98,6 +112,8 @@
 import CycleCard from "../components/CycleCard";
 import AddCycleCard from "../components/AddCycleCard";
 import CycleCardTitle from "../components/CycleCardTitle";
+import RoutineStore from "../stores/routineStore"
+import TypeStore from "../stores/typeStore";
 export default {
   name: "CreateRoutine",
   components: {
@@ -107,14 +123,20 @@ export default {
   },
   data : function () {
     return {
-      categories : ['Muscle Definition', 'Muscle Gain', 'Weight Loss'],
-      selectedCategories: [],
-      cycleTypes: [{ name: 'WARMUP', icon: 'mdi-run' },{ name: 'EXERCISE', icon: 'mdi-dumbbell' }, { name: 'COOLDOWN', icon: 'mdi-water'}],
-      cycles : [],
       routineIdentifier: 0,
+      types : TypeStore,
       fab: false,
-      routine: {},
-      difficulties: ['rookie', 'beginner', 'intermediate', 'advanced', 'expert'],
+      routine: RoutineStore,
+      cycleSuccessDeleteSnackbar: {
+        color: "success",
+        icon: "mdi-check-circle",
+        mode: "multi-line",
+        position: "bot",
+        timeout: 3500,
+        title: "Success",
+        text: "Cycle deleted successfully.",
+        visible: false
+      }
     }
   },
   methods : {
@@ -129,20 +151,22 @@ export default {
       let cycle = {
         name: "NEW SECTION",
         type: cycle_type,
-        repetitions: 0,
-        position: 0
+        position: 0,
+        exercises: []
       };
-      let index = this.cycles.reverse().findIndex(c => c.cycle.type === cycle_type);
-      this.cycles.splice(index, 0, ({cycle: cycle, exists: false}));
-      this.cycles.reverse();
+      let index = this.routine.cycles.reverse().findIndex(c => c.cycle.type === cycle_type);
+      this.routine.cycles.splice(index, 0, ({cycle: cycle, exists: false}));
+      this.routine.cycles.reverse();
       this.sortCycles();
+      console.log(this.routine);
     },
     sortCycles() {
-      this.cycles.forEach((c, i) => c.cycle.order = i + 1);
+      this.routine.cycles.forEach((c, i) => c.cycle.order = i);
     },
     removeSection(order) {
-      let index = this.cycles.findIndex(c => c.cycle.order === order);
-      this.cycles.splice(index, 1);
+      this.cycleSuccessDeleteSnackbar.visible = true;
+      let index = this.routine.cycles.findIndex(c => c.cycle.order === order);
+      this.routine.cycles.splice(index, 1);
     },
     onScroll (e) {
       if (typeof window === 'undefined') return

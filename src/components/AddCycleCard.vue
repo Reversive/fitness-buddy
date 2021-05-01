@@ -9,7 +9,7 @@
       <v-row align="center" justify="center">
         <v-col >
           <v-btn icon
-                 @click="$emit('addCyclePressed')"
+                 @click="addCycle"
                  class="font-weight-bold green--text"
           >
             <v-icon color="success" size="30" class="mr-2" >mdi-plus-circle</v-icon><h3>ADD CYCLE</h3>
@@ -26,10 +26,13 @@ export default {
   props : {
   },
   methods: {
+    addCycle() {
+      this.$emit('addCyclePressed');
+    }
   },
   data: function () {
     return {
-      amountOfCards : 0,
+
     }
   }
 

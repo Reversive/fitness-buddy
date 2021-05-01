@@ -26,7 +26,7 @@
         <CExercisePreviewCard :exercise="exercise" :active="active" @exerciseSelected="[toggle($event), setSelectedExercise($event)]" />
       </v-slide-item>
       <v-slide-item>
-        <CCreateExerciseCard v-on:updateSnackBar="handleSnackbarUpdate"/>
+        <CCreateExerciseCard v-on:createExerciseResult="handleCreateExerciseResult"/>
       </v-slide-item>
     </v-slide-group>
 
@@ -133,7 +133,7 @@ export default {
       }
       let currentExercise = this.exerciseStore.exercises[this.selectedExercise];
       let payload = { duration: this.duration, repetitions: this.repetitions, exercise: currentExercise};
-      this.$emit('addExerciseClicked', payload);
+      this.$emit('exerciseAddedSuccessfully', payload);
       this.$emit('close-dialog');
       this.duration = 0;
       this.repetitions = 0;
@@ -148,7 +148,7 @@ export default {
     areRequirementsMet() {
       return this.isExerciseSelected() && (this.repetitions !== 0 || this.duration !== 0);
     },
-    handleSnackbarUpdate(cancel) {
+    handleCreateExerciseResult(cancel) {
       if(cancel !== true) this.snackbar.visible = true;
     }
   },

@@ -8,7 +8,7 @@
   >
     <div class="mx-5 pt-1"><span class="float-right"><v-btn class="ml-5" icon
                                                                       x-large
-                                                                      @click="$emit('cycleTrashClicked', cycle.order)">
+                                                                      @click="deleteCycleCard">
         <v-icon color="error" x-large>mdi-trash-can</v-icon>
       </v-btn></span></div>
     <v-slide-group
@@ -16,15 +16,15 @@
         active-class="success"
         show-arrows
     >
-      <!-- Iterar sobre ejercicios creados -->
+
       <v-slide-item
-          v-for="n in 0"
-          :key="n"
+          v-for="exercise in exercises"
+          :key="exercise.id"
          >
-        <CExerciseCard/>
+        <CExerciseCard :exercise-info="exercise"/>
       </v-slide-item>
       <v-slide-item>
-        <CAddExerciseCard v-on:addExerciseSuccess="snackbar.visible = true"/>
+        <CAddExerciseCard v-on:addExerciseSuccess="addExerciseToCycleArray"/>
       </v-slide-item>
     </v-slide-group>
     <div class="white--text cycle-footer-bg">
@@ -47,20 +47,21 @@
     </span>
     </div>
   </v-card>
-    <v-snackbar v-model="snackbar.visible" :color="snackbar.color" :multi-line="snackbar.mode === 'multi-line'" :timeout="snackbar.timeout" :top="snackbar.position === 'top'">
+    <v-snackbar v-model="exerciseSuccessSnackbar.visible" :color="exerciseSuccessSnackbar.color" :multi-line="exerciseSuccessSnackbar.mode === 'multi-line'" :timeout="exerciseSuccessSnackbar.timeout" :top="exerciseSuccessSnackbar.position === 'top'">
       <v-layout align-center pr-4>
-        <v-icon class="pr-3" dark large>{{ snackbar.icon }}</v-icon>
+        <v-icon class="pr-3" dark large>{{ exerciseSuccessSnackbar.icon }}</v-icon>
         <v-layout column>
           <div>
-            <strong>{{ snackbar.title }}</strong>
+            <strong>{{ exerciseSuccessSnackbar.title }}</strong>
           </div>
-          <div>{{ snackbar.text }}</div>
+          <div>{{ exerciseSuccessSnackbar.text }}</div>
         </v-layout>
       </v-layout>
-      <v-btn v-if="snackbar.timeout === 0" icon @click="snackbar.visible = false">
+      <v-btn v-if="exerciseSuccessSnackbar.timeout === 0" icon @click="exerciseSuccessSnackbar.visible = false">
         <v-icon>clear</v-icon>
       </v-btn>
     </v-snackbar>
+
   </v-container>
 
 </template>
@@ -68,14 +69,13 @@
 <script>
 import AddExerciseCard from "./AddExerciseCard";
 import ExerciseCard from "./ExerciseCard"
+import RoutineStore from "../stores/routineStore";
 export default {
-
   name: "CycleCard",
   data: () => {
     return {
-      cycleExercises : [],
-      numbers: 0,
-      snackbar : {
+      exercises : [],
+      exerciseSuccessSnackbar : {
         color: "success",
         icon: "mdi-check-circle",
         mode: "multi-line",
@@ -88,13 +88,26 @@ export default {
     }
   },
   props: {
-    cycle: Object,
     identifier: Number,
   },
   components: {
     CAddExerciseCard : AddExerciseCard,
     CExerciseCard : ExerciseCard
-  }
+  },
+  methods: {
+    addExerciseToCycleArray(payload) {
+      this.exerciseSuccessSnackbar.visible = true;
+      this.exercises = this.getCycleExercises();
+      this.getCycleExercises().push(payload);
+    },
+    deleteCycleCard() {
+      this.$emit('cycleTrashClicked', this.identifier)
+    },
+    getCycleExercises() {
+      let index = RoutineStore.cycles.findIndex(c => c.cycle.order === this.identifier);
+      return RoutineStore.cycles[index].cycle.exercises;
+    }
+  },
 }
 </script>
 

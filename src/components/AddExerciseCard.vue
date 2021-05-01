@@ -18,7 +18,7 @@
                 <v-icon class="mr-2" color="white" size="30">mdi-plus-circle</v-icon><h3>ADD EXERCISE</h3>
               </v-btn>
             </template>
-            <CAddExerciseDialog v-on:close-dialog="closeDialog" :key="renderKey"/>
+            <CAddExerciseDialog v-on:close-dialog="closeDialog" v-on:exerciseAddedSuccessfully="sendExerciseToFather" :key="renderKey"/>
           </v-dialog>
         </v-col>
       </v-row>
@@ -37,7 +37,8 @@ name: "AddExerciseCard",
   data: () => {
     return {
       dialog: false,
-      renderKey: 0
+      renderKey: 0,
+      exerciseCount: 0
 
     }
   },
@@ -45,7 +46,10 @@ name: "AddExerciseCard",
     closeDialog() {
       this.dialog = false;
       this.renderKey++;
-      this.$emit('addExerciseSuccess');
+    },
+    sendExerciseToFather(payload) {
+      payload['id'] = this.exerciseCount++;
+      this.$emit('addExerciseSuccess', payload);
     }
   }
 }

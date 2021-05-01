@@ -22,7 +22,7 @@
                 <v-icon class="mr-2" color="white" size="30">mdi-plus-circle</v-icon><h3>CREATE</h3>
               </v-btn>
             </template>
-            <CCreateExerciseDialog v-on:close-create-exercise-dialog="closeDialog"/>
+            <CCreateExerciseDialog v-on:close-create-exercise-dialog="closeCreateExerciseDialog"/>
           </v-dialog>
         </v-col>
       </v-row>
@@ -47,8 +47,8 @@ export default {
     CCreateExerciseDialog : CreateExerciseDialog
   },
   methods: {
-    closeDialog(cancel) {
-      this.$emit('updateSnackBar', cancel);
+    closeCreateExerciseDialog(cancel) {
+      this.$emit('createExerciseResult', cancel);
       this.dialog = false;
     }
   }
