@@ -41,7 +41,7 @@
               @click:append="show1 = !show1"
           ></v-text-field>
         </v-col>
-        <div class="justify-center"><v-btn class="success justify-center" :disabled="!valid" large> Register</v-btn></div>
+        <div class="justify-center"><v-btn class="success justify-center"  large> Register</v-btn></div>
       </v-form>
     </v-card>
   </div>
@@ -82,7 +82,7 @@ export default {
       measureInput:"",
       measureRules:[
         v => (/^[1-9]\d*$/.test(v))  || "Height must be a positive number",
-        v => v<300 || "Weight can't be that high",
+        v => v<300 || "Height can't be that high",
       ],
     }
   }
