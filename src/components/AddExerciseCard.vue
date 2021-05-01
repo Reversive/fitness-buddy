@@ -18,23 +18,21 @@
                 <v-icon class="mr-2" color="white" size="30">mdi-plus-circle</v-icon><h3>ADD EXERCISE</h3>
               </v-btn>
             </template>
-            <CExerciseDialog v-on:close-dialog="closeDialog"/>
-
+            <CAddExerciseDialog v-on:close-dialog="closeDialog"/>
           </v-dialog>
-
         </v-col>
       </v-row>
     </v-container>
   </v-card>
+
 </template>
 
 <script>
 import AddExerciseDialog from "./AddExerciseDialog";
-
 export default {
 name: "AddExerciseCard",
   components: {
-  CExerciseDialog : AddExerciseDialog,
+  CAddExerciseDialog : AddExerciseDialog
   },
   data: () => {
   return {

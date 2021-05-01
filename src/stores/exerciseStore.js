@@ -5,7 +5,7 @@ const ExerciseStore = {
         {id: 2, name: "Burpee", image: "https://i.imgur.com/oip2JLS.png"},
         {id: 3, name: "Rope Jump", image: "https://i.imgur.com/OR8IBOM.png"},
         {id: 4, name: "Cardio", image: "https://i.imgur.com/AegXXLI.png"},
-        {id: 5, name: "Bench Press", image: "https://i.imgur.com/IlLsEsE.png"},
+        //{id: 5, name: "Bench Press", image: "https://i.imgur.com/IlLsEsE.png"},
     ]
 };
 

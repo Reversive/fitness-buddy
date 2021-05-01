@@ -30,7 +30,7 @@
       </v-slide-item>
     </v-slide-group>
 
-    <div class="white--text cycle-footer-bg">
+    <div class="white--text cycle-footer-bg" >
         <h3 class="d-inline-block ml-3">EXERCISE DURATION:</h3>
         <v-text-field
             class="pa-4 d-inline-block mb-0 dur"
@@ -51,6 +51,8 @@
       </span>
     </div>
 
+
+
   </v-card>
 </template>
 
@@ -58,21 +60,23 @@
 import ExercisePreviewCard from "./ExercisePreviewCard";
 import ExerciseStore from "../stores/exerciseStore";
 import CreateExerciseCard from "./CreateExerciseCard";
+
 export default {
   name: "AddExercisePopup",
   data: () => {
     return {
       model : null,
       customModel : null,
+      successExerciseMessage : 'Exercise created successfully',
       exerciseStore: ExerciseStore,
       selectedExercise: null,
       duration : 0,
-      repetitions: 0
-    }
-  },
+      repetitions: 0 }
+      },
   components: {
     CExercisePreviewCard : ExercisePreviewCard,
-    CCreateExerciseCard : CreateExerciseCard
+    CCreateExerciseCard : CreateExerciseCard,
+
   },
   methods: {
     addExerciseClicked() {

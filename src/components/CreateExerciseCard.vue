@@ -21,7 +21,7 @@
                 <v-icon class="mr-2" color="white" size="30">mdi-plus-circle</v-icon><h3>CREATE</h3>
               </v-btn>
             </template>
-            <CCreateExerciseDialog :dialog="dialog"/>
+            <CCreateExerciseDialog v-on:close-create-exercise-dialog="closeDialog"/>
           </v-dialog>
         </v-col>
       </v-row>
@@ -41,6 +41,11 @@ export default {
   },
   components: {
     CCreateExerciseDialog : CreateExerciseDialog
+  },
+  methods: {
+    closeDialog() {
+      this.dialog = false;
+    }
   }
 }
 </script>
