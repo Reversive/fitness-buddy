@@ -24,7 +24,7 @@
         <CExerciseCard/>
       </v-slide-item>
       <v-slide-item>
-        <CAddExerciseCard/>
+        <CAddExerciseCard v-on:addExerciseSuccess="snackbar.visible = true"/>
       </v-slide-item>
     </v-slide-group>
     <div class="white--text cycle-footer-bg">
@@ -47,6 +47,20 @@
     </span>
     </div>
   </v-card>
+    <v-snackbar v-model="snackbar.visible" :color="snackbar.color" :multi-line="snackbar.mode === 'multi-line'" :timeout="snackbar.timeout" :top="snackbar.position === 'top'">
+      <v-layout align-center pr-4>
+        <v-icon class="pr-3" dark large>{{ snackbar.icon }}</v-icon>
+        <v-layout column>
+          <div>
+            <strong>{{ snackbar.title }}</strong>
+          </div>
+          <div>{{ snackbar.text }}</div>
+        </v-layout>
+      </v-layout>
+      <v-btn v-if="snackbar.timeout === 0" icon @click="snackbar.visible = false">
+        <v-icon>clear</v-icon>
+      </v-btn>
+    </v-snackbar>
   </v-container>
 
 </template>
@@ -60,7 +74,17 @@ export default {
   data: () => {
     return {
       cycleExercises : [],
-      numbers: 0
+      numbers: 0,
+      snackbar : {
+        color: "success",
+        icon: "mdi-check-circle",
+        mode: "multi-line",
+        position: "bot",
+        timeout: 3500,
+        title: "Success",
+        text: "Exercise added successfully.",
+        visible: false
+      }
     }
   },
   props: {

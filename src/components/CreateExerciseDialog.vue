@@ -33,7 +33,7 @@
           color="primary"
           class="font-weight-bold"
           text
-          @click="$emit('close-create-exercise-dialog')"
+          @click="$emit('close-create-exercise-dialog', true)"
       >
         Cancel
       </v-btn>
@@ -57,6 +57,9 @@ export default {
   name: "CreateExerciseDialog",
   data: () => ({
     valid: false,
+    snackbar: false,
+    text: 'Lorem ipsum dolor sit amet',
+    vertical: true,
     exerciseLibrary: ExerciseStore.exercises,
     exerciseName: '',
     nameRules: [
@@ -72,7 +75,7 @@ export default {
       const newExerciseId = this.exerciseLibrary.length;
       let newExercise = {id: newExerciseId, name: this.exerciseName, image: this.imageLink};
       this.exerciseLibrary.push(newExercise);
-      this.$emit('close-create-exercise-dialog');
+      this.$emit('close-create-exercise-dialog', false);
       this.exerciseName = '';
       this.imageLink = '';
     }

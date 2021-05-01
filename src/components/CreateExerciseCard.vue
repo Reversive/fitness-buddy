@@ -1,4 +1,5 @@
 <template>
+  <div>
   <v-card
       color="#6F2DBD"
       class="ma-4 rounded-lg text-center"
@@ -26,7 +27,10 @@
         </v-col>
       </v-row>
     </v-container>
+
   </v-card>
+
+  </div>
 </template>
 
 <script>
@@ -43,7 +47,8 @@ export default {
     CCreateExerciseDialog : CreateExerciseDialog
   },
   methods: {
-    closeDialog() {
+    closeDialog(cancel) {
+      this.$emit('updateSnackBar', cancel);
       this.dialog = false;
     }
   }
