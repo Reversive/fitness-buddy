@@ -9,7 +9,7 @@
     >
       <v-row
           width="100%"
-          style="place-content: center; margin-bottom: 12px;"
+          style="place-content: center;"
       >
         <v-icon
             color="white"

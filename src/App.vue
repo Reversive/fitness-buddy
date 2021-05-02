@@ -26,7 +26,7 @@
       CFooter : Footer,
       CHeaderNavBar : HeaderNavBar,
       CCommunityRoutines: CommunityRoutines,
-      CLogin: Login
+      CLogin: Login,
     },
     data: () => {
       return {

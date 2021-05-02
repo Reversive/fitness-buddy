@@ -21,16 +21,16 @@
         elevation="15"
         width="100%"
     >
-    <v-container class="pr-0">
+    <v-container>
       <div>
         <h2 class="text-left pt-2 d-inline-block" style="color: white">
           <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-text</v-icon>ROUTINE CREATION
         </h2>
-        <span class="float-right d-inline-block">
+        <span class="float-right d-inline-block mt-1">
           <v-btn
               depressed
               color="error"
-              @click="$router.push('/personal-routines')"
+              @click="handleCancelClick"
               class="font-weight-bold mr-5"
           >
       CANCEL
@@ -69,9 +69,9 @@
 
     <v-container class="mt-2">
 
-    <h2 class="white--text d-inline-block">
-    Select category:
-    </h2>
+    <h3 class="white--text d-inline-block">
+    SELECT CATEGORY:
+    </h3>
     <v-autocomplete
         :items="types.categories"
         v-model="routine.categories"
@@ -90,14 +90,14 @@
           close
           color="#A663CC"
           @click:close="deleteChip(item, routine.categories)"
-          class="white--text"
+          class="white--text text-uppercase"
       >{{ item }}</v-chip>
     </template></v-autocomplete>
 
-    <span class="pl-2 float-right mr-5">
-        <h2 class="white--text text-right d-inline-block">
-          Select Difficulty:
-        </h2>
+    <span class="pl-2 float-right mr-5 ">
+        <h3 class="white--text text-right d-inline-block">
+          SELECT DIFFICULTY:
+        </h3>
         <v-autocomplete
             :items="types.difficulties"
             v-model="routine.difficulty"
@@ -180,7 +180,6 @@ export default {
       this.routine.cycles.splice(index, 0, ({cycle: cycle, exists: false}));
       this.routine.cycles.reverse();
       this.sortCycles();
-      console.log(this.routine);
     },
     sortCycles() {
       this.routine.cycles.forEach((c, i) => c.cycle.order = i);
@@ -199,7 +198,14 @@ export default {
       this.$vuetify.goTo(0)
     },
     handleRoutineCreation() {
-      console.log("To-do.");
+      console.log("To-do..");
+    },
+    async handleCancelClick() {
+      const result = await this.$confirm('Do you really want to exit?', { title: 'WARNING' })
+      if (result) {
+        await this.$router.push('/personal-routines');
+        RoutineStore.clearRoutine();
+      }
     }
 
   }

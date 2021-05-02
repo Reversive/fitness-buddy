@@ -100,8 +100,12 @@ export default {
       this.exercises = this.getCycleExercises();
       this.getCycleExercises().push(payload);
     },
-    deleteCycleCard() {
-      this.$emit('cycleTrashClicked', this.identifier)
+    async deleteCycleCard() {
+      const result = await this.$confirm('Do you really want to delete this cycle?', { title: 'WARNING' })
+      if(result) {
+        this.$emit('cycleTrashClicked', this.identifier);
+      }
+
     },
     getCycleExercises() {
       let index = RoutineStore.cycles.findIndex(c => c.cycle.order === this.identifier);

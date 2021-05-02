@@ -41,7 +41,7 @@
                       <h1 class="text-center display-1">HELLO, FRIEND!</h1>
                       <h5
                           class="text-center text-uppercase"
-                      >Enter your personal details and start journey with us.</h5>
+                      >Enter your personal details and start the journey with us.</h5>
                     </v-card-text>
                     <div class="text-center">
                       <v-btn rounded outlined dark @click="step++">SIGN UP</v-btn>
@@ -117,7 +117,7 @@
                   </v-col>
                   <v-col cols="12" md="4">
                     <div >
-                      <v-img src="./../assets/gym-workout-1600.jpg" min-height="400" ></v-img>
+                      <v-img src="../assets/gym-workout-1600.jpg" min-height="400" ></v-img>
                     </div>
                   </v-col>
                 </v-row>
@@ -147,7 +147,7 @@
                   </v-col>
                   <v-col cols="12" md="4">
                     <div >
-                      <v-img src="./../assets/gymphoto2.jpg" min-height="400" ></v-img>
+                      <v-img src="../assets/gymphoto2.jpg" min-height="400" ></v-img>
                     </div>
                   </v-col>
                 </v-row>
