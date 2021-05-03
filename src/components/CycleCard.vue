@@ -21,7 +21,21 @@
           v-for="exercise in exercises"
           :key="exercise.id"
          >
-        <CExerciseCard :exercise-info="exercise"/>
+        <v-dialog
+            v-model="editDialog"
+            width="500"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <div
+                v-bind="attrs"
+                v-on="on"
+            >
+              <CExerciseCard :exercise-info="exercise"/>
+            </div>
+          </template>
+        <CEditExerciseDialog :exerciseInfo="exercise" v-on:deleteExercise="deleteExercise" v-on:updateExercise="updateExercise" :key="exercise.id"/>
+
+        </v-dialog>
       </v-slide-item>
       <v-slide-item>
         <CAddExerciseCard v-on:addExerciseSuccess="addExerciseToCycleArray"/>
@@ -70,11 +84,13 @@
 import AddExerciseCard from "./AddExerciseCard";
 import ExerciseCard from "./ExerciseCard"
 import RoutineStore from "../stores/routineStore";
+import EditExerciseDialog from "./EditExerciseDialog";
 export default {
   name: "CycleCard",
   data: () => {
     return {
       exercises : [],
+      editDialog: false,
       exerciseSuccessSnackbar : {
         color: "success",
         icon: "mdi-check-circle",
@@ -92,7 +108,8 @@ export default {
   },
   components: {
     CAddExerciseCard : AddExerciseCard,
-    CExerciseCard : ExerciseCard
+    CExerciseCard : ExerciseCard,
+    CEditExerciseDialog : EditExerciseDialog
   },
   methods: {
     addExerciseToCycleArray(payload) {
@@ -110,6 +127,20 @@ export default {
     getCycleExercises() {
       let index = RoutineStore.cycles.findIndex(c => c.cycle.order === this.identifier);
       return RoutineStore.cycles[index].cycle.exercises;
+    },
+    deleteExercise(id) {
+      this.editDialog = false;
+      let exercises = this.getCycleExercises();
+      let idx = exercises.findIndex(e => e.id === id);
+      exercises.splice(idx, 1);
+    },
+    updateExercise(reps, duration, id) {
+      console.log(duration + ' ' + reps);
+      this.editDialog = false;
+      let exercises = this.getCycleExercises();
+      let idx = exercises.findIndex(e => e.id === id);
+      exercises[idx].duration = duration.toString();
+      exercises[idx].repetitions = reps.toString();
     }
   },
 }
