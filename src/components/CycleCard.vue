@@ -21,21 +21,7 @@
           v-for="exercise in exercises"
           :key="exercise.id"
          >
-        <v-dialog
-            v-model="editDialog"
-            width="500"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <div
-                v-bind="attrs"
-                v-on="on"
-            >
-              <CExerciseCard :exercise-info="exercise"/>
-            </div>
-          </template>
-        <CEditExerciseDialog :exerciseInfo="exercise" v-on:deleteExercise="deleteExercise" v-on:updateExercise="updateExercise" :key="exercise.id"/>
-
-        </v-dialog>
+        <CExerciseCard :exercise-info="exercise" @click.native="handleEditExercise(exercise)" class="clickable-cursor" :key="exercise.id"/>
       </v-slide-item>
       <v-slide-item>
         <CAddExerciseCard v-on:addExerciseSuccess="addExerciseToCycleArray"/>
@@ -76,7 +62,16 @@
       </v-btn>
     </v-snackbar>
 
+    <v-dialog
+        v-model="editDialog"
+        width="500"
+    >
+      <CEditExerciseDialog v-on:deleteExercise="deleteExercise" v-on:updateExercise="updateExercise" :key="counter"/>
+    </v-dialog>
+
   </v-container>
+
+
 
 </template>
 
@@ -85,12 +80,14 @@ import AddExerciseCard from "./AddExerciseCard";
 import ExerciseCard from "./ExerciseCard"
 import RoutineStore from "../stores/routineStore";
 import EditExerciseDialog from "./EditExerciseDialog";
+import EditStore from "../stores/editStore";
 export default {
   name: "CycleCard",
   data: () => {
     return {
       exercises : [],
       editDialog: false,
+      counter: 0,
       exerciseSuccessSnackbar : {
         color: "success",
         icon: "mdi-check-circle",
@@ -128,18 +125,24 @@ export default {
       let index = RoutineStore.cycles.findIndex(c => c.cycle.order === this.identifier);
       return RoutineStore.cycles[index].cycle.exercises;
     },
-    deleteExercise(id) {
+    deleteExercise() {
       this.editDialog = false;
       let exercises = this.getCycleExercises();
-      let idx = exercises.findIndex(e => e.id === id);
+      let idx = exercises.findIndex(e => e.id === EditStore.currentExercise.id);
       exercises.splice(idx, 1);
     },
-    updateExercise(reps, duration, id) {
+    updateExercise() {
       this.editDialog = false;
-      let exercises = this.getCycleExercises();
-      let idx = exercises.findIndex(e => e.id === id);
-      exercises[idx].duration = duration;
-      exercises[idx].repetitions = reps;
+      let idx = this.getCycleExercises().findIndex(e => e.id === EditStore.currentExercise.id);
+
+      this.getCycleExercises()[idx].duration = EditStore.currentExercise.duration;
+      this.getCycleExercises()[idx].repetitions = EditStore.currentExercise.repetitions;
+      console.log(this.getCycleExercises()[idx]);
+    },
+    handleEditExercise(exercise) {
+      this.counter++;
+      EditStore.currentExercise = exercise;
+      this.editDialog = true;
     }
   },
 }
@@ -162,6 +165,10 @@ export default {
 
 .cycle-footer-bg {
   background-color: #6F2DBD;
+}
+
+.clickable-cursor {
+  cursor: pointer;
 }
 
 
