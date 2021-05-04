@@ -135,12 +135,11 @@ export default {
       exercises.splice(idx, 1);
     },
     updateExercise(reps, duration, id) {
-      console.log(duration + ' ' + reps);
       this.editDialog = false;
       let exercises = this.getCycleExercises();
       let idx = exercises.findIndex(e => e.id === id);
-      exercises[idx].duration = duration.toString();
-      exercises[idx].repetitions = reps.toString();
+      exercises[idx].duration = duration;
+      exercises[idx].repetitions = reps;
     }
   },
 }
