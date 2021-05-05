@@ -74,16 +74,21 @@ export default {
     }
   },
   methods: {
-    toggleEdit() {
-      this.isEditing = !this.isEditing;
-      this.changeButtonText();
-      this.saveProfile();
+    async toggleEdit() {
+      if(this.isEditing) {
+        const result = await this.$confirm('Do you really want to save changes?', { title: 'WARNING' })
+        if(result) {
+          this.isEditing = !this.isEditing;
+          this.changeButtonText();
+          this.saveProfile();
+        }
+      } else {
+        this.isEditing = !this.isEditing;
+        this.changeButtonText();
+      }
     },
     saveProfile() {
       // Update info
-    },
-    cancelEdit() {
-      this.isEditing = false;
     },
     changeButtonText() {
       if (this.isEditing)
