@@ -7,7 +7,7 @@
         width="100%"
     >
       <h2 class="text-left ml-5 pt-5 d-inline-block" style="color: white">
-        <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-search-outline</v-icon>COMMUNITY ROUTINES
+        <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-text</v-icon>COMMUNITY ROUTINES
       </h2>
       <v-container fill-height>
         <v-layout row wrap align-center>

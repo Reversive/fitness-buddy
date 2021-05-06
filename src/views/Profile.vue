@@ -1,25 +1,25 @@
 <template>
-  <v-container class="profile mt-10">
-    <v-card elevation="24">
+  <v-container class="profile my-6 mx-15">
+    <v-card elevation="24" color="#6F2DBD">
       <v-btn class="grey--text rounded-pill profile-edit-button" @click="toggleEdit">{{ btnText }}</v-btn>
       <v-row class="pa-6" justify="center">
         <v-card class="rounded-circle">
           <v-img src="profile-placeholder.png" alt="Profile picture" width="128px" height="128px" contain/>
         </v-card>
       </v-row>
-      <v-card-title v-bind:class="{hidden: isEditing}">{{ name }}</v-card-title>
+      <v-card-title class="white--text font-weight-bold text-uppercase" v-bind:class="{hidden: isEditing}">{{ name }}</v-card-title>
       <div class="centered" v-bind:class="{hidden: !isEditing}" >
         <div class="input-div">
           <v-text-field v-bind:disabled="!isEditing" v-bind:value="name" label="name"/>
         </div>
       </div>
-      <v-card-text class="grey--text" v-bind:class="{hidden: isEditing}">{{ email }}</v-card-text>
+      <v-card-text class="white--text font-weight-bold text-uppercase" v-bind:class="{hidden: isEditing}">{{ email }}</v-card-text>
       <div class="centered" v-bind:class="{hidden: !isEditing}" >
         <div class="input-div">
           <v-text-field v-bind:disabled="!isEditing" v-bind:value="email" label="email"/>
         </div>
       </div>
-      <v-card-text class="grey--text" v-bind:class="{hidden: isEditing}">{{ gender }}</v-card-text>
+      <v-card-text class="white--text font-weight-bold text-uppercase" v-bind:class="{hidden: isEditing}">{{ gender }}</v-card-text>
       <div class="centered" v-bind:class="{hidden: !isEditing}" >
         <div class="input-div">
           <v-text-field v-bind:disabled="!isEditing" v-bind:value="gender" label="gender"/>
@@ -27,8 +27,8 @@
       </div>
       <v-row cols="12" class="mt-6" justify="space-between">
         <v-col cols="3">
-          <span class="grey--text">Age</span><br>
-          <span v-bind:class="{hidden: isEditing}">{{ age }}</span>
+          <span class="white--text font-weight-bold text-uppercase">Age</span><br>
+          <span class="white--text font-weight-bold text-uppercase" v-bind:class="{hidden: isEditing}">{{ age }}</span>
           <div class="centered" v-bind:class="{hidden: !isEditing}" >
             <div class="input-div">
               <v-text-field v-bind:disabled="!isEditing" v-bind:value="age" type="number" single-line dense/>
@@ -36,8 +36,8 @@
           </div>
         </v-col>
         <v-col cols="3">
-          <span class="grey--text">Height</span><br>
-          <span v-bind:class="{hidden: isEditing}">{{ height }}cm</span>
+          <span class="white--text font-weight-bold text-uppercase">Height</span><br>
+          <span class="white--text font-weight-bold text-uppercase" v-bind:class="{hidden: isEditing}">{{ height }}cm</span>
           <div class="centered" v-bind:class="{hidden: !isEditing}" >
             <div class="input-div">
               <v-text-field v-bind:disabled="!isEditing" v-bind:value="height" type="number" suffix="cm" single-line dense/>
@@ -45,8 +45,8 @@
           </div>
         </v-col>
         <v-col cols="3">
-          <span class="grey--text">Weight</span><br>
-          <span v-bind:class="{hidden: isEditing}">{{ weight }}kg</span>
+          <span class="white--text font-weight-bold text-uppercase">Weight</span><br>
+          <span class="white--text font-weight-bold text-uppercase" v-bind:class="{hidden: isEditing}">{{ weight }}kg</span>
           <div class="centered" v-bind:class="{hidden: !isEditing}" >
             <div class="input-div">
               <v-text-field v-bind:disabled="!isEditing" v-bind:value="weight" type="number" suffix="kg" single-line dense/>
