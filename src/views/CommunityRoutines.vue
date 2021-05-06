@@ -6,12 +6,15 @@
         elevation="15"
         width="100%"
     >
-      <v-container>
-        <h2 class="text-left pt-2 mb-2" style="color: white">
-          <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-search-outline</v-icon>COMMUNITY ROUTINES
-        </h2>
+      <h2 class="text-left ml-5 pt-5 d-inline-block" style="color: white">
+        <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-search-outline</v-icon>COMMUNITY ROUTINES
+      </h2>
+      <v-container fill-height>
+        <v-layout row wrap align-center>
+        <v-flex class="text-left ml-5">
+
         <v-select
-            :items="items"
+            :items="searchFilter"
             v-model="sortBy"
             item-color="primary"
             dark
@@ -32,23 +35,29 @@
               color="white"
               ></v-text-field>
         </span>
+        </v-flex>
+        </v-layout>
       </v-container>
-      <v-container>
-        <!-- Make a 'for' here iterating over filtered routines -->
-      </v-container>
+
+
     </v-sheet>
   </div>
 </template>
 
 <script>
+
 export default {
   name: "CommunityRoutines",
   data: () => {
     return {
       sortBy: null,
       searchTerm: null,
-      items: ['NAME', 'USER', 'CATEGORY']
+      searchFilter: ['AUTHOR', 'NAME'],
+      filteredRoutines: [],
+      model: null
     }
+  },
+  components: {
   }
 }
 </script>
@@ -61,5 +70,7 @@ export default {
 .search-bar {
   width: 400px;
 }
+
+
 
 </style>

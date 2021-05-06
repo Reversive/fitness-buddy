@@ -160,11 +160,14 @@
 </template>
 
 <script>
+
+import {UserApi, Credentials} from "../api/user";
+import {Api} from "../api/api";
 export default {
   name: "Login",
   data: () => {
     return{
-      step:1,
+      step: 1,
       show1: false,
       show2: false,
       valid: false,
@@ -184,8 +187,14 @@ export default {
     source:String
   },
   methods: {
-    handleSignIn() {
-      this.$router.push('/community-routines');
+    async handleSignIn() {
+      const credentials = new Credentials(this.email, this.password);
+      await UserApi.login(credentials, null);
+      // checkear si devuelve token y guardarlo o lo q sea..
+      if(Api.token) {
+        await this.$router.push('/community-routines');
+      }
+
     },
     handleSignUp() {
       this.$router.push('/community-routines');
