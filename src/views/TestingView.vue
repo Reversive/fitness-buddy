@@ -6,7 +6,7 @@
           <v-col cols="12" sm="8" md="8">
             <v-card class="elevation-12">
               <v-window v-model="step">
-                <v-window-item id="Sex" :value="1">
+                <v-window-item id="SexAndAge" :value="1">
                   <v-row>
                     <v-col cols="12" md="8">
                       <v-card-text class="mt-12">
@@ -36,7 +36,7 @@
                     </v-col>
                   </v-row>
                 </v-window-item>
-                <v-window-item id="Register" :value="2">
+                <v-window-item id="HeightAndWeight" :value="2">
                   <v-row class="fill-height">
                     <v-col cols="12" md="8">
                       <v-card-text class="mt-12">

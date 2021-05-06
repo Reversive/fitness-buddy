@@ -38,7 +38,7 @@
           <v-btn
               depressed
               color="success"
-              class="font-weight-bold"
+              class="font-weight-bold mr-5"
               @click="handleRoutineCreation"
           >
       CREATE ROUTINE

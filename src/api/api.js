@@ -46,14 +46,14 @@ class Api {
     return await Api.fetch(url, secure, {}, controller)
   }
 
-  static async post(url, secure, data, controller) {
+  static async post(url, secure, data) {
     return await Api.fetch(url, secure, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8'
       },
       body: JSON.stringify(data)
-    }, controller);
+    });
   }
 
   static async put(url, secure, data, controller) {

@@ -13,6 +13,7 @@
                         <v-text-field
                             label="Email"
                             name="Email"
+                            v-model="email_login"
                             :rules="[v=>!!v||'Email is required',
                             v=>/.+@.+\..+/.test(v) || 'E-mail must be valid']"
                             prepend-icon="mdi-email"
@@ -23,6 +24,7 @@
                             id="password"
                             label="Password"
                             name="password"
+                            v-model="password_login"
                             prepend-icon="mdi-lock"
                             color="purple accent-9"
                             :rules="[v=> !!v||'Password is required']"
@@ -66,18 +68,20 @@
                     <v-card-text class="mt-12">
                       <h1 class="text-center display-2 purple--text text--accent-9 text-uppercase font-weight-bold">Create Account</h1>
                       <v-form v-model="valid3">
-                        <v-text-field label="Full Name" name="Name" :rules="[v=> !!v||'Full name is required']" prepend-icon="mdi-account" type="text" color="purple accent-9"/>
+                        <v-text-field label="Full Name" v-model="name" name="Name" :rules="[v=> !!v||'Full name is required']" prepend-icon="mdi-account" type="text" color="purple accent-9"/>
                         <v-text-field :rules="[v=>!!v||'Email is required',
                                        v=>/.+@.+\..+/.test(v) || 'E-mail must be valid']"
                                       label="Email"
                                       name="Email"
                                       prepend-icon="mdi-email"
+                                      v-model="email_signup"
                                       type="text"
                                       color="purple accent-9"/>
                         <v-text-field id="password"
                                       label="Password"
                                       name="password"
                                       prepend-icon="mdi-lock"
+                                      v-model="password_signup"
                                       :rules="[v=>!!v||'Password is required']"
                                       :type="show2 ? 'text' : 'password'"
                                       :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -100,10 +104,12 @@
                       <v-form v-model="valid2">
                         <v-select class="ml-12 mr-12"
                                   :items="items"
+                                  v-model="sex"
                                   :rules="[v=>!!v|| 'Sex is required']"
                                   label="Sex"></v-select>
                         <v-text-field class="ml-12 mr-12"
                                       label="Age"
+                                      v-model="age"
                                       name="Age"
                                       :rules="[v => !!v ||'Age is Required',v => (/^[1-9]\d*$/.test(v))  || 'age must be a positive number',]"
                                       type="text"
@@ -129,12 +135,12 @@
                       <h2 class="text-center display-2 purple--text text--accent-9 mb-5">Just a few more steps</h2>
                       <h4 class="text-center purple--text text--accent-9">Optimize your workout plan by answering this questions</h4>
                       <v-form v-model="valid2">
-                        <v-text-field class="ml-12 mr-12" label="Weight" name="Weight" :rules="[
+                        <v-text-field class="ml-12 mr-12"  v-model="weight" label="Weight" name="Weight" :rules="[
                           v => !!v ||'Weight is Required',
                           v => (/^[1-9]\d*$/.test(v))  || 'Weight must be a positive number',
                           ]" type="text" suffix="Kg" prepend-icon="mdi-weight" color="purple accent-9"/>
 
-                        <v-text-field class="ml-12 mr-12" label="Height" name="Height" :rules="[
+                        <v-text-field class="ml-12 mr-12" label="Height" v-model="height" name="Height" :rules="[
                           v => !!v ||'Height is Required',
                           v => (/^[1-9]\d*$/.test(v))  || 'Height must be a positive number',
                           ]" type="text" suffix="cm" prepend-icon="mdi-ruler" color="purple accent-9"/>
@@ -161,7 +167,7 @@
 
 <script>
 
-import {UserApi, Credentials} from "../api/user";
+import {UserApi, Credentials, SignUpCredentials,} from "../api/user";
 import {Api} from "../api/api";
 export default {
   name: "Login",
@@ -175,8 +181,10 @@ export default {
       valid3: false,
       items: ["Man", "Woman", "Other"],
       name: '',
-      email: '',
-      password: '',
+      email_login: '',
+      password_login: '',
+      email_signup:'',
+      password_signup:'',
       sex: '',
       age: 0,
       weight: 0,
@@ -188,7 +196,7 @@ export default {
   },
   methods: {
     async handleSignIn() {
-      const credentials = new Credentials(this.email, this.password);
+      const credentials = new Credentials(this.email_login, this.password_login);
       await UserApi.login(credentials, null);
       // checkear si devuelve token y guardarlo o lo q sea..
       if(Api.token) {
@@ -197,7 +205,8 @@ export default {
 
     },
     handleSignUp() {
-      this.$router.push('/community-routines');
+      const credentials = new SignUpCredentials(this.email_signup,this.email_signup,this.password_signup);
+      UserApi.register(credentials);
     }
   }
 }
