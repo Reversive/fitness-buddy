@@ -186,7 +186,6 @@
           </v-card>
         </v-col>
       </v-row>
-
       <v-snackbar v-model="cycleRegisterSuccess.visible" :color="cycleRegisterSuccess.color" :multi-line="cycleRegisterSuccess.mode === 'multi-line'" :timeout="cycleRegisterSuccess.timeout" :top="cycleRegisterSuccess.position === 'top'">
         <v-layout align-center pr-4>
           <v-icon class="pr-3" dark large>{{ cycleRegisterSuccess.icon }}</v-icon>
@@ -201,13 +200,26 @@
           <v-icon>clear</v-icon>
         </v-btn>
       </v-snackbar>
-    </v-container>
+    <v-snackbar v-model="cycleFail.visible" :color="cycleFail.color" :multi-line="cycleFail.mode === 'multi-line'" :timeout="cycleFail.timeout" :top="cycleFail.position === 'top'">
+      <v-layout align-center pr-4>
+        <v-icon class="pr-3" dark large>{{ cycleFail.icon }}</v-icon>
+      <v-layout column>
+        <div>
+          <strong>{{ cycleFail.title }}</strong>
+        </div>
+        <div>{{ cycleFail.text }}</div>
+      </v-layout>
+    </v-layout>
+    <v-btn v-if="cycleFail.timeout === 0" icon @click="cycleFail.visible = false">
+      <v-icon>clear</v-icon>
+    </v-btn>
+  </v-snackbar>
+  </v-container>
 </template>
 
 <script>
 
 import {UserApi, Credentials, SignUpCredentials,Verification,} from "../api/user";
-import {Api} from "../api/api";
 export default {
   name: "Login",
   data: () => {
@@ -234,11 +246,21 @@ export default {
         icon: "mdi-check-circle",
         mode: "multi-line",
         position: "bot",
-        timeout: 3500,
+        timeout: 3000,
         title: "Success",
         text: "Registration successful, please log-in.",
         visible: false
-      }
+      },
+      cycleFail: {
+        color:"red",
+        icon: "mdi-close-circle",
+        mode: "multi-line",
+        position: "bot",
+        timeout: 3000,
+        title: "Error",
+        text: "",
+        visible: false
+      },
     }
   },
   props:{
@@ -246,22 +268,35 @@ export default {
   },
   methods: {
     async handleSignIn() {
-      const credentials = new Credentials(this.email_login, this.password_login);
-      await UserApi.login(credentials, null);
-      if(Api.token) {
+      try{
+        const credentials = new Credentials(this.email_login, this.password_login);
+        await UserApi.login(credentials, null);
         await this.$router.push('/community-routines');
+      }catch (e) {
+       this.cycleFail.text=e.description;
+       this.cycleFail.visible = !this.cycleFail.visible;
       }
     },
-    handleSignUp() {
-      const credentials = new SignUpCredentials(this.email_signup,this.email_signup,this.password_signup);
-      UserApi.register(credentials);
-      this.step++;
+    async handleSignUp() {
+      try{
+        const credentials = new SignUpCredentials(this.email_signup,this.email_signup,this.password_signup);
+        await UserApi.register(credentials);
+        this.step++;
+      }catch (e) {
+        this.cycleFail.text=e.description;
+        this.cycleFail.visible = !this.cycleFail.visible;
+      }
     },
     async confirmRegister(){
-      const credentials = new Verification(this.email_signup,this.code);
-      await UserApi.verifyCode(credentials);
-      this.step = 1;
-      this.cycleRegisterSuccess.visible = !this.cycleRegisterSuccess.visible;
+      try{
+        const credentials = new Verification(this.email_signup,this.code);
+        await UserApi.verifyCode(credentials);
+        this.step = 1;
+        this.cycleRegisterSuccess.visible = !this.cycleRegisterSuccess.visible;
+      }catch(e){
+        this.cycleFail.text=e.description;
+        this.cycleFail.visible = !this.cycleFail.visible;
+      }
     },
     async resendCode() {
       await UserApi.resendVerificationCode(this.email_signup);
