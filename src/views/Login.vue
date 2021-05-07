@@ -164,16 +164,15 @@
                     <v-card-text class="mt-12">
                       <h4 class="text-center display-2 purple--text text--accent-9 mb-5">Please enter the confirmation code that was sent to your email</h4>
                       <v-form v-model="valid2">
-                        <v-text-field class="ml-12 mr-12"  v-model="email_signup" label="email" name="email" :rules="[
-                          v => !!v ||'Email is Required',
-                          ]" type="text" color="purple accent-9"/>
+                        <v-text-field class="ml-12 mr-12"  disabled v-model="email_signup" label="email" name="email" type="text" color="purple accent-9"/>
                         <v-text-field class="ml-12 mr-12"  v-model="code" label="Code" name="Code" :rules="[
                           v => !!v ||'Code is Required',
                           ]" type="text" color="purple accent-9"/>
                       </v-form>
                     </v-card-text>
-                    <div class="text-center ">
-                      <v-btn rounded class="mb-7 white--text" color="purple accent-9" :disabled="!valid2" @click="ConfirmRegister">CONFIRM</v-btn>
+                    <div class="text-center">
+                      <v-btn rounded class="mb-7 mr-3 white--text" color="purple accent-9" @click="resendCode">RESEND VERIFICATION CODE</v-btn>
+                      <v-btn rounded class="mb-7 white--text" color="purple accent-9" :disabled="!valid2" @click="confirmRegister">CONFIRM</v-btn>
                     </div>
                   </v-col>
                   <v-col cols="12" md="4">
@@ -187,6 +186,21 @@
           </v-card>
         </v-col>
       </v-row>
+
+      <v-snackbar v-model="cycleRegisterSuccess.visible" :color="cycleRegisterSuccess.color" :multi-line="cycleRegisterSuccess.mode === 'multi-line'" :timeout="cycleRegisterSuccess.timeout" :top="cycleRegisterSuccess.position === 'top'">
+        <v-layout align-center pr-4>
+          <v-icon class="pr-3" dark large>{{ cycleRegisterSuccess.icon }}</v-icon>
+          <v-layout column>
+            <div>
+              <strong>{{ cycleRegisterSuccess.title }}</strong>
+            </div>
+            <div>{{ cycleRegisterSuccess.text }}</div>
+          </v-layout>
+        </v-layout>
+        <v-btn v-if="cycleRegisterSuccess.timeout === 0" icon @click="cycleRegisterSuccess.visible = false">
+          <v-icon>clear</v-icon>
+        </v-btn>
+      </v-snackbar>
     </v-container>
 </template>
 
@@ -215,6 +229,16 @@ export default {
       age: 0,
       weight: 0,
       height: 0,
+      cycleRegisterSuccess: {
+        color: "success",
+        icon: "mdi-check-circle",
+        mode: "multi-line",
+        position: "bot",
+        timeout: 3500,
+        title: "Success",
+        text: "Registration successful, please log-in.",
+        visible: false
+      }
     }
   },
   props:{
@@ -224,22 +248,23 @@ export default {
     async handleSignIn() {
       const credentials = new Credentials(this.email_login, this.password_login);
       await UserApi.login(credentials, null);
-      // checkear si devuelve token y guardarlo o lo q sea..
       if(Api.token) {
         await this.$router.push('/community-routines');
       }
-
     },
     handleSignUp() {
       const credentials = new SignUpCredentials(this.email_signup,this.email_signup,this.password_signup);
       UserApi.register(credentials);
       this.step++;
     },
-    async ConfirmRegister(){
-      const credentials= new Verification(this.email_signup,this.code);
+    async confirmRegister(){
+      const credentials = new Verification(this.email_signup,this.code);
       await UserApi.verifyCode(credentials);
-      await this.$router.push('/');
-
+      this.step = 1;
+      this.cycleRegisterSuccess.visible = !this.cycleRegisterSuccess.visible;
+    },
+    async resendCode() {
+      await UserApi.resendVerificationCode(this.email_signup);
     }
   }
 }

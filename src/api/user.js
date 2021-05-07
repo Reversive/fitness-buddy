@@ -22,6 +22,10 @@ class UserApi {
     static async verifyCode(code){
         return await Api.post(`${UserApi.url}/verify_email`,false,code);
     }
+    static async resendVerificationCode(email) {
+        const payload = new ResendVerification(email);
+        return await  Api.post(`${UserApi.url}/resend_verification`, false, payload);
+    }
 }
 
 class Credentials {
@@ -36,11 +40,17 @@ class Verification {
         this.code = code;
     }
 }
-class SignUpCredentials{
-    constructor(username,email,password) {
-        this.username=username;
-        this.email=email;
-        this.password=password;
+class SignUpCredentials {
+    constructor(username, email, password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+}
+class ResendVerification {
+    constructor(email) {
+        this.email = email;
+
     }
 
 }
