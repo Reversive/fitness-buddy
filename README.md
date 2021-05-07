@@ -1,4 +1,4 @@
-# fitness-buddy-client
+# fitness-buddy
 
 ## Project setup
 ```
