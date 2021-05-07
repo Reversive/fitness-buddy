@@ -158,6 +158,31 @@
                   </v-col>
                 </v-row>
               </v-window-item>
+              <v-window-item :value="5">
+                <v-row class="fill-height">
+                  <v-col cols="12" md="8">
+                    <v-card-text class="mt-12">
+                      <h4 class="text-center display-2 purple--text text--accent-9 mb-5">Please enter the confirmation code that was sent to your email</h4>
+                      <v-form v-model="valid2">
+                        <v-text-field class="ml-12 mr-12"  v-model="email_signup" label="email" name="email" :rules="[
+                          v => !!v ||'Email is Required',
+                          ]" type="text" color="purple accent-9"/>
+                        <v-text-field class="ml-12 mr-12"  v-model="code" label="Code" name="Code" :rules="[
+                          v => !!v ||'Code is Required',
+                          ]" type="text" color="purple accent-9"/>
+                      </v-form>
+                    </v-card-text>
+                    <div class="text-center ">
+                      <v-btn rounded class="mb-7 white--text" color="purple accent-9" :disabled="!valid2" @click="ConfirmRegister">CONFIRM</v-btn>
+                    </div>
+                  </v-col>
+                  <v-col cols="12" md="4">
+                    <div >
+                      <v-img src="../assets/gymphoto2.jpg" min-height="400" ></v-img>
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-window-item>
             </v-window>
           </v-card>
         </v-col>
@@ -167,7 +192,7 @@
 
 <script>
 
-import {UserApi, Credentials, SignUpCredentials,} from "../api/user";
+import {UserApi, Credentials, SignUpCredentials,Verification,} from "../api/user";
 import {Api} from "../api/api";
 export default {
   name: "Login",
@@ -179,6 +204,7 @@ export default {
       valid: false,
       valid2: false,
       valid3: false,
+      code:'',
       items: ["Man", "Woman", "Other"],
       name: '',
       email_login: '',
@@ -207,6 +233,13 @@ export default {
     handleSignUp() {
       const credentials = new SignUpCredentials(this.email_signup,this.email_signup,this.password_signup);
       UserApi.register(credentials);
+      this.step++;
+    },
+    async ConfirmRegister(){
+      const credentials= new Verification(this.email_signup,this.code);
+      await UserApi.verifyCode(credentials);
+      await this.$router.push('/');
+
     }
   }
 }

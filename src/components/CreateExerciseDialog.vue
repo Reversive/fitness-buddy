@@ -21,7 +21,6 @@
                 label="Image Link"
                 required
             ></v-text-field>
-
       </v-container>
     </v-form>
 

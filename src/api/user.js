@@ -1,6 +1,6 @@
 import { Api } from './api.js';
 
-export { UserApi, Credentials, SignUpCredentials};
+export { UserApi, Credentials, SignUpCredentials,Verification};
 
 class UserApi {
     static get url() {
@@ -17,7 +17,10 @@ class UserApi {
         Api.token = undefined;
     }
     static async register(credentials){
-        await Api.post(`${UserApi.url}`,false,credentials);
+        return await Api.post(`${UserApi.url}`,false,credentials);
+    }
+    static async verifyCode(code){
+        return await Api.post(`${UserApi.url}/verify_email`,false,code);
     }
 }
 
@@ -25,6 +28,12 @@ class Credentials {
     constructor(username, password) {
         this.username = username;
         this.password = password;
+    }
+}
+class Verification {
+    constructor(email, code) {
+        this.email = email;
+        this.code = code;
     }
 }
 class SignUpCredentials{
