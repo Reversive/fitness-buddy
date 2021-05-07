@@ -31,7 +31,7 @@ export default {
   data: function () {
     return {
       menu_items: [
-        {caption: "COMMUNITY ROUTINES", title: "Go to the Community Routines Page", icon: "mdi-clipboard-search-outline", route: "/community-routines" },
+        {caption: "COMMUNITY ROUTINES", title: "Go to the Community Routines Page", icon: "mdi-account-group", route: "/community-routines" },
         {caption: "MY ROUTINES", title: "Go to the Personal Routines Page", icon: "mdi-clipboard-account-outline", route: "/personal-routines"},
         {caption: "", title: "Go to the Profile Page", route: "/profile", icon: "mdi-account-circle",
           sub_menu_items: [
