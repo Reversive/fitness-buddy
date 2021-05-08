@@ -1,6 +1,6 @@
 const RoutineStore = {
     id: null,
-    categories: [],
+    category: {},
     name: null,
     difficulty: null,
     cycles: [],

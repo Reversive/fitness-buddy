@@ -74,25 +74,16 @@
     </h3>
     <v-autocomplete
         :items="types.categories"
-        v-model="routine.categories"
+        v-model="routine.category"
         class="white--text d-inline-block ml-2"
-        chips
         full-width
         deletable-chips
         hide-details
         hide-no-data
         hide-selected
         outlined
-        multiple
         single-line
-    ><template #selection="{ item }">
-      <v-chip
-          close
-          color="#A663CC"
-          @click:close="deleteChip(item, routine.categories)"
-          class="white--text text-uppercase"
-      >{{ item }}</v-chip>
-    </template></v-autocomplete>
+    ></v-autocomplete>
 
     <span class="pl-2 float-right mr-5 ">
         <h3 class="white--text text-right d-inline-block">
@@ -136,6 +127,10 @@ import AddCycleCard from "../components/AddCycleCard";
 import CycleCardTitle from "../components/CycleCardTitle";
 import RoutineStore from "../stores/routineStore"
 import TypeStore from "../stores/typeStore";
+import {CategoryApi, Category} from "../api/category";
+import {Routine, RoutineApi} from "../api/routine";
+import {Cycle} from "../api/cycle";
+
 export default {
   name: "CreateRoutine",
   components: {
@@ -161,19 +156,31 @@ export default {
       }
     }
   },
-  methods : {
-    deleteChip(item, array) {
-      for (let i = 0; i < array.length; i += 1) {
-        if (array[parseInt(i, 10)] === item) {
-          array.splice(i, 1);
-        }
+  async mounted() {
+    CategoryApi.get().then(response => {
+      if(response.totalCount === 3) {
+        TypeStore.categories.forEach(e => {
+          let idx = response.content.findIndex(c => c.name === e.text);
+          e.id = response.content[idx].id;
+        });
+      } else {
+        TypeStore.categories.forEach(e => {
+          let category = new Category(e.text, "");
+          let response = CategoryApi.add(category);
+          e.id = response.id;
+        });
       }
-    },
+    }).catch(() => {
+      console.error('Something went wrong setting up categories');
+    });
+  },
+  methods : {
     addCycle(cycle_type) {
       let cycle = {
         name: "NEW SECTION",
         type: cycle_type,
         position: 0,
+        repetitions: 0,
         exercises: []
       };
       let index = this.routine.cycles.reverse().findIndex(c => c.cycle.type === cycle_type);
@@ -198,7 +205,19 @@ export default {
       this.$vuetify.goTo(0)
     },
     handleRoutineCreation() {
-      console.log("To-do..");
+      if(this.routine.name === null || this.routine.difficulty === null || this.category === null) return; // handle errors later
+      let categoryIdx = TypeStore.categories.findIndex(e => e.text === this.routine.category);
+      let category = TypeStore.categories[categoryIdx];
+      let routinePayload = new Routine(this.routine.name, "", true, this.routine.difficulty.toLowerCase(), category.id);
+      let routineResponse = RoutineApi.add(routinePayload);
+      routineResponse.then(routine => {
+        let routine_id = routine.id;
+        console.log(routine_id);
+        this.routine.cycles.forEach(c => {
+            let cyclePayload = new Cycle(c.cycle.name, "", c.cycle.type.name.toLowerCase(), c.cycle.order, c.cycle.repetitions);
+            console.log(cyclePayload);
+        });
+      });
     },
     async handleCancelClick() {
       const result = await this.$confirm('Do you really want to exit?', { title: 'WARNING' })
@@ -207,7 +226,6 @@ export default {
         RoutineStore.clearRoutine();
       }
     }
-
   }
 
 }
