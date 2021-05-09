@@ -1,6 +1,9 @@
 <template>
   <v-container class="profile my-6">
     <v-card elevation="24" color="#6F2DBD">
+      <v-overlay v-bind:value="loading" absolute opacity="0.5">
+        <v-progress-circular indeterminate size="64"/>
+      </v-overlay>
       <div class="profile-edit-buttons">
         <v-btn class="red white--text rounded-pill mr-3" v-bind:class="{hidden: !isEditing}" @click="cancelEdit">CANCEL</v-btn>
         <v-btn class="grey--text rounded-pill" @click="toggleEdit">{{ btnText }}</v-btn>
@@ -58,6 +61,7 @@ export default {
       weight: null,
       metadata: null,
       isEditing: false,
+      loading: true,
       btnText: 'EDIT PROFILE',
       genders: [{text: 'male', value: 'male'}, {text: 'female', value: 'female'}, {text: 'other', value: 'other'}]
     }
@@ -91,6 +95,7 @@ export default {
       }
     },
     async saveProfile() {
+      this.loading = true;
       this.metadata.height = parseInt(this.height);
       this.metadata.weight = parseInt(this.weight);
       const data = {
@@ -100,8 +105,10 @@ export default {
         metadata: this.metadata
       };
       await Api.put(Api.baseUrl+'/users/current', true, data, null);
+      this.loading = false;
     },
     async fetchData() {
+      this.loading = true;
       const result = await Api.get(Api.baseUrl+'/users/current', true, null);
       console.log(result);
       const {firstName, email, gender, birthdate, metadata} = result;
@@ -114,7 +121,7 @@ export default {
         this.height = metadata.height;
         this.weight = metadata.weight;
       }
-
+      this.loading = false;
     },
     changeButtonText() {
       if (this.isEditing)

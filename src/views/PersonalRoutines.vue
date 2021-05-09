@@ -10,17 +10,35 @@
         <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-account-outline</v-icon>MY ROUTINES
       </h2>
       <v-container fill-height>
-
+        <v-row class="justify-space-between">
+          <RoutinePreviewCard :routine="routine"/>
+          <RoutinePreviewCard :routine="routine"/>
+          <RoutinePreviewCard :routine="routine"/>
+          <RoutinePreviewCard :routine="routine"/>
+          <RoutinePreviewCard :routine="routine"/>
+        </v-row>
       </v-container>
-
-
     </v-sheet>
   </div>
 </template>
 
 <script>
+import RoutinePreviewCard from "@/components/RoutinePreviewCard";
+
 export default {
-  name: "PersonalRoutines"
+  name: "PersonalRoutines",
+  data: () => {
+    return {
+      routine: {
+        title: 'Personal Routine 1',
+        target: 'Weight loss',
+        duration: '50 minutes',
+        muscleGroups: 'Legs, core',
+        link: '/profile'
+      }
+    }
+  },
+  components: {RoutinePreviewCard}
 }
 </script>
 
