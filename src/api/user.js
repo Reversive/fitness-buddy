@@ -1,6 +1,6 @@
 import { Api } from './api.js';
 
-export { UserApi, Credentials, SignUpCredentials,Verification};
+export { UserApi, Credentials,Verification};
 
 class UserApi {
     static get url() {
@@ -40,17 +40,9 @@ class Verification {
         this.code = code;
     }
 }
-class SignUpCredentials {
-    constructor(username, email, password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
-}
 class ResendVerification {
     constructor(email) {
         this.email = email;
-
     }
 
 }

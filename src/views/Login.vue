@@ -67,18 +67,20 @@
                   <v-col cols="12" md="8">
                     <v-card-text class="mt-12">
                       <h1 class="text-center display-2 purple--text text--accent-9 text-uppercase font-weight-bold">Create Account</h1>
-                      <v-form v-model="valid3">
-                        <v-text-field label="Full Name" v-model="name" name="Name" :rules="[v=> !!v||'Full name is required']" prepend-icon="mdi-account" type="text" color="purple accent-9"/>
+                      <v-form v-model="valid2">
+                        <v-text-field hint="*Required" label="Full Name" v-model="name" name="Name" :rules="[v=> !!v||'Full name is required']" prepend-icon="mdi-account" type="text" color="purple accent-9"/>
                         <v-text-field :rules="[v=>!!v||'Email is required',
                                        v=>/.+@.+\..+/.test(v) || 'E-mail must be valid']"
                                       label="Email"
                                       name="Email"
+                                      hint="*Required"
                                       prepend-icon="mdi-email"
                                       v-model="email_signup"
                                       type="text"
                                       color="purple accent-9"/>
                         <v-text-field id="password"
                                       label="Password"
+                                      hint="*Required"
                                       name="password"
                                       prepend-icon="mdi-lock"
                                       v-model="password_signup"
@@ -90,7 +92,7 @@
                       </v-form>
                     </v-card-text>
                     <div class="text-center ">
-                      <v-btn rounded class="mb-7 white--text" color="purple accent-9" :dark="valid3" :disabled="!valid3" @click="step++">NEXT</v-btn>
+                      <v-btn rounded class="mb-7 white--text" color="purple accent-9" :dark="valid2" :disabled="!valid2" @click="step++">NEXT</v-btn>
                     </div>
                   </v-col>
                 </v-row>
@@ -101,24 +103,23 @@
                     <v-card-text class="mt-12">
                       <h2 class="text-center display-2 purple--text text--accent-9 mb-5">Just a few more steps</h2>
                       <h4 class="text-center purple--text text--accent-9">Optimize your workout plan by answering this questions</h4>
-                      <v-form v-model="valid2">
+                      <v-form>
                         <v-select class="ml-12 mr-12"
                                   :items="items"
                                   v-model="sex"
-                                  :rules="[v=>!!v|| 'Sex is required']"
                                   label="Sex"></v-select>
                         <v-text-field class="ml-12 mr-12"
                                       label="Age"
-                                      v-model="age"
+                                      value="0"
+                                      v-model.number="age"
                                       name="Age"
-                                      :rules="[v => !!v ||'Age is Required',v => (/^[1-9]\d*$/.test(v))  || 'age must be a positive number',]"
-                                      type="text"
+                                      :rules="[v => (/^[1-9]\d*$/.test(v))  || 'age must be a positive number']"
                                       color="purple accent-9"/>
                       </v-form>
                     </v-card-text>
                     <div class="text-center mt-3">
                       <v-btn rounded class="mb-7 mr-7" color="purple accent-9" dark @click="step--" >BACK</v-btn>
-                      <v-btn class="mb-7 white--text" rounded color="purple accent-9" :disabled="!valid2" @click="step++">NEXT</v-btn>
+                      <v-btn class="mb-7 white--text" rounded color="purple accent-9"  @click="step++">NEXT</v-btn>
                     </div>
                   </v-col>
                   <v-col cols="12" md="4">
@@ -134,21 +135,19 @@
                     <v-card-text class="mt-12">
                       <h2 class="text-center display-2 purple--text text--accent-9 mb-5">Just a few more steps</h2>
                       <h4 class="text-center purple--text text--accent-9">Optimize your workout plan by answering this questions</h4>
-                      <v-form v-model="valid2">
-                        <v-text-field class="ml-12 mr-12"  v-model="weight" label="Weight" name="Weight" :rules="[
-                          v => !!v ||'Weight is Required',
+                      <v-form>
+                        <v-text-field class="ml-12 mr-12"  v-model.number="weight" value="0" label="Weight" name="Weight" :rules="[
                           v => (/^[1-9]\d*$/.test(v))  || 'Weight must be a positive number',
-                          ]" type="text" suffix="Kg" prepend-icon="mdi-weight" color="purple accent-9"/>
+                          ]" suffix="Kg" prepend-icon="mdi-weight" color="purple accent-9"/>
 
-                        <v-text-field class="ml-12 mr-12" label="Height" v-model="height" name="Height" :rules="[
-                          v => !!v ||'Height is Required',
+                        <v-text-field class="ml-12 mr-12" label="Height" v-model.number="height" value="0" name="Height" :rules="[
                           v => (/^[1-9]\d*$/.test(v))  || 'Height must be a positive number',
-                          ]" type="text" suffix="cm" prepend-icon="mdi-ruler" color="purple accent-9"/>
+                          ]" suffix="cm" prepend-icon="mdi-ruler" color="purple accent-9"/>
                       </v-form>
                     </v-card-text>
                     <div class="text-center ">
                       <v-btn rounded class="mb-7 mr-7" color="purple accent-9" dark @click="step--" >BACK</v-btn>
-                      <v-btn rounded class="mb-7 white--text" color="purple accent-9" :disabled="!valid2" @click="handleSignUp">FINISH</v-btn>
+                      <v-btn rounded class="mb-7 white--text" color="purple accent-9" @click="handleSignUp">FINISH</v-btn>
                     </div>
                   </v-col>
                   <v-col cols="12" md="4">
@@ -219,7 +218,7 @@
 
 <script>
 
-import {UserApi, Credentials, SignUpCredentials,Verification,} from "../api/user";
+import {UserApi, Credentials,Verification,} from "../api/user";
 export default {
   name: "Login",
   data: () => {
@@ -229,18 +228,17 @@ export default {
       show2: false,
       valid: false,
       valid2: false,
-      valid3: false,
       code:'',
-      items: ["Man", "Woman", "Other"],
+      items: [{text:'Man',value:'male'},{ text:'Woman',value:'female'},{ text:'Other',value:'other'}],
+      sex:null,
+      age:null,
+      weight:null,
+      height:null,
       name: '',
       email_login: '',
       password_login: '',
       email_signup:'',
       password_signup:'',
-      sex: '',
-      age: 0,
-      weight: 0,
-      height: 0,
       cycleRegisterSuccess: {
         color: "success",
         icon: "mdi-check-circle",
@@ -267,23 +265,48 @@ export default {
     source:String
   },
   methods: {
+     packageData(){
+      let data={
+        username:this.email_signup,
+        email:this.email_signup,
+        password:this.password_signup,
+        firstName:this.name,
+        gender:undefined,
+        birthdate:undefined,
+        metadata:undefined
+      }
+     let metadata={'height':undefined,'weight':undefined};
+      if(this.sex!=null) {
+        data.gender=this.sex;
+      }
+      if(this.age!=null){
+        data.birthdate=this.age;
+      }if(this.weight!=null){
+        metadata.Weight=this.weight;
+      }if(this.height!=null){
+        metadata.Height=this.height;
+      }
+      if(metadata.Height!=null||metadata.Weight!=null){
+        data.metadata=metadata;
+      }
+      return data
+      },
     async handleSignIn() {
       try{
         const credentials = new Credentials(this.email_login, this.password_login);
         await UserApi.login(credentials, null);
         await this.$router.push('/community-routines');
       }catch (e) {
-       this.cycleFail.text=e.description;
+       this.cycleFail.text=e.details;
        this.cycleFail.visible = !this.cycleFail.visible;
       }
     },
     async handleSignUp() {
       try{
-        const credentials = new SignUpCredentials(this.email_signup,this.email_signup,this.password_signup);
-        await UserApi.register(credentials);
+        await UserApi.register(this.packageData());
         this.step++;
       }catch (e) {
-        this.cycleFail.text=e.description;
+        this.cycleFail.text=e.details;
         this.cycleFail.visible = !this.cycleFail.visible;
       }
     },
@@ -294,7 +317,7 @@ export default {
         this.step = 1;
         this.cycleRegisterSuccess.visible = !this.cycleRegisterSuccess.visible;
       }catch(e){
-        this.cycleFail.text=e.description;
+        this.cycleFail.text=e.details;
         this.cycleFail.visible = !this.cycleFail.visible;
       }
     },
