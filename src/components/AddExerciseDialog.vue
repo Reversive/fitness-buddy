@@ -131,7 +131,7 @@ export default {
         this.errorSnackbar.visible = true;
         return null;
       }
-      let currentExercise = this.exerciseStore.exercises[this.selectedExercise];
+      let currentExercise = this.exerciseStore.exercises[this.selectedExercise - 1];
       let payload = { duration: this.duration, repetitions: this.repetitions, exercise: currentExercise};
       this.$emit('exerciseAddedSuccessfully', payload);
       this.$emit('close-dialog');
@@ -151,7 +151,7 @@ export default {
     handleCreateExerciseResult(cancel) {
       if(cancel !== true) this.snackbar.visible = true;
     }
-  },
+  }
 }
 </script>
 

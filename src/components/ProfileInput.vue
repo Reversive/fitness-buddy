@@ -1,7 +1,10 @@
 <template>
   <div class="centered" v-bind:class="{hidden: !editing}" >
     <div class="input-div">
-      <v-text-field v-bind:disabled="!editing" :value="input_value" v-bind:label="single?'':input_label" :type="input_type" :single-line="single" :dense="single" dark/>
+      <v-text-field v-bind:disabled="!editing" :value="input_value"
+                    v-bind:label="single?'':input_label" :type="input_type"
+                    v-on:keyup.native="$emit('change', $event.target.value)"
+                    :single-line="single" :dense="single" dark/>
     </div>
   </div>
 </template>
@@ -10,6 +13,10 @@
 
 export default {
   name: "ProfileInput",
+  model: {
+    prop: 'input_value',
+    event: 'change'
+  },
   props: ['input_value', 'editing', 'input_type', 'input_label', 'single']
 }
 </script>
