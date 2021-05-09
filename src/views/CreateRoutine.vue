@@ -117,6 +117,20 @@
         <v-icon>clear</v-icon>
       </v-btn>
     </v-snackbar>
+    <v-snackbar v-model="missingFieldSnackbar.visible" :color="missingFieldSnackbar.color" :multi-line="missingFieldSnackbar.mode === 'multi-line'" :timeout="missingFieldSnackbar.timeout" :top="missingFieldSnackbar.position === 'top'">
+      <v-layout align-center pr-4>
+        <v-icon class="pr-3" dark large>{{ missingFieldSnackbar.icon }}</v-icon>
+        <v-layout column>
+          <div>
+            <strong>{{ missingFieldSnackbar.title }}</strong>
+          </div>
+          <div>{{ missingFieldSnackbar.text }}</div>
+        </v-layout>
+      </v-layout>
+      <v-btn v-if="missingFieldSnackbar.timeout === 0" icon @click="missingFieldSnackbar.visible = false">
+        <v-icon>clear</v-icon>
+      </v-btn>
+    </v-snackbar>
   </div>
 
 </template>
@@ -126,10 +140,14 @@ import CycleCard from "../components/CycleCard";
 import AddCycleCard from "../components/AddCycleCard";
 import CycleCardTitle from "../components/CycleCardTitle";
 import RoutineStore from "../stores/routineStore"
+import ExerciseStore from "../stores/exerciseStore";
 import TypeStore from "../stores/typeStore";
 import {CategoryApi, Category} from "../api/category";
 import {Routine, RoutineApi} from "../api/routine";
-import {Cycle} from "../api/cycle";
+import {Cycle, CycleApi} from "../api/cycle";
+import {ExerciseApi, Exercise, Image} from "../api/exercise";
+import {CycleExerciseApi, CycleExercise} from "../api/cycleExercise";
+
 
 export default {
   name: "CreateRoutine",
@@ -153,34 +171,76 @@ export default {
         title: "Success",
         text: "Cycle deleted successfully.",
         visible: false
-      }
+      },
+      missingFieldSnackbar: {
+        color: "error",
+        icon: "mdi-close-circle",
+        mode: "multi-line",
+        position: "bot",
+        timeout: 4500,
+        title: "Error",
+        text: "Missing fields, please check routine name, category and difficulty are set.",
+        visible: false
+      },
     }
   },
   async mounted() {
     CategoryApi.get().then(response => {
-      if(response.totalCount === 3) {
-        TypeStore.categories.forEach(e => {
-          let idx = response.content.findIndex(c => c.name === e.text);
-          e.id = response.content[idx].id;
-        });
-      } else {
+      if(response.totalCount === 0) {
         TypeStore.categories.forEach(e => {
           let category = new Category(e.text, "");
           let response = CategoryApi.add(category);
           e.id = response.id;
         });
+      } else {
+        TypeStore.categories.forEach(e => {
+          let idx = response.content.findIndex(c => c.name === e.text);
+          e.id = response.content[idx].id;
+        });
       }
     }).catch(() => {
       console.error('Something went wrong setting up categories');
     });
+
+    ExerciseApi.get().then(response => {
+      if(response.totalCount === 0) {
+        ExerciseStore.exercises.forEach(e => {
+          let exercisePayload = new Exercise(e.name, "", "exercise");
+          let exerciseResponse = ExerciseApi.add(exercisePayload);
+          exerciseResponse.then(exercise => {
+            e.id = exercise.id;
+            let image = new Image(e.image);
+            ExerciseApi.addImage(e.id, image);
+          });
+
+        });
+      } else {
+        response.content.forEach(e => {
+          let exerciseImageResponse = ExerciseApi.getImage(e.id);
+          exerciseImageResponse.then(image => {
+            let currentImage = image.content[0].url;
+            let idx = ExerciseStore.exercises.findIndex(ex => ex.name === e.name);
+            if(idx === -1) {
+              ExerciseStore.exercises.push({id: e.id, name: e.name, image: currentImage });
+            } else {
+              ExerciseStore.exercises[idx].id = e.id;
+            }
+          });
+
+        });
+      }
+    }).catch(() => {
+      console.error('Something went wrong setting up exercises');
+    });
+
   },
   methods : {
     addCycle(cycle_type) {
       let cycle = {
-        name: "NEW SECTION",
+        name: "NEW CYCLE",
         type: cycle_type,
         position: 0,
-        repetitions: 0,
+        repetitions: 1,
         exercises: []
       };
       let index = this.routine.cycles.reverse().findIndex(c => c.cycle.type === cycle_type);
@@ -189,7 +249,7 @@ export default {
       this.sortCycles();
     },
     sortCycles() {
-      this.routine.cycles.forEach((c, i) => c.cycle.order = i);
+      this.routine.cycles.forEach((c, i) => c.cycle.order = i + 1);
     },
     removeSection(order) {
       this.cycleSuccessDeleteSnackbar.visible = true;
@@ -205,19 +265,33 @@ export default {
       this.$vuetify.goTo(0)
     },
     handleRoutineCreation() {
-      if(this.routine.name === null || this.routine.difficulty === null || this.category === null) return; // handle errors later
+      if(this.isFieldMissing()) {
+        this.missingFieldSnackbar.visible = !this.missingFieldSnackbar.visible;
+        return;
+      }
       let categoryIdx = TypeStore.categories.findIndex(e => e.text === this.routine.category);
       let category = TypeStore.categories[categoryIdx];
       let routinePayload = new Routine(this.routine.name, "", true, this.routine.difficulty.toLowerCase(), category.id);
       let routineResponse = RoutineApi.add(routinePayload);
       routineResponse.then(routine => {
-        let routine_id = routine.id;
-        console.log(routine_id);
         this.routine.cycles.forEach(c => {
-            let cyclePayload = new Cycle(c.cycle.name, "", c.cycle.type.name.toLowerCase(), c.cycle.order, c.cycle.repetitions);
-            console.log(cyclePayload);
+            let cyclePayload = new Cycle(c.cycle.name, "", c.cycle.type.name.toLowerCase(), c.cycle.order, parseInt(c.cycle.repetitions));
+            let cycleResponse = CycleApi.add(routine.id, cyclePayload);
+            cycleResponse.then(cycle => {
+              c.cycle.exercises.forEach(e => {
+                let exercisePayload = new CycleExercise(e.order, parseInt(e.duration), parseInt(e.repetitions));
+                CycleExerciseApi.add(cycle.id, e.exercise.id, exercisePayload);
+              });
+            }).catch((e) => {
+              console.error(e);
+            });
         });
+      }).catch(() => {
+        console.error('Something went wrong setting up the routine');
       });
+    },
+    isFieldMissing() {
+      return this.routine.name === null || this.routine.difficulty === null || this.routine.category === null;
     },
     async handleCancelClick() {
       const result = await this.$confirm('Do you really want to exit?', { title: 'WARNING' })

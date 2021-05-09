@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import {ExerciseApi, Exercise, Image} from "../api/exercise";
 import ExerciseStore from "../stores/exerciseStore";
 export default {
   name: "CreateExerciseDialog",
@@ -71,12 +72,20 @@ export default {
   }),
   methods: {
     createExercise() {
-      const newExerciseId = this.exerciseLibrary.length;
-      let newExercise = {id: newExerciseId, name: this.exerciseName, image: this.imageLink};
-      this.exerciseLibrary.push(newExercise);
-      this.$emit('close-create-exercise-dialog', false);
-      this.exerciseName = '';
-      this.imageLink = '';
+      let apiExercise = new Exercise(this.exerciseName, "", "exercise");
+      let apiResponse = ExerciseApi.add(apiExercise);
+      apiResponse.then(exercise => {
+        let image = new Image(this.imageLink);
+        ExerciseApi.addImage(exercise.id, image);
+        let renderExercise = {id: exercise.id, name: this.exerciseName, image: this.imageLink};
+        this.exerciseLibrary.push(renderExercise);
+        this.$emit('close-create-exercise-dialog', false);
+        this.exerciseName = '';
+        this.imageLink = '';
+      }).catch( () => {
+        console.error("Something went wrong creating exercise");
+      });
+
     }
   }
 }

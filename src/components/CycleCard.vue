@@ -31,6 +31,7 @@
       <h3 class="d-inline-block ml-3">CYCLE NAME:</h3>
       <v-text-field
           class="pa-4 d-inline-block mb-0"
+          v-model="cycleName"
           clearable
           flat
           hide-details
@@ -40,6 +41,7 @@
       <h3 class="d-inline-block mr-2">CYCLE REPETITIONS:</h3>
       <v-text-field
           class="reps d-inline-block"
+          v-model="cycleRepetitions"
           outlined
           hide-details
           single-line
@@ -121,9 +123,12 @@ export default {
       }
 
     },
-    getCycleExercises() {
+    getCycle() {
       let index = RoutineStore.cycles.findIndex(c => c.cycle.order === this.identifier);
-      return RoutineStore.cycles[index].cycle.exercises;
+      return RoutineStore.cycles[index];
+    },
+    getCycleExercises() {
+      return this.getCycle().cycle.exercises;
     },
     deleteExercise() {
       this.editDialog = false;
@@ -134,7 +139,6 @@ export default {
     updateExercise() {
       this.editDialog = false;
       let idx = this.getCycleExercises().findIndex(e => e.id === EditStore.currentExercise.id);
-
       this.getCycleExercises()[idx].duration = EditStore.currentExercise.duration;
       this.getCycleExercises()[idx].repetitions = EditStore.currentExercise.repetitions;
       console.log(this.getCycleExercises()[idx]);
@@ -145,6 +149,24 @@ export default {
       this.editDialog = true;
     }
   },
+  computed : {
+    cycleRepetitions: {
+      get: function () {
+        return this.getCycle().cycle.repetitions;
+      },
+      set: function (newValue) {
+        this.getCycle().cycle.repetitions = newValue;
+      }
+    },
+    cycleName: {
+      get: function () {
+        return this.getCycle().cycle.name;
+      },
+      set: function (newValue) {
+        this.getCycle().cycle.name = newValue;
+      }
+    }
+  }
 }
 </script>
 

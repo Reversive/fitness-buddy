@@ -38,7 +38,7 @@ name: "AddExerciseCard",
     return {
       dialog: false,
       renderKey: 0,
-      exerciseCount: 0
+      exerciseCount: 1
 
     }
   },
@@ -48,7 +48,7 @@ name: "AddExerciseCard",
       this.renderKey++;
     },
     sendExerciseToFather(payload) {
-      payload['id'] = this.exerciseCount++;
+      payload['order'] = this.exerciseCount++;
       this.$emit('addExerciseSuccess', payload);
     }
   }

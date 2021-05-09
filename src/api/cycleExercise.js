@@ -1,28 +1,28 @@
 import { Api } from './api.js';
-import {CycleApi} from "./cycle";
 
-export {CycleExercise, Exercise};
+export {CycleExerciseApi, CycleExercise};
 
-class CycleExercise {
-    static url(routine_id, cycle_id) {
-        return `${CycleApi.url(routine_id)}/${cycle_id}/exercises`;
+class CycleExerciseApi {
+    static url(cycle_id) {
+        return `${Api.baseUrl}/cycles/${cycle_id}/exercises`;
     }
 
-    static async add(routine_id, cycle_id, exercise_id, exercise) {
-        return await Api.post(`${CycleExercise.url(routine_id, cycle_id)}/${exercise_id}`, true, exercise);
+    static async add(cycle_id, exercise_id, exercise) {
+        return await Api.post(`${CycleExerciseApi.url(cycle_id)}/${exercise_id}`, true, exercise);
     }
 
-    static async getExercises(routine_id, cycle_id) {
-        return await Api.get(`${CycleExercise.url(routine_id, cycle_id)}`, true, null);
+    static async getExercises(cycle_id) {
+        return await Api.get(`${CycleExerciseApi.url(cycle_id)}`, true, null);
     }
 
-    static async getExerciseById(routine_id, cycle_id, exercise_id) {
-        return await Api.get(`${CycleExercise.url(routine_id, cycle_id)}/${exercise_id}`, true, null);
+    static async getExerciseById(cycle_id, exercise_id) {
+        return await Api.get(`${CycleExerciseApi.url(cycle_id)}/${exercise_id}`, true, null);
     }
+
 }
 
 
-class Exercise {
+class CycleExercise {
     constructor(order, duration , repetitions) {
         this.order = order;
         this.duration = duration;
