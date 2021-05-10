@@ -179,7 +179,7 @@ export default {
         position: "bot",
         timeout: 4500,
         title: "Error",
-        text: "Missing fields, please check routine name, category and difficulty are set.",
+        text: null,
         visible: false
       },
     }
@@ -265,7 +265,8 @@ export default {
       this.$vuetify.goTo(0)
     },
     handleRoutineCreation() {
-      if(this.isFieldMissing()) {
+      if(this.isRoutineFieldMissing()) {
+        this.missingFieldSnackbar.text = this.missingFieldSnackbar.text.slice(0, this.missingFieldSnackbar.text.length - 2);
         this.missingFieldSnackbar.visible = !this.missingFieldSnackbar.visible;
         return;
       }
@@ -290,8 +291,34 @@ export default {
         console.error('Something went wrong setting up the routine');
       });
     },
-    isFieldMissing() {
-      return this.routine.name === null || this.routine.difficulty === null || this.routine.category === null;
+    isRoutineFieldMissing() {
+      this.missingFieldSnackbar.text = "Please fill ";
+      let isMissing = false;
+      if(this.routine.name === null) {
+        this.missingFieldSnackbar.text += "routine name, ";
+        isMissing = true;
+      }
+      if(this.routine.difficulty === null) {
+        this.missingFieldSnackbar.text += "routine difficulty, ";
+        isMissing = true;
+      }
+      if(this.routine.category === null) {
+        this.missingFieldSnackbar.text += "routine category, ";
+        isMissing = true;
+      }
+
+      for(let i = 0; i < this.routine.cycles.length; i++) {
+        let cycle = this.routine.cycles[i].cycle;
+        if(cycle.repetitions === "" || cycle.repetitions === null) {
+          this.missingFieldSnackbar.text += `cycle ${i + 1} repetitions, `;
+          isMissing = true;
+        }
+        if(cycle.name === null) {
+          this.missingFieldSnackbar.text += `cycle ${i + 1} name, `;
+          isMissing = true;
+        }
+      }
+      return isMissing;
     },
     async handleCancelClick() {
       const result = await this.$confirm('Do you really want to exit?', { title: 'WARNING' })
