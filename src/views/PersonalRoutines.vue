@@ -19,6 +19,20 @@
           <RoutinePreviewCard :routine="routine"/>
         </v-row>
       </v-container>
+      <v-snackbar v-model="successSnackbar.visible" :color="successSnackbar.color" :multi-line="successSnackbar.mode === 'multi-line'" :timeout="successSnackbar.timeout" :top="successSnackbar.position === 'top'">
+        <v-layout align-center pr-4>
+          <v-icon class="pr-3" dark large>{{ successSnackbar.icon }}</v-icon>
+          <v-layout column>
+            <div>
+              <strong>{{ successSnackbar.title }}</strong>
+            </div>
+            <div>{{ successSnackbar.text }}</div>
+          </v-layout>
+        </v-layout>
+        <v-btn v-if="successSnackbar.timeout === 0" icon @click="successSnackbar.visible = false">
+          <v-icon>clear</v-icon>
+        </v-btn>
+      </v-snackbar>
     </v-sheet>
   </div>
 </template>
@@ -28,7 +42,7 @@ import RoutinePreviewCard from "../components/RoutinePreviewCard";
 //import {UserApi} from "../api/user";
 import {RoutineApi} from "../api/routine";
 export default {
-
+  props: ['query'],
   name: "PersonalRoutines",
   data: () => {
     return {
@@ -38,15 +52,31 @@ export default {
         duration: '50 minutes',
         muscleGroups: 'Legs, core',
         link: '/profile'
+      },
+      successSnackbar: {
+        color: "success",
+        icon: "mdi-check-circle",
+        mode: "multi-line",
+        position: "bot",
+        timeout: 3500,
+        title: "Success",
+        text: "Success creating a routine.",
+        visible: false
       }
     }
   },
   methods: {
     async retrieveRoutines() {
+      console.log(this.query);
       let myRoutines = RoutineApi.get();
       await myRoutines.then(routines => {
         console.log(routines);
       }).catch((e) => console.error(e));
+    }
+  },
+  mounted() {
+    if(this.query !== undefined) {
+      this.successSnackbar.visible = true;
     }
   },
   components: {RoutinePreviewCard}

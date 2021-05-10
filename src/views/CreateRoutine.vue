@@ -300,9 +300,7 @@ export default {
       }).catch(() => {
         console.error('Something went wrong setting up the routine');
       });
-      this.successSnackbar.visible = true;
-      this.successSnackbar.text = "Routine created successfully";
-      await this.routine.clearRoutine();
+      await this.$router.push({ path: '/personal-routines', query: { q: 'show' } });
     },
     isRoutineFieldMissing() {
       this.missingFieldSnackbar.text = "Please fill ";

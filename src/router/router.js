@@ -8,7 +8,9 @@ const router = new Router({
     routes: [
         { path: '/', component: () => import('../views/Login'), name: 'login' },
         { path: '/profile', component: () => import('../views/Profile'), meta: {requiresLogin: true} },
-        { path: '/personal-routines', component: () => import('../views/PersonalRoutines'), meta: {requiresLogin: true} },
+        { path: '/personal-routines', component: () => import('../views/PersonalRoutines'),
+            meta: {requiresLogin: true},
+            props: route => ({ query: route.query.q }) },
         { path: '/community-routines', component: () => import('../views/CommunityRoutines'), meta: {requiresLogin: true} },
         { path: '/create-routine', component: () => import('../views/CreateRoutine'), meta: {requiresLogin: true}},
     ]
