@@ -22,29 +22,9 @@
         width="100%"
     >
     <v-container>
-      <div>
-        <h2 class="text-left pt-2 d-inline-block" style="color: white">
-          <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-text</v-icon>ROUTINE CREATION
-        </h2>
-        <span class="float-right d-inline-block mt-1">
-          <v-btn
-              depressed
-              color="error"
-              @click="handleCancelClick"
-              class="font-weight-bold mr-5"
-          >
-      CANCEL
-    </v-btn>
-          <v-btn
-              depressed
-              color="success"
-              class="font-weight-bold mr-5"
-              @click="handleRoutineCreation"
-          >
-      CREATE ROUTINE
-    </v-btn>
-        </span>
-      </div>
+    <h2 class="text-left pt-2 d-inline-block" style="color: white">
+      <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-text</v-icon>ROUTINE CREATION
+    </h2>
 
     <v-text-field
         v-model="routine.name"
@@ -56,36 +36,25 @@
         hide-details
     />
     </v-container>
-    <div v-for="cycle_type in types.cycleTypes" :key="cycle_type.name" class="mt-0">
-      <CCycleCardTitle :text="cycle_type.name" :icon="cycle_type.icon" />
-      <div v-for="c in routine.cycles" :key="c.cycle.order" >
-        <CCycleCard   v-if="c.cycle.type === cycle_type"
-                      :identifier="c.cycle.order"
-                      v-on:cycleTrashClicked="removeSection"
-                      />
-      </div>
-      <CAddCycleCard @addCyclePressed="addCycle(cycle_type)"/>
-    </div>
+      <v-container class="mt-2">
 
-    <v-container class="mt-2">
+        <h3 class="white--text d-inline-block">
+          SELECT CATEGORY:
+        </h3>
+        <v-autocomplete
+            :items="types.categories"
+            v-model="routine.category"
+            class="white--text d-inline-block ml-2"
+            full-width
+            deletable-chips
+            hide-details
+            hide-no-data
+            hide-selected
+            outlined
+            single-line
+        ></v-autocomplete>
 
-    <h3 class="white--text d-inline-block">
-    SELECT CATEGORY:
-    </h3>
-    <v-autocomplete
-        :items="types.categories"
-        v-model="routine.category"
-        class="white--text d-inline-block ml-2"
-        full-width
-        deletable-chips
-        hide-details
-        hide-no-data
-        hide-selected
-        outlined
-        single-line
-    ></v-autocomplete>
-
-    <span class="pl-2 float-right mr-5 ">
+        <span class="pl-2 float-right mr-5 ">
         <h3 class="white--text text-right d-inline-block">
           SELECT DIFFICULTY:
         </h3>
@@ -101,19 +70,51 @@
             single-line
         />
     </span>
+      </v-container>
+    <div v-for="cycle_type in types.cycleTypes" :key="cycle_type.name" class="mt-0">
+      <CCycleCardTitle :text="cycle_type.name" :icon="cycle_type.icon" />
+      <div v-for="c in routine.cycles" :key="c.cycle.order" >
+        <CCycleCard   v-if="c.cycle.type === cycle_type"
+                      :identifier="c.cycle.order"
+                      v-on:cycleTrashClicked="removeSection"
+                      />
+      </div>
+      <CAddCycleCard @addCyclePressed="addCycle(cycle_type)"/>
+    </div>
+    <v-container class="mb-5">
+      <span class="float-right d-inline-block">
+          <v-btn
+              depressed
+              color="error"
+              @click="handleCancelClick"
+              class="font-weight-bold mr-5 rounded-pill"
+          >
+            CANCEL
+          </v-btn>
+          <v-btn
+              depressed
+              color="success"
+              class="font-weight-bold rounded-pill"
+              @click="handleRoutineCreation"
+          >
+            CREATE ROUTINE
+          </v-btn>
+      </span>
+
     </v-container>
+
     </v-sheet>
-    <v-snackbar v-model="cycleSuccessDeleteSnackbar.visible" :color="cycleSuccessDeleteSnackbar.color" :multi-line="cycleSuccessDeleteSnackbar.mode === 'multi-line'" :timeout="cycleSuccessDeleteSnackbar.timeout" :top="cycleSuccessDeleteSnackbar.position === 'top'">
+    <v-snackbar v-model="successSnackbar.visible" :color="successSnackbar.color" :multi-line="successSnackbar.mode === 'multi-line'" :timeout="successSnackbar.timeout" :top="successSnackbar.position === 'top'">
       <v-layout align-center pr-4>
-        <v-icon class="pr-3" dark large>{{ cycleSuccessDeleteSnackbar.icon }}</v-icon>
+        <v-icon class="pr-3" dark large>{{ successSnackbar.icon }}</v-icon>
         <v-layout column>
           <div>
-            <strong>{{ cycleSuccessDeleteSnackbar.title }}</strong>
+            <strong>{{ successSnackbar.title }}</strong>
           </div>
-          <div>{{ cycleSuccessDeleteSnackbar.text }}</div>
+          <div>{{ successSnackbar.text }}</div>
         </v-layout>
       </v-layout>
-      <v-btn v-if="cycleSuccessDeleteSnackbar.timeout === 0" icon @click="cycleSuccessDeleteSnackbar.visible = false">
+      <v-btn v-if="successSnackbar.timeout === 0" icon @click="successSnackbar.visible = false">
         <v-icon>clear</v-icon>
       </v-btn>
     </v-snackbar>
@@ -162,14 +163,14 @@ export default {
       types : TypeStore,
       fab: false,
       routine: RoutineStore,
-      cycleSuccessDeleteSnackbar: {
+      successSnackbar: {
         color: "success",
         icon: "mdi-check-circle",
         mode: "multi-line",
         position: "bot",
         timeout: 3500,
         title: "Success",
-        text: "Cycle deleted successfully.",
+        text: null,
         visible: false
       },
       missingFieldSnackbar: {
@@ -183,6 +184,9 @@ export default {
         visible: false
       },
     }
+  },
+  destroyed() {
+    RoutineStore.clearRoutine();
   },
   async mounted() {
     CategoryApi.get().then(response => {
@@ -252,7 +256,8 @@ export default {
       this.routine.cycles.forEach((c, i) => c.cycle.order = i + 1);
     },
     removeSection(order) {
-      this.cycleSuccessDeleteSnackbar.visible = true;
+      this.successSnackbar.text = "Cycle deleted successfully.";
+      this.successSnackbar.visible = true;
       let index = this.routine.cycles.findIndex(c => c.cycle.order === order);
       this.routine.cycles.splice(index, 1);
     },
@@ -290,6 +295,7 @@ export default {
       }).catch(() => {
         console.error('Something went wrong setting up the routine');
       });
+      this.$router.push('/personal-routines');
     },
     isRoutineFieldMissing() {
       this.missingFieldSnackbar.text = "Please fill ";
@@ -324,7 +330,6 @@ export default {
       const result = await this.$confirm('Do you really want to exit?', { title: 'WARNING' })
       if (result) {
         await this.$router.push('/personal-routines');
-        RoutineStore.clearRoutine();
       }
     }
   }

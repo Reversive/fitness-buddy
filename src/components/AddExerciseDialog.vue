@@ -8,7 +8,7 @@
         <v-btn
           depressed
           color="success"
-          class="ma-4 font-weight-bold"
+          class="ma-4 font-weight-bold rounded-pill"
           @click="addExerciseClicked"
       >
       ADD TO CYCLE
