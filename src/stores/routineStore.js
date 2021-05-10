@@ -7,7 +7,7 @@ const RoutineStore = {
 
     clearRoutine() {
         this.id = null;
-        this.categories = null;
+        this.category = null;
         this.name = null;
         this.difficulty = null;
         this.cycles = [];

@@ -269,14 +269,20 @@ export default {
     toTop () {
       this.$vuetify.goTo(0)
     },
-    handleRoutineCreation() {
+    getRoutineCategory() {
+      let categoryIdx = TypeStore.categories.findIndex(e => e.text === this.routine.category);
+      return TypeStore.categories[categoryIdx];
+    },
+    printError() {
+      this.missingFieldSnackbar.text = this.missingFieldSnackbar.text.slice(0, this.missingFieldSnackbar.text.length - 2);
+      this.missingFieldSnackbar.visible = !this.missingFieldSnackbar.visible;
+    },
+    async handleRoutineCreation() {
       if(this.isRoutineFieldMissing()) {
-        this.missingFieldSnackbar.text = this.missingFieldSnackbar.text.slice(0, this.missingFieldSnackbar.text.length - 2);
-        this.missingFieldSnackbar.visible = !this.missingFieldSnackbar.visible;
+        this.printError();
         return;
       }
-      let categoryIdx = TypeStore.categories.findIndex(e => e.text === this.routine.category);
-      let category = TypeStore.categories[categoryIdx];
+      let category = this.getRoutineCategory();
       let routinePayload = new Routine(this.routine.name, "", true, this.routine.difficulty.toLowerCase(), category.id);
       let routineResponse = RoutineApi.add(routinePayload);
       routineResponse.then(routine => {
@@ -286,7 +292,8 @@ export default {
             cycleResponse.then(cycle => {
               c.cycle.exercises.forEach(e => {
                 let exercisePayload = new CycleExercise(e.order, parseInt(e.duration), parseInt(e.repetitions));
-                CycleExerciseApi.add(cycle.id, e.exercise.id, exercisePayload);
+                let exerciseResponse = CycleExerciseApi.add(cycle.id, e.exercise.id, exercisePayload);
+                exerciseResponse.then(exercises => console.log(exercises));
               });
             }).catch((e) => {
               console.error(e);
@@ -295,7 +302,9 @@ export default {
       }).catch(() => {
         console.error('Something went wrong setting up the routine');
       });
-      this.$router.push('/personal-routines');
+      this.successSnackbar.visible = true;
+      this.successSnackbar.text = "Routine created successfully";
+      //this.routine.clearRoutine(); Si saco este comentario no llega a llamar a la api, rarisimo..
     },
     isRoutineFieldMissing() {
       this.missingFieldSnackbar.text = "Please fill ";
@@ -331,6 +340,7 @@ export default {
       if (result) {
         await this.$router.push('/personal-routines');
       }
+
     }
   }
 
