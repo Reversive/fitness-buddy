@@ -285,7 +285,7 @@ export default {
       let category = this.getRoutineCategory();
       let routinePayload = new Routine(this.routine.name, "", true, this.routine.difficulty.toLowerCase(), category.id);
       let routineResponse = RoutineApi.add(routinePayload);
-      routineResponse.then(routine => {
+      await routineResponse.then(routine => {
         this.routine.cycles.forEach(c => {
             let cyclePayload = new Cycle(c.cycle.name, "", c.cycle.type.name.toLowerCase(), c.cycle.order, parseInt(c.cycle.repetitions));
             let cycleResponse = CycleApi.add(routine.id, cyclePayload);
@@ -304,7 +304,7 @@ export default {
       });
       this.successSnackbar.visible = true;
       this.successSnackbar.text = "Routine created successfully";
-      //this.routine.clearRoutine(); Si saco este comentario no llega a llamar a la api, rarisimo..
+      await this.routine.clearRoutine();
     },
     isRoutineFieldMissing() {
       this.missingFieldSnackbar.text = "Please fill ";
