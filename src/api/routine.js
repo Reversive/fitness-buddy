@@ -11,8 +11,12 @@ class RoutineApi {
         return await Api.post(RoutineApi.url, true, routine);
     }
 
-    static async get(routine_id) {
+    static async getById(routine_id) {
         return await Api.get(`${RoutineApi.url}/${routine_id}`, true, null);
+    }
+
+    static async get() {
+        return await Api.get(`${RoutineApi.url}`, true, null);
     }
 }
 

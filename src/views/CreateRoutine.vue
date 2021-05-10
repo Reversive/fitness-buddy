@@ -183,6 +183,7 @@ export default {
         text: null,
         visible: false
       },
+      cycleNumber: 1,
     }
   },
   destroyed() {
@@ -244,16 +245,13 @@ export default {
         name: "NEW CYCLE",
         type: cycle_type,
         position: 0,
+        order: this.cycleNumber++,
         repetitions: 1,
         exercises: []
       };
       let index = this.routine.cycles.reverse().findIndex(c => c.cycle.type === cycle_type);
       this.routine.cycles.splice(index, 0, ({cycle: cycle, exists: false}));
       this.routine.cycles.reverse();
-      this.sortCycles();
-    },
-    sortCycles() {
-      this.routine.cycles.forEach((c, i) => c.cycle.order = i + 1);
     },
     removeSection(order) {
       this.successSnackbar.text = "Cycle deleted successfully.";

@@ -26,6 +26,10 @@ class UserApi {
         const payload = new ResendVerification(email);
         return await  Api.post(`${UserApi.url}/resend_verification`, false, payload);
     }
+
+    static async getRoutines() {
+        return await Api.get(`${UserApi.url}/current/routines`, true, null);
+    }
 }
 
 class Credentials {

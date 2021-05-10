@@ -6,6 +6,7 @@
         elevation="15"
         width="100%"
     >
+      <v-btn @click="retrieveRoutines" class="ml-5">Test get rutinas</v-btn>
       <h2 class="text-left ml-5 pt-5 d-inline-block" style="color: white">
         <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-account-outline</v-icon>MY ROUTINES
       </h2>
@@ -23,9 +24,11 @@
 </template>
 
 <script>
-import RoutinePreviewCard from "@/components/RoutinePreviewCard";
-
+import RoutinePreviewCard from "../components/RoutinePreviewCard";
+//import {UserApi} from "../api/user";
+import {RoutineApi} from "../api/routine";
 export default {
+
   name: "PersonalRoutines",
   data: () => {
     return {
@@ -36,6 +39,14 @@ export default {
         muscleGroups: 'Legs, core',
         link: '/profile'
       }
+    }
+  },
+  methods: {
+    async retrieveRoutines() {
+      let myRoutines = RoutineApi.get();
+      await myRoutines.then(routines => {
+        console.log(routines);
+      }).catch((e) => console.error(e));
     }
   },
   components: {RoutinePreviewCard}
