@@ -15,8 +15,8 @@ class RoutineApi {
         return await Api.get(`${RoutineApi.url}/${routine_id}`, true, null);
     }
 
-    static async get() {
-        return await Api.get(`${RoutineApi.url}`, true, null);
+    static async get(params) {
+        return await Api.get(`${RoutineApi.url}?${new URLSearchParams(params).toString()}`, true, null);
     }
 
     static async delete(routine_id) {

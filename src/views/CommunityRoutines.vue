@@ -10,7 +10,7 @@
         <v-icon large color="white" class="pr-3 mb-1" >mdi-account-group</v-icon>COMMUNITY ROUTINES
       </h2>
       <v-container fill-height>
-        <v-layout row wrap align-center>
+        <v-layout row wrap align-center style="position: relative">
           <v-flex class="text-left ml-5">
             <v-select
                 :items="searchFilter"
@@ -35,9 +35,10 @@
                   />
             </span>
           </v-flex>
-          <v-row class="justify-space-between fullWidth">
+          <v-row class="justify-space-between fullWidth mb-10">
             <RoutinePreviewCard v-for="routine in routines" :key="routine.id" :routine="routine"/>
           </v-row>
+          <v-btn v-if="showLoadMore" v-on:click="getRoutines" style="position: absolute; right: 0; bottom: 0">Load More</v-btn>
         </v-layout>
       </v-container>
 
@@ -60,27 +61,39 @@ export default {
       searchTerm: null,
       searchFilter: ['AUTHOR', 'NAME'],
       filteredRoutines: [],
-      model: null
+      model: null,
+      page: 0,
+      showLoadMore: false,
+      pageSize: 13
     }
   },
   created() {
-    RoutineApi.get().then((results) => {
-      for (let i = 0; i < results.content.length; i++) {
-        const result = results.content[i];
-        console.log(result);
-        this.routines.push({
-          id: result.id,
-          title: result.name,
-          target: result.category.name.toLowerCase(),
-          difficulty: result.difficulty,
-          link: '/profile',
-          username: result.user.username
-        });
-      }
-    }).catch((e) => {
-      console.log(e);
-      this.$router.push('/login');
-    });
+    this.routines = [];
+    this.page = 0;
+    this.getRoutines();
+  },
+  methods: {
+    getRoutines() {
+      RoutineApi.get({page: this.page, size: this.pageSize}).then((results) => {
+        this.showLoadMore = !(results.content.length === 0 || results.content.length < this.pageSize);
+        for (let i = 0; i < results.content.length; i++) {
+          const result = results.content[i];
+          console.log(result);
+          this.routines.push({
+            id: result.id,
+            title: result.name,
+            target: result.category.name.toLowerCase(),
+            difficulty: result.difficulty,
+            link: '/profile',
+            username: result.user.username
+          });
+        }
+        this.page++;
+      }).catch((e) => {
+        console.log(e);
+        this.$router.push('/login');
+      });
+    }
   },
   components: {
     RoutinePreviewCard

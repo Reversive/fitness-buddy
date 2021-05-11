@@ -33,8 +33,8 @@
 
 <script>
 import RoutinePreviewCard from "../components/RoutinePreviewCard";
-import {UserApi} from "../api/user";
-import {RoutineApi} from "../api/routine";
+import {UserApi} from "@/api/user";
+import {RoutineApi} from "@/api/routine";
 
 export default {
   props: ['query'],
@@ -55,12 +55,6 @@ export default {
     }
   },
   methods: {
-    async retrieveRoutines() {
-      let myRoutines = UserApi.getRoutines();
-      await myRoutines.then(routines => {
-        console.log(routines);
-      }).catch((e) => console.error(e));
-    },
     async deleteRoutine(routineId) {
       let deleteResponse = RoutineApi.delete(routineId);
       await deleteResponse.then(() => {
