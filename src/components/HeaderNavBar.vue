@@ -35,7 +35,6 @@ export default {
         {caption: "MY ROUTINES", title: "Go to the Personal Routines Page", icon: "mdi-clipboard-account-outline", route: "/personal-routines"},
         {caption: "", title: "Go to the Profile Page", route: "/profile", icon: "mdi-account-circle",
           sub_menu_items: [
-            {id: 2, caption: "CREATE ROUTINE", title: "Go to the Create Routine Page", icon: "mdi-clipboard-text", route: "/create-routine"},
             {id: 3, caption: "MY PROFILE", title: "Go to My Profile", icon: "mdi-card-account-details", route: "/profile"},
             {id: 4, caption: "LOG OUT", title: "Log Out", icon: "mdi-logout", route: "/"}
 

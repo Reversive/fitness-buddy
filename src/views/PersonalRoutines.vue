@@ -8,7 +8,7 @@
         <h2 class="text-left ml-5 pt-5 white--text d-inline-block">
           <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-account-outline</v-icon>MY ROUTINES
         </h2>
-      <v-btn class="rounded-pill createBtn" @click="$router.push('/create-routine')">CREATE ROUTINE</v-btn>
+      <v-btn class="rounded-pill createBtn font-weight-bold" color="success" @click="$router.push('/create-routine')">CREATE ROUTINE</v-btn>
       <v-container fill-height>
         <Routines v-bind:routines="routines" v-bind:showLoadMore="showLoadMore" :getRoutines="getRoutines" :deleteRoutine="deleteRoutine"/>
       </v-container>
