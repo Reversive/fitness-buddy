@@ -12,15 +12,28 @@
                 :rules="nameRules"
                 label="Exercise Title"
                 required
-            ></v-text-field>
-
-
+            />
+            <v-textarea
+                v-model="exerciseDetail"
+                :rules="nameRules"
+                maxlength="50"
+                single-line
+                counter
+                label="Exercise Detail"
+                required
+            />
             <v-text-field
                 v-model="imageLink"
-                :rules="exerciseImageLink"
+                :rules="nameRules"
                 label="Image Link"
                 required
-            ></v-text-field>
+            />
+            <v-text-field
+                v-model="videoLink"
+                :rules="nameRules"
+                label="Video Link"
+                required
+            />
       </v-container>
     </v-form>
 
@@ -51,7 +64,7 @@
 </template>
 
 <script>
-import {ExerciseApi, Exercise, Image} from "../api/exercise";
+import {ExerciseApi, Exercise, Image, Video} from "../api/exercise";
 import ExerciseStore from "../stores/exerciseStore";
 export default {
   name: "CreateExerciseDialog",
@@ -62,22 +75,24 @@ export default {
     vertical: true,
     exerciseLibrary: ExerciseStore.exercises,
     exerciseName: '',
-    nameRules: [
-      v => !!v || 'Exercise name is required',
-    ],
+    exerciseDetail: '',
+    videoLink: '',
     imageLink: '',
-    exerciseImageLink: [
-      v => !!v || 'Image Link is required',
+    nameRules: [
+      v => !!v || 'This field is required',
     ],
+
   }),
   methods: {
     createExercise() {
-      let apiExercise = new Exercise(this.exerciseName, "", "exercise");
+      let apiExercise = new Exercise(this.exerciseName, this.exerciseDetail, "exercise");
       let apiResponse = ExerciseApi.add(apiExercise);
       apiResponse.then(exercise => {
         let image = new Image(this.imageLink);
         ExerciseApi.addImage(exercise.id, image);
-        let renderExercise = {id: exercise.id, name: this.exerciseName, image: this.imageLink};
+        let video = new Video(this.videoLink);
+        ExerciseApi.addVideo(exercise.id, video);
+        let renderExercise = {id: exercise.id, name: this.exerciseName, image: this.imageLink, video: this.videoLink};
         this.exerciseLibrary.push(renderExercise);
         this.$emit('close-create-exercise-dialog', false);
         this.exerciseName = '';

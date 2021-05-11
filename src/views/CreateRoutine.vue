@@ -146,7 +146,7 @@ import TypeStore from "../stores/typeStore";
 import {CategoryApi, Category} from "../api/category";
 import {Routine, RoutineApi} from "../api/routine";
 import {Cycle, CycleApi} from "../api/cycle";
-import {ExerciseApi, Exercise, Image} from "../api/exercise";
+import {ExerciseApi, Exercise, Image, Video} from "../api/exercise";
 import {CycleExerciseApi, CycleExercise} from "../api/cycleExercise";
 
 
@@ -216,6 +216,8 @@ export default {
             e.id = exercise.id;
             let image = new Image(e.image);
             ExerciseApi.addImage(e.id, image);
+            let video = new Video(e.video);
+            ExerciseApi.addVideo(e.id, video);
           });
 
         });
