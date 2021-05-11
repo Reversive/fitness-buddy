@@ -1,9 +1,10 @@
 <template>
-  <div class="centered" v-bind:class="{hidden: !editing}" >
+  <div class="centered" v-if="editing" >
     <div class="input-div">
-      <v-text-field v-bind:disabled="!editing" :value="input_value"
+      <v-text-field :value="input_value"
                     v-bind:label="single?'':input_label" :type="input_type"
                     v-on:keyup.native="$emit('change', $event.target.value)"
+                    v-on:mouseup.native="$emit('change', $event.target.value)"
                     :single-line="single" :dense="single" dark/>
     </div>
   </div>
@@ -22,9 +23,6 @@ export default {
 </script>
 
 <style scoped>
-.hidden {
-  display: none !important;
-}
 
 .centered {
   display: flex;
@@ -37,4 +35,5 @@ export default {
 .input-div {
   width: 40%;
 }
+
 </style>

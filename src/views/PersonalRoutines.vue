@@ -4,19 +4,13 @@
         class="rounded-lg pb-5"
         color="#6F2DBD"
         elevation="15"
-        width="100%"
-    >
-      <v-btn @click="retrieveRoutines" class="ml-5">Test get rutinas</v-btn>
+        width="100%">
       <h2 class="text-left ml-5 pt-5 d-inline-block" style="color: white">
         <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-account-outline</v-icon>MY ROUTINES
       </h2>
       <v-container fill-height>
         <v-row class="justify-space-between">
-          <RoutinePreviewCard :routine="routine"/>
-          <RoutinePreviewCard :routine="routine"/>
-          <RoutinePreviewCard :routine="routine"/>
-          <RoutinePreviewCard :routine="routine"/>
-          <RoutinePreviewCard :routine="routine"/>
+          <RoutinePreviewCard v-for="routine in routines" :key="routine.id" :routine="routine"/>
         </v-row>
       </v-container>
       <v-snackbar v-model="successSnackbar.visible" :color="successSnackbar.color" :multi-line="successSnackbar.mode === 'multi-line'" :timeout="successSnackbar.timeout" :top="successSnackbar.position === 'top'">
@@ -40,18 +34,14 @@
 <script>
 import RoutinePreviewCard from "../components/RoutinePreviewCard";
 import {UserApi} from "../api/user";
+
+
 export default {
   props: ['query'],
   name: "PersonalRoutines",
   data: () => {
     return {
-      routine: {
-        title: 'Personal Routine 1',
-        target: 'Weight loss',
-        duration: '50 minutes',
-        muscleGroups: 'Legs, core',
-        link: '/profile'
-      },
+      routines: [],
       successSnackbar: {
         color: "success",
         icon: "mdi-check-circle",
@@ -71,6 +61,23 @@ export default {
         console.log(routines);
       }).catch((e) => console.error(e));
     }
+  },
+  created() {
+    UserApi.getRoutines().then((results) => {
+      for (let i = 0; i < results.content.length; i++) {
+        const result = results.content[i];
+        this.routines.push({
+          id: result.id,
+          title: result.name,
+          target: result.category.name.toLowerCase(),
+          difficulty: result.difficulty,
+          link: '/profile'
+        });
+      }
+    }).catch((e) => {
+      console.log(e);
+      this.$router.push('/login');
+    });
   },
   mounted() {
     if(this.query !== undefined) {

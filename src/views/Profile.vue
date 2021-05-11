@@ -5,7 +5,7 @@
         <v-progress-circular indeterminate size="64"/>
       </v-overlay>
       <div class="profile-edit-buttons">
-        <v-btn class="red white--text rounded-pill mr-3" v-bind:class="{hidden: !isEditing}" @click="cancelEdit">CANCEL</v-btn>
+        <v-btn class="red white--text rounded-pill mr-3" v-if="isEditing" @click="cancelEdit">CANCEL</v-btn>
         <v-btn class="grey--text rounded-pill" @click="toggleEdit">{{ btnText }}</v-btn>
       </div>
       <v-row class="pa-6" justify="center">
@@ -13,29 +13,29 @@
           <v-img src="profile-placeholder.png" alt="Profile picture" width="128px" height="128px" contain/>
         </v-card>
       </v-row>
-      <v-card-title class="white--text font-weight-bold text-uppercase" v-bind:class="{hidden: isEditing}">{{ name }}</v-card-title>
+      <v-card-title class="white--text font-weight-bold text-uppercase" v-if="!isEditing">{{ name }}</v-card-title>
       <ProfileInput v-model="name" v-bind:editing="isEditing" input_label="name"/>
-      <v-card-text class="white--text font-weight-bold text-uppercase" v-bind:class="{hidden: isEditing}">{{ email }}</v-card-text>
-      <v-card-text class="white--text font-weight-bold text-uppercase" v-bind:class="{hidden: isEditing}">{{ replaceNull(gender) }}</v-card-text>
-      <div class="centered" v-bind:class="{hidden: !isEditing}">
+      <v-card-text class="white--text font-weight-bold text-uppercase" v-if="!isEditing">{{ email }}</v-card-text>
+      <v-card-text class="white--text font-weight-bold text-uppercase" v-if="!isEditing">{{ replaceNull(gender) }}</v-card-text>
+      <div class="centered"  v-if="isEditing">
         <div class="input-div">
-          <v-select :items="genders" v-on:change="updateGender" v-bind:value="gender" v-bind:disabled="!isEditing" single-line dense dark/>
+          <v-select :items="genders" v-on:change="updateGender" v-bind:value="gender" single-line dense dark/>
         </div>
       </div>
       <v-row cols="12" class="mt-6" justify="space-between">
         <v-col cols="3">
           <span class="white--text font-weight-bold text-uppercase">Age</span><br>
-          <span class="white--text font-weight-bold text-uppercase" v-bind:class="{hidden: isEditing}">{{ replaceNull(age) }}</span>
+          <span class="white--text font-weight-bold text-uppercase"  v-if="!isEditing">{{ replaceNull(age) }}</span>
           <ProfileInput v-model="age" v-bind:editing="isEditing" input_type="number" :single="true"/>
         </v-col>
         <v-col cols="3">
           <span class="white--text font-weight-bold text-uppercase">Height</span><br>
-          <span class="white--text font-weight-bold text-uppercase" v-bind:class="{hidden: isEditing}">{{ replaceNull(height) }}cm</span>
+          <span class="white--text font-weight-bold text-uppercase"  v-if="!isEditing">{{ replaceNull(height) }}cm</span>
           <ProfileInput v-model="height" v-bind:editing="isEditing" input_type="number" :single="true"/>
         </v-col>
         <v-col cols="3">
           <span class="white--text font-weight-bold text-uppercase">Weight</span><br>
-          <span class="white--text font-weight-bold text-uppercase" v-bind:class="{hidden: isEditing}">{{ replaceNull(weight) }}kg</span>
+          <span class="white--text font-weight-bold text-uppercase"  v-if="!isEditing">{{ replaceNull(weight) }}kg</span>
           <ProfileInput v-model="weight" v-bind:editing="isEditing" input_type="number" :single="true"/>
         </v-col>
       </v-row>
@@ -139,10 +139,6 @@ export default {
 }
 </script>
 <style scoped>
-
-.hidden {
-  display: none !important;
-}
 
 .centered {
   display: flex;

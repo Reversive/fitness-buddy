@@ -11,31 +11,33 @@
       </h2>
       <v-container fill-height>
         <v-layout row wrap align-center>
-        <v-flex class="text-left ml-5">
-
-        <v-select
-            :items="searchFilter"
-            v-model="sortBy"
-            item-color="primary"
-            dark
-            label="SEARCH BY"
-            class="sort-by-px mt-5 d-inline-block white--text"
-            color="white"
-            dense
-            outlined
-        />
-        <span>
-          <v-text-field
-              class="d-inline-block ml-3 search-bar"
-              dark
-              label="SEARCH"
-              v-model="searchTerm"
-              append-icon="mdi-magnify"
-              out
-              color="white"
-              ></v-text-field>
-        </span>
-        </v-flex>
+          <v-flex class="text-left ml-5">
+            <v-select
+                :items="searchFilter"
+                v-model="sortBy"
+                item-color="primary"
+                dark
+                label="SEARCH BY"
+                class="sort-by-px mt-5 d-inline-block white--text"
+                color="white"
+                dense
+                outlined
+            />
+            <span>
+              <v-text-field
+                  class="d-inline-block ml-3 search-bar"
+                  dark
+                  label="SEARCH"
+                  v-model="searchTerm"
+                  append-icon="mdi-magnify"
+                  out
+                  color="white"
+                  />
+            </span>
+          </v-flex>
+          <v-row class="justify-space-between fullWidth">
+            <RoutinePreviewCard v-for="routine in routines" :key="routine.id" :routine="routine"/>
+          </v-row>
         </v-layout>
       </v-container>
 
@@ -46,10 +48,14 @@
 
 <script>
 
+import {RoutineApi} from "@/api/routine";
+import RoutinePreviewCard from "@/components/RoutinePreviewCard";
+
 export default {
   name: "CommunityRoutines",
   data: () => {
     return {
+      routines: [],
       sortBy: null,
       searchTerm: null,
       searchFilter: ['AUTHOR', 'NAME'],
@@ -57,7 +63,27 @@ export default {
       model: null
     }
   },
+  created() {
+    RoutineApi.get().then((results) => {
+      for (let i = 0; i < results.content.length; i++) {
+        const result = results.content[i];
+        console.log(result);
+        this.routines.push({
+          id: result.id,
+          title: result.name,
+          target: result.category.name.toLowerCase(),
+          difficulty: result.difficulty,
+          link: '/profile',
+          username: result.user.username
+        });
+      }
+    }).catch((e) => {
+      console.log(e);
+      this.$router.push('/login');
+    });
+  },
   components: {
+    RoutinePreviewCard
   }
 }
 </script>
@@ -69,6 +95,10 @@ export default {
 
 .search-bar {
   width: 400px;
+}
+
+.fullWidth {
+  width: 100%;
 }
 
 
