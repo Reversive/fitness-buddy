@@ -125,7 +125,7 @@
                       v-on:cycleTrashClicked="removeSection"
                       />
       </div>
-      <CAddCycleCard v-if="!isDetail()" @addCyclePressed="addCycle(cycle_type)"/>
+      <CAddCycleCard v-if="!isDetail() && cycle_type.name === 'EXERCISE'" @addCyclePressed="addCycle(cycle_type)"/>
     </div>
     <v-container class="mb-5">
       <span class="float-right d-inline-block">
@@ -305,6 +305,21 @@ export default {
     }).catch(() => {
       console.error('Something went wrong setting up exercises');
     });
+
+    if(!this.isEditing() && !this.isDetail()) {
+      for(let i = 0; i < 3; i++) {
+        let localCycle = {
+          name: "NEW CYCLE",
+          type: TypeStore.cycleTypes[i],
+          order: this.cycleNumber++,
+          repetitions: 1,
+          exercises: []
+        };
+        this.routine.cycles.push({cycle: localCycle});
+      }
+
+
+    }
 
     if(this.isEditing() || this.isDetail()) {
       await this.fillRoutineData();
