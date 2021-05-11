@@ -1,10 +1,10 @@
 <template>
-  <v-card width="21%" elevation="0" class="purple--text text--darken-4 my-4">
+  <v-card width="21%" elevation="0" class="purple--text text--darken-4 my-4" @click="expandDetails">
     <div v-if="!routine.username" class="editBtn">
-      <v-btn fab x-small elevation="0" color="transparent" @click="editRoutine">
+      <v-btn fab x-small elevation="0" color="transparent" @click.stop="editRoutine">
         <v-icon class="purple--text text--darken-4 big-text">mdi-pencil</v-icon>
       </v-btn>
-      <v-btn fab x-small elevation="0" color="transparent" @click="deleteRoutine">
+      <v-btn fab x-small elevation="0" color="transparent" @click.stop="deleteRoutine">
         <v-icon class="red--text big-text">mdi-trash-can-outline</v-icon>
       </v-btn>
     </div>
@@ -15,7 +15,7 @@
       <RoutineCardItem icon="mdi-bullseye" :text="routine.target"/>
       <RoutineCardItem icon="mdi-speedometer" :text="routine.difficulty"/>
     </div>
-    <v-btn @click="expandDetails">More Details</v-btn>
+    <!--<v-btn @click="expandDetails">More Details</v-btn>-->
     <span v-if="routine.username" class="username">by: {{routine.username}}</span>
   </v-card>
 </template>

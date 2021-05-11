@@ -1,17 +1,16 @@
 <template>
   <div class="my-6 mx-15">
     <v-sheet
-        class="rounded-lg pb-5"
+        class="rounded-lg pb-5 p-relative"
         color="#6F2DBD"
         elevation="15"
         width="100%">
-      <h2 class="text-left ml-5 pt-5 d-inline-block" style="color: white">
-        <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-account-outline</v-icon>MY ROUTINES
-      </h2>
+        <h2 class="text-left ml-5 pt-5 white--text d-inline-block">
+          <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-account-outline</v-icon>MY ROUTINES
+        </h2>
+      <v-btn class="rounded-pill createBtn" @click="$router.push('/create-routine')">CREATE ROUTINE</v-btn>
       <v-container fill-height>
-        <v-row class="justify-space-between">
-          <RoutinePreviewCard v-for="routine in routines" :key="routine.id" :routine="routine" @onDeleteRoutine="deleteRoutine"/>
-        </v-row>
+        <Routines v-bind:routines="routines" v-bind:showLoadMore="showLoadMore" :getRoutines="getRoutines" :deleteRoutine="deleteRoutine"/>
       </v-container>
       <v-snackbar v-model="successSnackbar.visible" :color="successSnackbar.color" :multi-line="successSnackbar.mode === 'multi-line'" :timeout="successSnackbar.timeout" :top="successSnackbar.position === 'top'">
         <v-layout align-center pr-4>
@@ -32,9 +31,10 @@
 </template>
 
 <script>
-import RoutinePreviewCard from "../components/RoutinePreviewCard";
+//import RoutinePreviewCard from "../components/RoutinePreviewCard";
 import {UserApi} from "@/api/user";
 import {RoutineApi} from "@/api/routine";
+import Routines from "@/components/Routines";
 
 export default {
   props: ['query'],
@@ -42,6 +42,9 @@ export default {
   data: () => {
     return {
       routines: [],
+      pageSize: 3,
+      page: 0,
+      showLoadMore: false,
       successSnackbar: {
         color: "success",
         icon: "mdi-check-circle",
@@ -50,7 +53,7 @@ export default {
         timeout: 3500,
         title: "Success",
         text: null,
-        visible: false
+        visible: false,
       }
     }
   },
@@ -63,6 +66,25 @@ export default {
       });
       this.successSnackbar.text = "Success deleting routine.";
       this.successSnackbar.visible = true;
+    },
+    getRoutines() {
+      UserApi.getRoutines({page: this.page, size: this.pageSize}).then((results) => {
+        this.showLoadMore = !(results.content.length === 0 || results.content.length < this.pageSize);
+        for (let i = 0; i < results.content.length; i++) {
+          const result = results.content[i];
+          this.routines.push({
+            id: result.id,
+            title: result.name,
+            target: result.category.name.toLowerCase(),
+            difficulty: result.difficulty,
+            link: '/profile'
+          });
+        }
+        this.page++;
+      }).catch((e) => {
+        console.log(e);
+        this.$router.push('/login');
+      });
     }
   },
   mounted() {
@@ -73,26 +95,24 @@ export default {
       this.successSnackbar.text = "Success creating a routine.";
       this.successSnackbar.visible = true;
     }
-    UserApi.getRoutines().then((results) => {
-      for (let i = 0; i < results.content.length; i++) {
-        const result = results.content[i];
-        this.routines.push({
-          id: result.id,
-          title: result.name,
-          target: result.category.name.toLowerCase(),
-          difficulty: result.difficulty,
-          link: '/profile'
-        });
-      }
-    }).catch((e) => {
-      console.log(e);
-      this.$router.push('/login');
-    });
+    this.page = 0;
+    this.routines = [];
+    this.getRoutines();
   },
-  components: {RoutinePreviewCard}
+  components: {Routines/*, RoutinePreviewCard*/}
 }
 </script>
 
 <style scoped>
+.createBtn {
+  position: absolute;
+  right: 20px;
+  top: 20px
+}
+
+.p-relative {
+  position: relative;
+}
+
 
 </style>

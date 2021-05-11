@@ -27,8 +27,8 @@ class UserApi {
         return await  Api.post(`${UserApi.url}/resend_verification`, false, payload);
     }
 
-    static async getRoutines() {
-        return await Api.get(`${UserApi.url}/current/routines/`, true, null);
+    static async getRoutines(params) {
+        return await Api.get(`${UserApi.url}/current/routines/?${new URLSearchParams(params).toString()}`, true, null);
     }
 }
 

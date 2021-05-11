@@ -1,16 +1,16 @@
 <template>
   <div class="my-6 mx-15">
     <v-sheet
-        class="rounded-lg pb-5"
+        class="rounded-lg pb-5 p-relative"
         color="#6F2DBD"
         elevation="15"
         width="100%"
     >
-      <h2 class="text-left ml-5 pt-5 d-inline-block" style="color: white">
+      <h2 class="text-left ml-5 pt-5 d-inline-block white--text">
         <v-icon large color="white" class="pr-3 mb-1" >mdi-account-group</v-icon>COMMUNITY ROUTINES
       </h2>
       <v-container fill-height>
-        <v-layout row wrap align-center style="position: relative">
+        <v-layout row wrap align-center>
           <v-flex class="text-left ml-5">
             <v-select
                 :items="searchFilter"
@@ -35,10 +35,12 @@
                   />
             </span>
           </v-flex>
-          <v-row class="justify-space-between fullWidth mb-10">
+          <!--<v-row class="justify-space-between fullWidth mb-10">
             <RoutinePreviewCard v-for="routine in routines" :key="routine.id" :routine="routine"/>
-          </v-row>
-          <v-btn v-if="showLoadMore" v-on:click="getRoutines" style="position: absolute; right: 0; bottom: 0">Load More</v-btn>
+          </v-row>-->
+
+          <!--<v-btn v-if="showLoadMore" v-on:click="getRoutines" class="loadMoreBtn">Load More</v-btn>-->
+          <Routines v-bind:routines="routines" v-bind:showLoadMore="showLoadMore" :getRoutines="getRoutines"/>
         </v-layout>
       </v-container>
 
@@ -50,7 +52,8 @@
 <script>
 
 import {RoutineApi} from "@/api/routine";
-import RoutinePreviewCard from "@/components/RoutinePreviewCard";
+//import RoutinePreviewCard from "@/components/RoutinePreviewCard";
+import Routines from "@/components/Routines";
 
 export default {
   name: "CommunityRoutines",
@@ -64,7 +67,7 @@ export default {
       model: null,
       page: 0,
       showLoadMore: false,
-      pageSize: 13
+      pageSize: 3
     }
   },
   created() {
@@ -96,7 +99,8 @@ export default {
     }
   },
   components: {
-    RoutinePreviewCard
+    Routines/*,
+    RoutinePreviewCard*/
   }
 }
 </script>
@@ -114,6 +118,14 @@ export default {
   width: 100%;
 }
 
+.p-relative {
+  position: relative;
+}
 
+.loadMoreBtn {
+  position: absolute;
+  right: 0;
+  bottom: 0
+}
 
 </style>
