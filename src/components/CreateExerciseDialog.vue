@@ -92,7 +92,7 @@ export default {
         ExerciseApi.addImage(exercise.id, image);
         let video = new Video(this.videoLink);
         ExerciseApi.addVideo(exercise.id, video);
-        let renderExercise = {id: exercise.id, name: this.exerciseName, image: this.imageLink, video: this.videoLink};
+        let renderExercise = {id: exercise.id, name: this.exerciseName, image: this.imageLink, video: this.videoLink, detail: this.exerciseDetail};
         this.exerciseLibrary.push(renderExercise);
         this.$emit('close-create-exercise-dialog', false);
         this.exerciseName = '';

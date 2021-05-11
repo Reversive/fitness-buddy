@@ -10,7 +10,7 @@
       </h2>
       <v-container fill-height>
         <v-row class="justify-space-between">
-          <RoutinePreviewCard v-for="routine in routines" :key="routine.id" :routine="routine"/>
+          <RoutinePreviewCard v-for="routine in routines" :key="routine.id" :routine="routine" @onDeleteRoutine="deleteRoutine"/>
         </v-row>
       </v-container>
       <v-snackbar v-model="successSnackbar.visible" :color="successSnackbar.color" :multi-line="successSnackbar.mode === 'multi-line'" :timeout="successSnackbar.timeout" :top="successSnackbar.position === 'top'">
@@ -34,7 +34,7 @@
 <script>
 import RoutinePreviewCard from "../components/RoutinePreviewCard";
 import {UserApi} from "../api/user";
-
+import {RoutineApi} from "../api/routine";
 
 export default {
   props: ['query'],
@@ -49,7 +49,7 @@ export default {
         position: "bot",
         timeout: 3500,
         title: "Success",
-        text: "Success creating a routine.",
+        text: null,
         visible: false
       }
     }
@@ -60,9 +60,25 @@ export default {
       await myRoutines.then(routines => {
         console.log(routines);
       }).catch((e) => console.error(e));
+    },
+    async deleteRoutine(routineId) {
+      let deleteResponse = RoutineApi.delete(routineId);
+      await deleteResponse.then(() => {
+        let index = this.routines.findIndex(r => r.id === routineId);
+        this.routines.splice(index, 1);
+      });
+      this.successSnackbar.text = "Success deleting routine.";
+      this.successSnackbar.visible = true;
     }
   },
-  created() {
+  mounted() {
+    if(this.query === 'edit') {
+      this.successSnackbar.text = "Success editing routine.";
+      this.successSnackbar.visible = true;
+    } else if(this.query === 'create') {
+      this.successSnackbar.text = "Success creating a routine.";
+      this.successSnackbar.visible = true;
+    }
     UserApi.getRoutines().then((results) => {
       for (let i = 0; i < results.content.length; i++) {
         const result = results.content[i];
@@ -78,11 +94,6 @@ export default {
       console.log(e);
       this.$router.push('/login');
     });
-  },
-  mounted() {
-    if(this.query !== undefined) {
-      this.successSnackbar.visible = true;
-    }
   },
   components: {RoutinePreviewCard}
 }

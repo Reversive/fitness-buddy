@@ -18,6 +18,10 @@ class RoutineApi {
     static async get() {
         return await Api.get(`${RoutineApi.url}`, true, null);
     }
+
+    static async delete(routine_id) {
+        return await Api.delete(`${RoutineApi.url}/${routine_id}`, true, null);
+    }
 }
 
 

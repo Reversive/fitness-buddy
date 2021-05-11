@@ -85,6 +85,9 @@ import EditExerciseDialog from "./EditExerciseDialog";
 import EditStore from "../stores/editStore";
 export default {
   name: "CycleCard",
+  mounted() {
+    if(this.cacheExercises !== undefined) this.exercises = this.cacheExercises;
+  },
   data: () => {
     return {
       exercises : [],
@@ -104,6 +107,7 @@ export default {
   },
   props: {
     identifier: Number,
+    cacheExercises: [Array, Object]
   },
   components: {
     CAddExerciseCard : AddExerciseCard,

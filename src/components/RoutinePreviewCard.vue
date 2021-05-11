@@ -1,10 +1,10 @@
 <template>
-  <v-card width="21%" elevation="0" class="purple--text text--darken-4 my-4" @click="$router.push(routine.link)">
+  <v-card width="21%" elevation="0" class="purple--text text--darken-4 my-4">
     <div v-if="!routine.username" class="editBtn">
-      <v-btn fab x-small elevation="0" color="transparent">
+      <v-btn fab x-small elevation="0" color="transparent" @click="editRoutine">
         <v-icon class="purple--text text--darken-4 big-text">mdi-pencil</v-icon>
       </v-btn>
-      <v-btn fab x-small elevation="0" color="transparent">
+      <v-btn fab x-small elevation="0" color="transparent" @click="deleteRoutine">
         <v-icon class="red--text big-text">mdi-trash-can-outline</v-icon>
       </v-btn>
     </div>
@@ -26,6 +26,14 @@ export default {
   name: "RoutinePreviewCard",
   props: {
     routine : Object
+  },
+  methods: {
+    deleteRoutine() {
+      this.$emit('onDeleteRoutine', this.routine.id);
+    },
+    editRoutine() {
+      this.$router.push({ path: '/edit-routine', query: { id: this.routine.id } });
+    }
   },
   components: {RoutineCardItem}
 }

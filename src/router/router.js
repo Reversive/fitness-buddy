@@ -13,6 +13,8 @@ const router = new Router({
             props: route => ({ query: route.query.q }) },
         { path: '/community-routines', component: () => import('../views/CommunityRoutines'), meta: {requiresLogin: true} },
         { path: '/create-routine', component: () => import('../views/CreateRoutine'), meta: {requiresLogin: true}},
+        { path: '/edit-routine', component: () => import('../views/CreateRoutine'), meta: {requiresLogin: true},
+            props: route => ({ query: route.query.id })}
     ]
 });
 
