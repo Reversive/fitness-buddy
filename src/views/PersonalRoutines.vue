@@ -39,8 +39,7 @@
 
 <script>
 import RoutinePreviewCard from "../components/RoutinePreviewCard";
-//import {UserApi} from "../api/user";
-import {RoutineApi} from "../api/routine";
+import {UserApi} from "../api/user";
 export default {
   props: ['query'],
   name: "PersonalRoutines",
@@ -67,8 +66,7 @@ export default {
   },
   methods: {
     async retrieveRoutines() {
-      console.log(this.query);
-      let myRoutines = RoutineApi.get();
+      let myRoutines = UserApi.getRoutines();
       await myRoutines.then(routines => {
         console.log(routines);
       }).catch((e) => console.error(e));

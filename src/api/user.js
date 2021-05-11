@@ -28,7 +28,7 @@ class UserApi {
     }
 
     static async getRoutines() {
-        return await Api.get(`${UserApi.url}/current/routines`, true, null);
+        return await Api.get(`${UserApi.url}/current/routines/`, true, null);
     }
 }
 
