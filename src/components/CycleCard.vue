@@ -6,9 +6,9 @@
       width="100%"
       color="white"
   >
-    <div class="mx-5 pt-1"><span class="float-right"><v-btn class="ml-5" icon
-                                                                      x-large
-                                                                      @click="deleteCycleCard">
+    <div class="mx-5 pt-1">
+      <span class="float-right" v-if="isDetail !== true">
+        <v-btn class="ml-5" icon x-large @click="deleteCycleCard">
         <v-icon color="error" x-large>mdi-trash-can</v-icon>
       </v-btn></span></div>
     <v-slide-group
@@ -23,7 +23,7 @@
          >
         <CExerciseCard :exercise-info="exercise" @click.native="handleEditExercise(exercise)" class="clickable-cursor" :key="exercise.id"/>
       </v-slide-item>
-      <v-slide-item>
+      <v-slide-item v-if="isDetail !== true">
         <CAddExerciseCard v-on:addExerciseSuccess="addExerciseToCycleArray"/>
       </v-slide-item>
     </v-slide-group>
@@ -32,7 +32,17 @@
       <v-text-field
           class="pa-4 d-inline-block mb-0"
           v-model="cycleName"
+          v-if="this.isDetail !== true"
           clearable
+          flat
+          hide-details
+          outlined
+      />
+      <v-text-field
+          class="pa-4 d-inline-block mb-0"
+          v-model="cycleName"
+          v-if="this.isDetail === true"
+          readonly
           flat
           hide-details
           outlined
@@ -43,9 +53,19 @@
           class="reps d-inline-block"
           v-model="cycleRepetitions"
           outlined
+          v-if="this.isDetail !== true"
           hide-details
           single-line
       />
+        <v-text-field
+            class="reps d-inline-block"
+            v-model="cycleRepetitions"
+            outlined
+            readonly
+            v-if="this.isDetail === true"
+            hide-details
+            single-line
+        />
     </span>
     </div>
   </v-card>
@@ -67,8 +87,9 @@
     <v-dialog
         v-model="editDialog"
         width="500"
+        v-if="isDetail !== true"
     >
-      <CEditExerciseDialog v-on:deleteExercise="deleteExercise" v-on:updateExercise="updateExercise" :key="counter"/>
+      <CEditExerciseDialog  v-on:deleteExercise="deleteExercise" v-on:updateExercise="updateExercise" :key="counter"/>
     </v-dialog>
 
   </v-container>
@@ -107,7 +128,8 @@ export default {
   },
   props: {
     identifier: Number,
-    cacheExercises: [Array, Object]
+    cacheExercises: [Array, Object],
+    isDetail: Boolean
   },
   components: {
     CAddExerciseCard : AddExerciseCard,

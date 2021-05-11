@@ -15,6 +15,7 @@
       <RoutineCardItem icon="mdi-bullseye" :text="routine.target"/>
       <RoutineCardItem icon="mdi-speedometer" :text="routine.difficulty"/>
     </div>
+    <v-btn @click="expandDetails">More Details</v-btn>
     <span v-if="routine.username" class="username">by: {{routine.username}}</span>
   </v-card>
 </template>
@@ -33,6 +34,9 @@ export default {
     },
     editRoutine() {
       this.$router.push({ path: '/edit-routine', query: { id: this.routine.id } });
+    },
+    expandDetails() {
+      this.$router.push({ path: '/routine-detail', query: { id: this.routine.id } });
     }
   },
   components: {RoutineCardItem}

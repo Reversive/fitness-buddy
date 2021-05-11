@@ -22,11 +22,14 @@
         width="100%"
     >
     <v-container>
-    <h2 v-if="!isEditing()" class="text-left pt-2 d-inline-block" style="color: white">
+    <h2 v-if="!isEditing() && !isDetail()" class="text-left pt-2 d-inline-block" style="color: white">
       <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-text</v-icon>CREATE ROUTINE
     </h2>
     <h2 v-if="isEditing()" class="text-left pt-2 d-inline-block" style="color: white">
       <v-icon large color="white" class="pr-3 mb-1" >mdi-pencil</v-icon>EDIT ROUTINE
+    </h2>
+    <h2 v-if="isDetail()" class="text-left pt-2 d-inline-block" style="color: white">
+      <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-search-outline</v-icon>ROUTINE DETAIL
     </h2>
 
     <v-text-field
@@ -34,20 +37,35 @@
         label="Routine Name"
         class="mt-2 text--white"
         color="white"
+        v-if="!isDetail()"
         outlined
         clearable
+        hide-details
+    />
+    <v-text-field
+        v-model="routine.name"
+        label="Routine Name"
+        class="mt-2 text--white"
+        color="white"
+        v-if="isDetail()"
+        outlined
+        readonly
         hide-details
     />
     </v-container>
       <v-container class="mt-2">
 
-        <h3 class="white--text d-inline-block">
+        <h3 v-if="!isDetail()" class="white--text d-inline-block">
           SELECT CATEGORY:
+        </h3>
+        <h3 v-if="isDetail()" class="white--text d-inline-block">
+          CATEGORY:
         </h3>
         <v-autocomplete
             :items="types.categories"
             item-text="name"
             v-model="routine.category"
+            v-if="!isDetail()"
             class="white--text d-inline-block ml-2 text-uppercase"
             full-width
             deletable-chips
@@ -56,22 +74,44 @@
             hide-selected
             outlined
             single-line
-        ></v-autocomplete>
+        />
+        <v-text-field
+            v-model="routine.category"
+            class="white--text d-inline-block ml-2 text-uppercase"
+            color="white"
+            v-if="isDetail()"
+            outlined
+            readonly
+            hide-details
+        />
 
         <span class="pl-2 float-right mr-5 ">
-        <h3 class="white--text text-right d-inline-block">
+        <h3 v-if="!isDetail()" class="white--text d-inline-block">
           SELECT DIFFICULTY:
+        </h3>
+        <h3 v-if="isDetail()" class="white--text d-inline-block">
+          DIFFICULTY:
         </h3>
         <v-autocomplete
             :items="types.difficulties"
             v-model="routine.difficulty"
-            class="white--text d-inline-block ml-2"
+            class="white--text d-inline-block ml-2 text-uppercase"
             full-width
+            v-if="!isDetail()"
             hide-details
             hide-no-data
             hide-selected
             outlined
             single-line
+        />
+        <v-text-field
+            v-model="routine.difficulty"
+            class="white--text d-inline-block ml-2 text-uppercase"
+            color="white"
+            v-if="isDetail()"
+            outlined
+            readonly
+            hide-details
         />
     </span>
       </v-container>
@@ -81,23 +121,25 @@
         <CCycleCard   v-if="c.cycle.type === cycle_type"
                       :identifier="c.cycle.order"
                       :cache-exercises="c.cycle.exercises"
+                      :isDetail="isDetail()"
                       v-on:cycleTrashClicked="removeSection"
                       />
       </div>
-      <CAddCycleCard @addCyclePressed="addCycle(cycle_type)"/>
+      <CAddCycleCard v-if="!isDetail()" @addCyclePressed="addCycle(cycle_type)"/>
     </div>
     <v-container class="mb-5">
       <span class="float-right d-inline-block">
           <v-btn
               depressed
               color="error"
+              v-if="!isDetail()"
               @click="handleCancelClick"
               class="font-weight-bold mr-5 rounded-pill"
           >
             CANCEL
           </v-btn>
           <v-btn
-              v-if="!isEditing()"
+              v-if="!isEditing() && !isDetail()"
               depressed
               color="success"
               class="font-weight-bold rounded-pill"
@@ -209,7 +251,6 @@ export default {
   async mounted() {
     RoutineStore.clearRoutine();
     this.routineId = this.query;
-
     CategoryApi.get().then(response => {
       if(response.totalCount === 0) {
         TypeStore.categories.forEach(e => {
@@ -265,7 +306,7 @@ export default {
       console.error('Something went wrong setting up exercises');
     });
 
-    if(this.isEditing()) {
+    if(this.isEditing() || this.isDetail()) {
       await this.fillRoutineData();
     }
   },
@@ -287,7 +328,10 @@ export default {
       return TypeStore.cycleTypes[idx];
     },
     isEditing() {
-      return this.routineId !== undefined;
+      return this.$router.currentRoute.name === 'edit';
+    },
+    isDetail() {
+      return this.$router.currentRoute.name === 'detail';
     },
     async fillRoutineData() {
       let routineResponse = RoutineApi.getById(this.routineId);
