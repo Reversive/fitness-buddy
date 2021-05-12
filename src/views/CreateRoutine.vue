@@ -21,16 +21,20 @@
         elevation="15"
         width="100%"
     >
-    <v-container>
-    <h2 v-if="!isEditing() && !isDetail()" class="text-left pt-2 d-inline-block" style="color: white">
-      <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-text</v-icon>CREATE ROUTINE
-    </h2>
-    <h2 v-if="isEditing()" class="text-left pt-2 d-inline-block" style="color: white">
-      <v-icon large color="white" class="pr-3 mb-1" >mdi-pencil</v-icon>EDIT ROUTINE
-    </h2>
-    <h2 v-if="isDetail()" class="text-left pt-2 d-inline-block" style="color: white">
-      <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-search-outline</v-icon>ROUTINE DETAIL
-    </h2>
+    <v-container style="position: relative">
+      <h2 v-if="!isEditing() && !isDetail()" class="text-left pt-2 d-inline-block" style="color: white">
+        <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-text</v-icon>CREATE ROUTINE
+      </h2>
+      <h2 v-if="isEditing()" class="text-left pt-2 d-inline-block" style="color: white">
+        <v-icon large color="white" class="pr-3 mb-1" >mdi-pencil</v-icon>EDIT ROUTINE
+      </h2>
+      <h2 v-if="isDetail()" class="text-left pt-2 d-inline-block" style="color: white">
+        <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-search-outline</v-icon>ROUTINE DETAIL
+      </h2>
+      <v-btn v-if="isDetail" class="rounded-pill" style="position: absolute; top: 20px; right: 10px" @click="copyLink">
+        SHARE
+        <input type="hidden" id="linkInput"/>
+      </v-btn>
 
     <v-text-field
         v-model="routine.name"
@@ -201,11 +205,11 @@ import CycleCardTitle from "../components/CycleCardTitle";
 import RoutineStore from "../stores/routineStore"
 import ExerciseStore from "../stores/exerciseStore";
 import TypeStore from "../stores/typeStore";
-import {CategoryApi, Category} from "../api/category";
-import {Routine, RoutineApi} from "../api/routine";
-import {Cycle, CycleApi} from "../api/cycle";
-import {ExerciseApi, Exercise, Image, Video} from "../api/exercise";
-import {CycleExerciseApi, CycleExercise} from "../api/cycleExercise";
+import {CategoryApi, Category} from "@/api/category";
+import {Routine, RoutineApi} from "@/api/routine";
+import {Cycle, CycleApi} from "@/api/cycle";
+import {ExerciseApi, Exercise, Image, Video} from "@/api/exercise";
+import {CycleExerciseApi, CycleExercise} from "@/api/cycleExercise";
 
 
 export default {
@@ -486,6 +490,30 @@ export default {
       if (result) {
         await this.$router.push('/personal-routines');
       }
+    },
+    copyLink() {
+      if (!this.isDetail())
+        return;
+
+      let input = document.querySelector('#linkInput');
+      input.setAttribute('value', window.location.href);
+      input.setAttribute('type', 'text');
+      input.select()
+
+      try {
+        const success = document.execCommand('copy');
+        if (success) {
+          alert('Copied url to clippboard');
+        } else {
+          alert("Oops, unable to copy");
+        }
+      } catch (err) {
+        alert('Oops, unable to copy');
+      }
+
+      /* unselect the range */
+      input.setAttribute('type', 'hidden');
+      window.getSelection().removeAllRanges();
     }
   }
 

@@ -4,6 +4,9 @@ import {Api} from '@/api/api'
 
 Vue.use(Router);
 
+let beforeRedirect = null;
+let redirecting = false
+
 const router = new Router({
     routes: [
         { path: '/', component: () => import('../views/Login'), name: 'login' },
@@ -21,10 +24,21 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-    if(to.matched.some(record => record.meta.requiresLogin)) {
+    if (from.name === 'login' && redirecting) {
+        redirecting = false;
+        router.push(beforeRedirect)
+            .then(/*mostrar un error que diga que tenes que estar loggeado?*/)
+            .catch((failure) => {
+                if (Router.isNavigationFailure(failure, Router.NavigationFailureType.redirected)) {
+                    console.log('err');
+                }
+            });
+    } else if (to.matched.some(record => record.meta.requiresLogin)) {
             if(Api.token) {
                 next();
             } else {
+                beforeRedirect = to.fullPath;
+                redirecting = true;
                 router.push({name: 'login'})
                     .then(/*mostrar un error que diga que tenes que estar loggeado?*/)
                     .catch((failure) => {

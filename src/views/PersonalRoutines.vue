@@ -10,7 +10,7 @@
         </h2>
       <v-btn class="rounded-pill createBtn font-weight-bold" color="success" @click="$router.push('/create-routine')">CREATE ROUTINE</v-btn>
       <v-container fill-height>
-        <Routines v-bind:routines="routines" v-bind:showLoadMore="showLoadMore" :getRoutines="getRoutines" :deleteRoutine="deleteRoutine"/>
+        <Routines v-bind:routines="routines" v-bind:showLoadMore="showLoadMore" :getRoutines="getRoutines" :deleteRoutine="deleteRoutine" :mine="true"/>
       </v-container>
       <v-snackbar v-model="successSnackbar.visible" :color="successSnackbar.color" :multi-line="successSnackbar.mode === 'multi-line'" :timeout="successSnackbar.timeout" :top="successSnackbar.position === 'top'">
         <v-layout align-center pr-4>
