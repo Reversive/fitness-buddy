@@ -76,6 +76,7 @@ export default {
             id: result.id,
             title: result.name,
             target: result.category.name,
+            rating: result.averageRating,
             difficulty: result.difficulty,
             link: '/profile'
           });

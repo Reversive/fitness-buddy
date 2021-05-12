@@ -14,6 +14,7 @@
     <div class="pa-2" :class="{'pb-6': routine.username, 'pb-4': !routine.username}">
       <RoutineCardItem icon="mdi-bullseye" :text="routine.target"/>
       <RoutineCardItem icon="mdi-speedometer" :text="routine.difficulty"/>
+      <RoutineCardItem icon="mdi-star-outline" :text="routine.rating?routine.rating + ' / 5':'No ratings'"/>
     </div>
     <span v-if="routine.username" class="username">by: {{routine.username}}</span>
   </v-card>

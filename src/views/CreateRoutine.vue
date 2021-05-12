@@ -161,6 +161,19 @@
         >
             SAVE CHANGES
           </v-btn>
+        <v-rating
+            empty-icon="mdi-star-outline"
+            full-icon="mdi-star"
+            half-icon="mdi-star-half-full"
+            v-model="score"
+            v-on:input="rateRoutine"
+            color="white"
+            background-color="white"
+            hover
+            length="5"
+            size="32"
+            :value="score"
+        ></v-rating>
       </span>
 
     </v-container>
@@ -177,6 +190,34 @@
         </v-layout>
       </v-layout>
       <v-btn v-if="successSnackbar.timeout === 0" icon @click="successSnackbar.visible = false">
+        <v-icon>clear</v-icon>
+      </v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="successRatingSnackbar.visible" :color="successRatingSnackbar.color" :multi-line="successRatingSnackbar.mode === 'multi-line'" :timeout="successRatingSnackbar.timeout" :top="successRatingSnackbar.position === 'top'">
+      <v-layout align-center pr-4>
+        <v-icon class="pr-3" dark large>{{ successRatingSnackbar.icon }}</v-icon>
+        <v-layout column>
+          <div>
+            <strong>{{ successRatingSnackbar.title }}</strong>
+          </div>
+          <div>{{ successRatingSnackbar.text }}</div>
+        </v-layout>
+      </v-layout>
+      <v-btn v-if="successRatingSnackbar.timeout === 0" icon @click="successRatingSnackbar.visible = false">
+        <v-icon>clear</v-icon>
+      </v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="successSharingSnackbar.visible" :color="successSharingSnackbar.color" :multi-line="successSharingSnackbar.mode === 'multi-line'" :timeout="successSharingSnackbar.timeout" :top="successSharingSnackbar.position === 'top'">
+      <v-layout align-center pr-4>
+        <v-icon class="pr-3" dark large>{{ successSharingSnackbar.icon }}</v-icon>
+        <v-layout column>
+          <div>
+            <strong>{{ successSharingSnackbar.title }}</strong>
+          </div>
+          <div>{{ successSharingSnackbar.text }}</div>
+        </v-layout>
+      </v-layout>
+      <v-btn v-if="successSharingSnackbar.timeout === 0" icon @click="successSharingSnackbar.visible = false">
         <v-icon>clear</v-icon>
       </v-btn>
     </v-snackbar>
@@ -210,6 +251,7 @@ import {Routine, RoutineApi} from "@/api/routine";
 import {Cycle, CycleApi} from "@/api/cycle";
 import {ExerciseApi, Exercise, Image, Video} from "@/api/exercise";
 import {CycleExerciseApi, CycleExercise} from "@/api/cycleExercise";
+import {Api} from "@/api/api";
 
 
 export default {
@@ -226,6 +268,7 @@ export default {
       types : TypeStore,
       fab: false,
       routine: RoutineStore,
+      score: 0,
       successSnackbar: {
         color: "success",
         icon: "mdi-check-circle",
@@ -244,6 +287,26 @@ export default {
         timeout: 4500,
         title: "Error",
         text: null,
+        visible: false
+      },
+      successRatingSnackbar: {
+        color: "success",
+        icon: "mdi-check-circle",
+        mode: "single-line",
+        position: "bot",
+        timeout: 3500,
+        title: "Success",
+        text: "Rating sent",
+        visible: false
+      },
+      successSharingSnackbar: {
+        color: "success",
+        icon: "mdi-check-circle",
+        mode: "single-line",
+        position: "bot",
+        timeout: 3500,
+        title: "Success",
+        text: "Link copied to clipboard",
         visible: false
       },
       cycleNumber: 1,
@@ -503,7 +566,7 @@ export default {
       try {
         const success = document.execCommand('copy');
         if (success) {
-          alert('Copied url to clippboard');
+          this.successSharingSnackbar.visible = true;
         } else {
           alert("Oops, unable to copy");
         }
@@ -514,6 +577,20 @@ export default {
       /* unselect the range */
       input.setAttribute('type', 'hidden');
       window.getSelection().removeAllRanges();
+    },
+    rateRoutine() {
+      if (!this.isDetail())
+        return;
+
+      Api.post(Api.baseUrl+'/reviews/'+this.routineId, true, {
+        score: this.score,
+        review: ''
+      }, null).then((response) => {
+        console.log(response);
+        this.successRatingSnackbar.visible = true;
+      }).catch((e) => {
+        console.log(e);
+      });
     }
   }
 

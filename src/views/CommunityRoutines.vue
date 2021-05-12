@@ -182,6 +182,7 @@ export default {
             title: result.name,
             target: result.category.name,
             difficulty: result.difficulty,
+            rating: result.averageRating,
             link: '/profile',
             username: result.user.username
           });
@@ -247,8 +248,7 @@ export default {
     }
   },
   components: {
-    Routines/*,
-    RoutinePreviewCard*/
+    Routines
   }
 }
 </script>
