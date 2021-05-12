@@ -169,6 +169,7 @@
             v-on:input="rateRoutine"
             color="white"
             background-color="white"
+            v-if="isDetail()"
             hover
             length="5"
             size="32"
@@ -269,6 +270,10 @@ export default {
       fab: false,
       routine: RoutineStore,
       score: 0,
+      rules: {
+        required: value => !!value || 'Required.',
+        counter: value => value.length >= 3 || 'Min 3 characters'
+      },
       successSnackbar: {
         color: "success",
         icon: "mdi-check-circle",
@@ -488,7 +493,14 @@ export default {
     },
     async handleRoutineCreation(isEditing) {
       if(this.isRoutineFieldMissing()) {
-        this.printError();
+        if(this.routine.name !== null) {
+          if(this.routine.name.length < 3) {
+            this.missingFieldSnackbar.text = "Routine name must have at least 3 characters.";
+            this.missingFieldSnackbar.visible = !this.missingFieldSnackbar.visible;
+          }
+        } else {
+          this.printError();
+        }
         return;
       }
       if(isEditing) {
