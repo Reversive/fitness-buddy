@@ -35,6 +35,7 @@
                       v-model="searchTerm"
                       v-on:keyup="validateSearch"
                       v-on:keyup.enter.prevent="searchRoutines"
+                      v-on:click:append="searchRoutines"
                       v-bind:error-messages="errorMessages"
                       append-icon="mdi-magnify"
                       out
@@ -213,7 +214,7 @@ export default {
         console.log(url);
         Api.get(url, true, null).then((result) => {
           if (result.totalCount === 0) {
-            this.errorMessages = 'Please insert a valid username';
+            this.errorMessages = 'No users found for given username';
             return;
           }
 
@@ -233,6 +234,7 @@ export default {
     resetSearch() {
       this.search = false;
       this.searchTerm = null;
+      this.errorMessages = undefined;
       this.resetAndGet();
     },
     validateSearch(e) {
