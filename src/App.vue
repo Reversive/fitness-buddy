@@ -20,6 +20,7 @@
   import Footer from "./components/Footer";
   import HeaderNavBar from "./components/HeaderNavBar";
   import Login from "./views/Login";
+
   export default {
     name: 'App',
     components: {
@@ -39,7 +40,6 @@
 
 <style lang="scss">
 #app {
-
   font-family: 'Open Sans', sans-serif;
 }
 

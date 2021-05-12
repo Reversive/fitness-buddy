@@ -36,8 +36,7 @@ export default {
         {caption: "", title: "Go to the Profile Page", route: "/profile", icon: "mdi-account-circle",
           sub_menu_items: [
             {id: 3, caption: "MY PROFILE", title: "Go to My Profile", icon: "mdi-card-account-details", route: "/profile"},
-            {id: 4, caption: "LOG OUT", title: "Log Out", icon: "mdi-logout", route: "/"}
-
+            {id: 4, caption: "LOG OUT", title: "Log Out", icon: "mdi-logout", route: "/logout"}
           ]}
       ]
     }

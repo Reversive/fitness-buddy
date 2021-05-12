@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import {Api} from '@/api/api'
+import {UserApi} from '@/api/user'
 
 Vue.use(Router);
 
@@ -19,12 +20,17 @@ const router = new Router({
         { path: '/edit-routine', component: () => import('../views/CreateRoutine'), meta: {requiresLogin: true},
             props: route => ({ query: route.query.id }), name: 'edit'},
         { path: '/routine-detail', component: () => import('../views/CreateRoutine'), meta: {requiresLogin: true},
-            props: route => ({ query: route.query.id }), name: 'detail'}
+            props: route => ({ query: route.query.id }), name: 'detail'},
+        {path: '/logout', component: () => import('../views/Login'), name: 'logout'}
     ]
 });
 
 router.beforeEach((to, from, next) => {
-    if (from.name === 'login' && redirecting) {
+    if (to.name === 'logout') {
+        UserApi.logout().then(() => {
+            router.push('/').then();
+        });
+    } else if (from.name === 'login' && redirecting) {
         redirecting = false;
         router.push(beforeRedirect)
             .then(/*mostrar un error que diga que tenes que estar loggeado?*/)
@@ -34,7 +40,8 @@ router.beforeEach((to, from, next) => {
                 }
             });
     } else if (to.matched.some(record => record.meta.requiresLogin)) {
-            if(Api.token) {
+            if (localStorage.getItem('userToken')) {
+                if (!Api.token) Api.token = localStorage.userToken;
                 next();
             } else {
                 beforeRedirect = to.fullPath;

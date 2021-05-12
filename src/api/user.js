@@ -10,11 +10,13 @@ class UserApi {
     static async login(credentials, controller) {
         const result = await Api.post(`${UserApi.url}/login`, false, credentials, controller);
         Api.token = result.token;
+        localStorage.userToken = result.token;
     }
 
     static async logout(controller) {
         await Api.post(`${UserApi.url}/logout`, true, controller);
         Api.token = undefined;
+        localStorage.removeItem('userToken');
     }
     static async register(credentials){
         return await Api.post(`${UserApi.url}`,false,credentials);
