@@ -15,7 +15,7 @@
                             name="Email"
                             v-model="email_login"
                             :rules="[v=>!!v||'Email is required',
-                            v=>/.+@.+\..+/.test(v) || 'E-mail must be valid']"
+                            v=>/.+@.+\..+/.test(v) || 'Email must have the form: example@domain.example']"
                             prepend-icon="mdi-email"
                             type="text"
                             color="purple accent-9"
@@ -70,7 +70,7 @@
                       <v-form v-model="valid2">
                         <v-text-field hint="*Required" label="Full Name" v-model="name" name="Name" :rules="[v=> !!v||'Full name is required']" prepend-icon="mdi-account" type="text" color="purple accent-9"/>
                         <v-text-field :rules="[v=>!!v||'Email is required',
-                                       v=>/.+@.+\..+/.test(v) || 'E-mail must be valid']"
+                                       v=>/.+@.+\..+/.test(v) || 'Email must have the form: example@domain.example']"
                                       label="Email"
                                       name="Email"
                                       hint="*Required"
