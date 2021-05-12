@@ -11,84 +11,102 @@
       </h2>
       <v-container fill-height>
         <v-layout row wrap align-center>
-          <v-row class="justify-space-between">
-            <v-col>
-              <v-flex class="text-left">
-                <v-select
-                    :items="searchFilter"
-                    v-model="searchBy"
-                    v-on:change="resetSearch"
-                    item-color="primary"
-                    dark
-                    label="SEARCH BY"
-                    class="sort-by-px mt-5 d-inline-block white--text"
-                    color="white"
-                    dense
-                    outlined
-                />
-                <span v-if="searchBy === 'search' || searchBy === 'userId'">
-                  <v-text-field
-                      id="searchInput"
-                      class="d-inline-block ml-3 search-bar"
-                      dark
-                      label="SEARCH"
-                      v-model="searchTerm"
-                      v-on:keyup="validateSearch"
-                      v-on:keyup.enter.prevent="searchRoutines"
-                      v-on:click:append="searchRoutines"
-                      v-bind:error-messages="errorMessages"
-                      append-icon="mdi-magnify"
-                      out
-                      color="white"
-                      />
-                </span>
-                <span v-if="searchBy === 'categoryId'">
-                  <v-select
-                      :items="categories"
-                      v-model="searchTerm"
-                      item-color="primary"
-                      v-on:change="searchRoutines"
-                      dark
-                      label="SELECT"
-                      class="sort-by-px mt-5 ml-3 d-inline-block white--text"
-                      color="white"
-                      dense
-                      outlined
+          <v-flex class="mt-5 align-center">
+            <v-select
+                :items="orderItems"
+                v-on:change="orderRoutines"
+                v-model="orderBy"
+                item-color="primary"
+                dark
+                label="ORDER BY"
+                class="sort-by-px d-inline-block white--text"
+                color="white"
+                dense
+                outlined
+            />
+            <v-select
+                :items="searchOrder"
+                v-on:change="orderRoutines"
+                v-model="order"
+                item-color="primary"
+                dark
+                label="ORDER"
+                class="sort-by-px d-inline-block white--text ml-5"
+                color="white"
+                dense
+                outlined
+            />
+            <v-select
+                :items="searchFilter"
+                v-model="searchBy"
+                v-on:change="resetSearch"
+                item-color="primary"
+                dark
+                label="SEARCH BY"
+                class="sort-by-px d-inline-block white--text ml-5"
+                color="white"
+                dense
+                outlined
+            />
+            <span v-if="searchBy === 'search' || searchBy === 'userId'">
+              <v-text-field
+                  id="searchInput"
+                  class="d-inline-block ml-5 search-bar"
+                  dark
+                  label="SEARCH"
+                  v-model="searchTerm"
+                  v-on:keyup="validateSearch"
+                  v-on:keyup.enter.prevent="searchRoutines"
+                  v-on:click:append="searchRoutines"
+                  v-bind:error-messages="errorMessages"
+                  append-icon="mdi-magnify"
+                  out
+                  color="white"
                   />
-                </span>
-                <span v-if="searchBy === 'difficulty'">
-                  <v-select
-                      :items="difficulties"
-                      v-model="searchTerm"
-                      item-color="primary"
-                      v-on:change="searchRoutines"
-                      dark
-                      label="SELECT"
-                      class="sort-by-px mt-5 ml-3 d-inline-block white--text"
-                      color="white"
-                      dense
-                      outlined
-                  />
-                </span>
-              </v-flex>
-            </v-col>
-            <v-col>
-              <v-flex class="text-right">
-                <v-select
-                    :items="orderItems"
-                    v-on:change="orderRoutines"
-                    v-model="orderBy"
-                    item-color="primary"
-                    dark
-                    label="ORDER BY"
-                    class="sort-by-px mt-5 d-inline-block white--text"
-                    color="white"
-                    dense
-                    outlined
-                />
-              </v-flex>
-            </v-col>
-          </v-row>
+            </span>
+            <span v-if="searchBy === 'categoryId'">
+              <v-select
+                  :items="categories"
+                  v-model="searchTerm"
+                  item-color="primary"
+                  v-on:change="searchRoutines"
+                  dark
+                  label="SELECT"
+                  class="sort-by-px ml-5 d-inline-block white--text"
+                  color="white"
+                  dense
+                  outlined
+              />
+            </span>
+            <span v-if="searchBy === 'difficulty'">
+              <v-select
+                  :items="difficulties"
+                  v-model="searchTerm"
+                  item-color="primary"
+                  v-on:change="searchRoutines"
+                  dark
+                  label="SELECT"
+                  class="sort-by-px ml-5 d-inline-block white--text"
+                  color="white"
+                  dense
+                  outlined
+              />
+            </span>
+            <span v-if="searchBy === 'averageRating'">
+              <v-select
+                  :items="ratings"
+                  v-model="searchTerm"
+                  item-color="primary"
+                  v-on:change="searchRoutines"
+                  dark
+                  label="SELECT"
+                  class="sort-by-px ml-5 d-inline-block white--text"
+                  color="white"
+                  dense
+                  outlined
+              />
+            </span>
+          </v-flex>
           <Routines v-bind:routines="routines" v-bind:showLoadMore="showLoadMore" :getRoutines="getRoutines"/>
         </v-layout>
       </v-container>
@@ -109,11 +127,12 @@ export default {
   data: () => {
     return {
       routines: [],
-      searchBy: null,
+      searchBy: 'none',
       searchTerm: null,
       searchFilter: [
-        {text: 'CLEAR', value: 'none'},
+        {text: 'NONE', value: 'none'},
         {text: 'NAME', value: 'search'},
+        {text: 'RATING', value: 'averageRating'},
         {text: 'AUTHOR', value: 'userId'},
         {text: 'DIFFICULTY', value: 'difficulty'},
         {text: 'CATEGORY', value: 'categoryId'}
@@ -125,15 +144,29 @@ export default {
         {text: 'ADVANCED', value: 'advanced'},
         {text: 'EXPERT', value: 'expert'}
       ],
+      ratings: [
+        {text: '1', value: 1},
+        {text: '2', value: 2},
+        {text: '3', value: 3},
+        {text: '4', value: 4},
+        {text: '5', value: 5},
+        {text: 'UNRATED', value: 0},
+      ],
       author: null,
       search: false,
       orderItems: [
         {text: 'NAME', value: 'name'},
+        {text: 'RATING', value: 'averageRating'},
         {text: 'DATE', value: 'date'},
         {text: 'DIFFICULTY', value: 'difficulty'},
         {text: 'CATEGORY', value: 'categoryId'},
         {text: 'AUTHOR', value: 'userId'}
       ],
+      searchOrder: [
+        {text: 'ASCENDING', value: 'asc'},
+        {text: 'DESCENDING', value: 'desc'}
+      ],
+      order: 'asc',
       errorMessages: undefined,
       orderBy: 'name',
       categories: [],
@@ -162,7 +195,7 @@ export default {
       this.getRoutines();
     },
     getRoutines() {
-      let req = {page: this.page, size: this.pageSize, orderBy: this.orderBy};
+      let req = {page: this.page, size: this.pageSize, orderBy: this.orderBy, direction: this.order};
       if (this.search) {
         req[this.searchBy] = this.searchTerm;
         if (this.searchBy === 'userId' && this.author) {
@@ -190,7 +223,6 @@ export default {
         this.page++;
       }).catch((e) => {
         console.log(e);
-        this.$router.push('/login');
       });
     },
     orderRoutines() {
@@ -255,11 +287,11 @@ export default {
 
 <style scoped>
 .sort-by-px {
-  width: 150px;
+  width: 180px;
 }
 
 .search-bar {
-  width: 400px;
+  width: 300px;
 }
 
 .fullWidth {
@@ -270,10 +302,5 @@ export default {
   position: relative;
 }
 
-.loadMoreBtn {
-  position: absolute;
-  right: 0;
-  bottom: 0
-}
 
 </style>
