@@ -21,7 +21,7 @@
           v-for="exercise in exercises"
           :key="exercise.id"
          >
-        <CExerciseCard :exercise-info="exercise" @deleteExerciseClicked="deleteExercise(exercise)" @editExerciseClicked="handleEditExercise(exercise)" class="clickable-cursor" :key="exercise.id"/>
+        <CExerciseCard :isDetail="isDetail" :exercise-info="exercise" @deleteExerciseClicked="deleteExercise(exercise)" @editExerciseClicked="handleEditExercise(exercise)" class="clickable-cursor" :key="exercise.id"/>
       </v-slide-item>
       <v-slide-item v-if="isDetail !== true">
         <CAddExerciseCard v-on:addExerciseSuccess="addExerciseToCycleArray"/>

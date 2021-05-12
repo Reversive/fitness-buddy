@@ -9,12 +9,13 @@
   >
 
     <v-card-text class="white--text mb-1 pt-0 pr-1">
-      <div class="d-inline-block" style="float: right">
+      <div v-if="!isDetail" class="d-inline-block" style="float: right">
         <v-btn icon @click.stop="deleteExerciseClicked">
           <v-icon color="error" size="27">mdi-trash-can</v-icon>
         </v-btn>
       </div>
-      <h3 class="text-center pt-3 pl-6 text-uppercase mt-2">{{exerciseInfo.exercise.name}}</h3>
+      <h3 v-if="isDetail" class="text-center pt-3 text-uppercase mt-2">{{exerciseInfo.exercise.name}}</h3>
+      <h3 v-if="!isDetail" class="text-center pt-3 pl-6 text-uppercase mt-2">{{exerciseInfo.exercise.name}}</h3>
     </v-card-text>
     <v-img :src="exerciseInfo.exercise.image" contain height="70px"> </v-img>
     <div>
@@ -40,7 +41,8 @@
 export default {
   name: "ExerciseCard",
   props: {
-    exerciseInfo : Object
+    exerciseInfo : Object,
+    isDetail: Boolean
   },
   methods: {
     deleteExerciseClicked() {
