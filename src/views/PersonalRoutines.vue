@@ -56,13 +56,16 @@ export default {
   },
   methods: {
     async deleteRoutine(routineId) {
+      const result = await this.$confirm('Do you really want to delete this routine?', { title: 'WARNING' })
+      if(result) {
       let deleteResponse = RoutineApi.delete(routineId);
       await deleteResponse.then(() => {
         let index = this.routines.findIndex(r => r.id === routineId);
         this.routines.splice(index, 1);
       });
-      this.successSnackbar.text = "Success deleting routine.";
-      this.successSnackbar.visible = true;
+        this.successSnackbar.text = "Success deleting routine.";
+        this.successSnackbar.visible = true;
+      }
     },
     getRoutines() {
       UserApi.getRoutines({page: this.page, size: this.pageSize}).then((results) => {
