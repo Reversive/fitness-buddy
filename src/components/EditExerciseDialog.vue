@@ -58,12 +58,6 @@ export default {
       EditStore.currentExercise.duration = this.duration;
       EditStore.currentExercise.repetitions = this.repetitions;
       this.$emit('updateExercise');
-    },
-    async handleDeleteExercise() {
-      const result = await this.$confirm('Do you really want to delete this exercise?', { title: 'WARNING' })
-      if(result) {
-        this.$emit('deleteExercise');
-      }
     }
   }
 }

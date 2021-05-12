@@ -89,7 +89,7 @@
         width="500"
         v-if="isDetail !== true"
     >
-      <CEditExerciseDialog  v-on:deleteExercise="deleteExercise" v-on:updateExercise="updateExercise" :key="counter"/>
+      <CEditExerciseDialog v-on:updateExercise="updateExercise" :key="counter"/>
     </v-dialog>
 
   </v-container>
@@ -156,12 +156,15 @@ export default {
     getCycleExercises() {
       return this.getCycle().cycle.exercises;
     },
-    deleteExercise(exercise) {
+    async deleteExercise(exercise) {
       this.editDialog = false;
-      let exercises = this.getCycleExercises();
-      console.log(exercise);
-      let idx = exercises.findIndex(e => e.exercise.id === exercise.exercise.id);
-      exercises.splice(idx, 1);
+      const result = await this.$confirm('Do you really want to delete this exercise?', { title: 'WARNING' })
+      if(result) {
+        let exercises = this.getCycleExercises();
+        console.log(exercise);
+        let idx = exercises.findIndex(e => e.exercise.id === exercise.exercise.id);
+        exercises.splice(idx, 1);
+      }
     },
     updateExercise() {
       this.editDialog = false;

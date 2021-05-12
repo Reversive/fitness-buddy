@@ -10,7 +10,7 @@
 
     <v-card-text class="white--text mb-1 pt-0 pr-1">
       <div class="d-inline-block" style="float: right">
-        <v-btn icon @click="deleteExerciseClicked">
+        <v-btn icon @click.stop="deleteExerciseClicked">
           <v-icon color="error" size="27">mdi-trash-can</v-icon>
         </v-btn>
       </div>
