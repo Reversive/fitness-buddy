@@ -1,5 +1,5 @@
 <template>
-  <v-card width="21%" elevation="0" class="purple--text text--darken-4 my-4" @click="expandDetails">
+  <v-card width="100%" elevation="0" class="purple--text text--darken-4 my-4" @click="expandDetails">
     <div v-if="!routine.username" class="editBtn">
       <v-btn fab x-small elevation="0" color="transparent" @click.stop="editRoutine">
         <v-icon class="purple--text text--darken-4 big-text">mdi-pencil</v-icon>

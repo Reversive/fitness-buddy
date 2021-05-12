@@ -1,7 +1,9 @@
 <template>
   <div class="p-relative fullWidth">
-    <v-row class="justify-space-between mb-10">
-      <RoutinePreviewCard v-for="routine in routines" :key="routine.id" :routine="routine" @onDeleteRoutine="deleteRoutine"/>
+    <v-row class="justify-start mb-10">
+      <v-col v-for="routine in routines" :key="routine.id" :routine="routine" cols="3">
+        <RoutinePreviewCard :routine="routine" @onDeleteRoutine="deleteRoutine"/>
+      </v-col>
     </v-row>
     <v-btn v-if="showLoadMore" v-on:click="getRoutines" class="loadMoreBtn">Load More</v-btn>
   </div>
