@@ -22,12 +22,28 @@ class ExerciseApi {
         return await Api.get(`${ExerciseApi.url}/${exercise_id}/images`, true, null);
     }
 
+    static async updateImage(exercise_id, image) {
+        return await Api.put(`${ExerciseApi.url}/${exercise_id}/images/1`, true, image, null);
+    }
+
     static async addVideo(exercise_id, video) {
         return await Api.post(`${ExerciseApi.url}/${exercise_id}/videos`, true, video);
     }
 
+    static async updateVideo(exercise_id, video) {
+        return await Api.put(`${ExerciseApi.url}/${exercise_id}/videos/1`, true, video, null);
+    }
+
     static async getVideos(exercise_id) {
         return await Api.get(`${ExerciseApi.url}/${exercise_id}/videos`, true, null);
+    }
+
+    static async deleteExercise(exercise_id) {
+        return await Api.delete(`${ExerciseApi.url}/${exercise_id}`, true, null);
+    }
+
+    static async update(exercise_id, exercise) {
+        return await Api.put(`${ExerciseApi.url}/${exercise_id}`, true, exercise, null);
     }
 
 }
