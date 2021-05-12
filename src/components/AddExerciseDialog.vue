@@ -44,7 +44,6 @@
         <v-text-field
           class="reps d-inline-block"
           outlined
-          disabled
           v-model="repetitions"
           hide-details
           single-line

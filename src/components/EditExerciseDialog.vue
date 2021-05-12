@@ -2,16 +2,8 @@
   <v-card>
     <div
         class="white--text title-bg">
-      <h2 class="d-inline-block ma-4 text-uppercase">EDIT EXERCISE</h2>
+      <h2 class="d-inline-block ma-4 text-uppercase">EDIT CYCLE EXERCISE</h2>
       <span class="float-right d-inline-block">
-        <v-btn
-            depressed
-            color="error"
-            class="my-4 mr-4 font-weight-bold"
-            @click="handleDeleteExercise"
-        >
-      DELETE
-    </v-btn>
       <v-btn
           depressed
           color="success"

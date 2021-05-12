@@ -21,7 +21,7 @@
           v-for="exercise in exercises"
           :key="exercise.id"
          >
-        <CExerciseCard :exercise-info="exercise" @click.native="handleEditExercise(exercise)" class="clickable-cursor" :key="exercise.id"/>
+        <CExerciseCard :exercise-info="exercise" @deleteExerciseClicked="deleteExercise(exercise)" @editExerciseClicked="handleEditExercise(exercise)" class="clickable-cursor" :key="exercise.id"/>
       </v-slide-item>
       <v-slide-item v-if="isDetail !== true">
         <CAddExerciseCard v-on:addExerciseSuccess="addExerciseToCycleArray"/>
@@ -156,18 +156,18 @@ export default {
     getCycleExercises() {
       return this.getCycle().cycle.exercises;
     },
-    deleteExercise() {
+    deleteExercise(exercise) {
       this.editDialog = false;
       let exercises = this.getCycleExercises();
-      let idx = exercises.findIndex(e => e.id === EditStore.currentExercise.id);
+      console.log(exercise);
+      let idx = exercises.findIndex(e => e.exercise.id === exercise.exercise.id);
       exercises.splice(idx, 1);
     },
     updateExercise() {
       this.editDialog = false;
-      let idx = this.getCycleExercises().findIndex(e => e.id === EditStore.currentExercise.id);
+      let idx = this.getCycleExercises().findIndex(e => e.exercise.id === EditStore.currentExercise.exercise.id);
       this.getCycleExercises()[idx].duration = EditStore.currentExercise.duration;
       this.getCycleExercises()[idx].repetitions = EditStore.currentExercise.repetitions;
-      console.log(this.getCycleExercises()[idx]);
     },
     handleEditExercise(exercise) {
       this.counter++;
