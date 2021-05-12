@@ -35,9 +35,13 @@
                 v-model="videoLink"
                 :rules="nameRules"
                 label="VIDEO LINK"
+                @input="parseUrl"
                 required
             />
       </v-container>
+      <div class="text-center">
+        <iframe id="videoPreview" :src=parsedURL height="200" width="340" allowfullscreen></iframe>
+      </div>
     </v-form>
 
     <v-divider></v-divider>
@@ -80,6 +84,7 @@ export default {
     exerciseName: '',
     exerciseDetail: '',
     videoLink: '',
+    parsedURL:'',
     exerciseType: '',
     imageLink: '',
     nameRules: [
@@ -111,6 +116,22 @@ export default {
         console.error("Something went wrong creating exercise");
       });
 
+    },
+    parseUrl(){
+      function getId(url){
+        let ID;
+        url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+        if(url[2] !== undefined) {
+          ID = url[2].split(/[^0-9a-z_-]/i);
+          ID = ID[0];
+        }
+        else {
+          ID = url;
+        }
+        return ID;
+      }
+      let videoId=getId(this.videoLink);
+      this.parsedURL="https://www.youtube.com/embed/"+videoId;
     }
   }
 }
