@@ -39,11 +39,12 @@
             hide-details
             single-line
         /><div class="text-h7 d-inline-block font-weight-bold">SECONDS</div>
-      <span class="pl-2 mt-4 float-right mr-5">
+      <span class="pl-2 mt-4 float-right mr-5" v-if="!isRestExercise">
         <h3 class="d-inline-block mr-2">EXERCISE REPETITIONS:</h3>
         <v-text-field
           class="reps d-inline-block"
           outlined
+          disabled
           v-model="repetitions"
           hide-details
           single-line
@@ -117,7 +118,8 @@ export default {
       exerciseStore: ExerciseStore,
       selectedExercise: null,
       duration : 0,
-      repetitions: 0
+      repetitions: 0,
+      isRestExercise: false,
     }
   },
   components: {
@@ -142,6 +144,10 @@ export default {
     },
     setSelectedExercise(selection) {
       this.selectedExercise = selection;
+      let currentExerciseIndex = this.exerciseStore.exercises.findIndex(e => e.id === this.selectedExercise);
+      let currentExercise = this.exerciseStore.exercises[currentExerciseIndex];
+      this.isRestExercise = currentExercise.type === 'REST';
+      return this.selectedExercise;
     },
     isExerciseSelected() {
       return this.selectedExercise !== null;

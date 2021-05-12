@@ -31,7 +31,7 @@
       <h2 v-if="isDetail()" class="text-left pt-2 d-inline-block" style="color: white">
         <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-search-outline</v-icon>ROUTINE DETAIL
       </h2>
-      <v-btn v-if="isDetail" class="rounded-pill" style="position: absolute; top: 20px; right: 10px" @click="copyLink">
+      <v-btn v-if="isDetail()" class="rounded-pill" style="position: absolute; top: 20px; right: 10px" @click="copyLink">
         SHARE
         <input type="hidden" id="linkInput"/>
       </v-btn>
@@ -275,7 +275,7 @@ export default {
     ExerciseApi.get().then(response => {
       if(response.totalCount === 0) {
         ExerciseStore.exercises.forEach(e => {
-          let exercisePayload = new Exercise(e.name, "", "exercise");
+          let exercisePayload = new Exercise(e.name, e.detail, e.type);
           let exerciseResponse = ExerciseApi.add(exercisePayload);
           exerciseResponse.then(exercise => {
             e.id = exercise.id;
@@ -296,7 +296,7 @@ export default {
               let currentVideo = video.content[0].url;
               let idx = ExerciseStore.exercises.findIndex(ex => ex.name === e.name);
               if(idx === -1) {
-                ExerciseStore.exercises.push({id: e.id, name: e.name, image: currentImage, video: currentVideo, detail: e.detail});
+                ExerciseStore.exercises.push({id: e.id, name: e.name, image: currentImage, video: currentVideo, detail: e.detail, type: e.type});
               } else {
                 ExerciseStore.exercises[idx].id = e.id;
               }

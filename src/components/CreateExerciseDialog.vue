@@ -10,28 +10,31 @@
             <v-text-field
                 v-model="exerciseName"
                 :rules="nameRules"
-                label="Exercise Title"
+                label="EXERCISE TITLE"
                 required
             />
+            <v-select :items="['EXERCISE', 'REST']"
+                       label="EXERCISE TYPE"
+                       v-model="exerciseType"/>
             <v-textarea
                 v-model="exerciseDetail"
                 :rules="nameRules"
                 maxlength="50"
                 single-line
                 counter
-                label="Exercise Detail"
+                label="EXERCISE DETAIL"
                 required
             />
             <v-text-field
                 v-model="imageLink"
                 :rules="nameRules"
-                label="Image Link"
+                label="IMAGE LINK"
                 required
             />
             <v-text-field
                 v-model="videoLink"
                 :rules="nameRules"
-                label="Video Link"
+                label="VIDEO LINK"
                 required
             />
       </v-container>
@@ -77,6 +80,7 @@ export default {
     exerciseName: '',
     exerciseDetail: '',
     videoLink: '',
+    exerciseType: '',
     imageLink: '',
     nameRules: [
       v => !!v || 'This field is required',
@@ -85,14 +89,20 @@ export default {
   }),
   methods: {
     createExercise() {
-      let apiExercise = new Exercise(this.exerciseName, this.exerciseDetail, "exercise");
+      let apiExercise = new Exercise(this.exerciseName, this.exerciseDetail, this.exerciseType.toLowerCase());
       let apiResponse = ExerciseApi.add(apiExercise);
       apiResponse.then(exercise => {
         let image = new Image(this.imageLink);
         ExerciseApi.addImage(exercise.id, image);
         let video = new Video(this.videoLink);
         ExerciseApi.addVideo(exercise.id, video);
-        let renderExercise = {id: exercise.id, name: this.exerciseName, image: this.imageLink, video: this.videoLink, detail: this.exerciseDetail};
+        let renderExercise = {
+          id: exercise.id,
+          name: this.exerciseName,
+          image: this.imageLink,
+          video: this.videoLink,
+          detail: this.exerciseDetail,
+          type: this.exerciseType};
         this.exerciseLibrary.push(renderExercise);
         this.$emit('close-create-exercise-dialog', false);
         this.exerciseName = '';

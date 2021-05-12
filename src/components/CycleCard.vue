@@ -6,7 +6,7 @@
       width="100%"
       color="white"
   >
-    <div class="mx-5 pt-1">
+    <div class="mx-5 pt-1" v-if="this.identifier > 3">
       <span class="float-right" v-if="isDetail !== true">
         <v-btn class="ml-5" icon x-large @click="deleteCycleCard">
         <v-icon color="error" x-large>mdi-trash-can</v-icon>
