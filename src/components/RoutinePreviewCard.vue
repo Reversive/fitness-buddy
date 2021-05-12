@@ -9,13 +9,12 @@
       </v-btn>
     </div>
     <v-row class="py-2 px-4 headerRow" no-gutters align="center">
-      <v-col :cols="routine.username?8:12" class="font-weight-bold">{{ routine.title }}</v-col>
+      <v-col :cols="routine.username?8:12" class="font-weight-bold text-uppercase">{{ routine.title }}</v-col>
     </v-row>
     <div class="pa-2" :class="{'pb-6': routine.username, 'pb-4': !routine.username}">
       <RoutineCardItem icon="mdi-bullseye" :text="routine.target"/>
       <RoutineCardItem icon="mdi-speedometer" :text="routine.difficulty"/>
     </div>
-    <!--<v-btn @click="expandDetails">More Details</v-btn>-->
     <span v-if="routine.username" class="username">by: {{routine.username}}</span>
   </v-card>
 </template>

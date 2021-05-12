@@ -3,7 +3,7 @@
     <v-col cols="3" class="text-center">
       <v-icon class="purple--text text--darken-4">{{ icon }}</v-icon>
     </v-col>
-    <v-col cols="8">{{ text }}</v-col>
+    <v-col cols="8" class="text-uppercase">{{ text }}</v-col>
   </v-row>
 </template>
 

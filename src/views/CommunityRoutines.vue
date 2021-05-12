@@ -85,7 +85,7 @@ export default {
           this.routines.push({
             id: result.id,
             title: result.name,
-            target: result.category.name.toLowerCase(),
+            target: result.category.name,
             difficulty: result.difficulty,
             link: '/profile',
             username: result.user.username
