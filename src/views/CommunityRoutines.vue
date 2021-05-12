@@ -10,7 +10,7 @@
         <v-icon large color="white" class="pr-3 mb-1" >mdi-account-group</v-icon>COMMUNITY ROUTINES
       </h2>
       <v-container fill-height>
-        <v-layout row wrap align-center>
+        <v-layout row wrap align-center class="mx-2">
           <v-flex class="mt-5 align-center">
             <v-select
                 :items="orderItems"
