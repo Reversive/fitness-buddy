@@ -275,7 +275,7 @@ export default {
     ExerciseApi.get().then(response => {
       if(response.totalCount === 0) {
         ExerciseStore.exercises.forEach(e => {
-          let exercisePayload = new Exercise(e.name, e.detail, e.type);
+          let exercisePayload = new Exercise(e.name, e.detail, e.type.toLowerCase());
           let exerciseResponse = ExerciseApi.add(exercisePayload);
           exerciseResponse.then(exercise => {
             e.id = exercise.id;
@@ -296,7 +296,7 @@ export default {
               let currentVideo = video.content[0].url;
               let idx = ExerciseStore.exercises.findIndex(ex => ex.name === e.name);
               if(idx === -1) {
-                ExerciseStore.exercises.push({id: e.id, name: e.name, image: currentImage, video: currentVideo, detail: e.detail, type: e.type});
+                ExerciseStore.exercises.push({id: e.id, name: e.name, image: currentImage, video: currentVideo, detail: e.detail, type: e.type.toUpperCase(), builtIn: false});
               } else {
                 ExerciseStore.exercises[idx].id = e.id;
               }
