@@ -29,7 +29,6 @@
 </template>
 
 <script>
-//import RoutinePreviewCard from "../components/RoutinePreviewCard";
 import {UserApi} from "@/api/user";
 import {RoutineApi} from "@/api/routine";
 import Routines from "@/components/Routines";
@@ -67,7 +66,7 @@ export default {
     },
     getRoutines() {
       UserApi.getRoutines({page: this.page, size: this.pageSize}).then((results) => {
-        this.showLoadMore = !(results.content.length === 0 || results.content.length < this.pageSize);
+        this.showLoadMore = !results.isLastPage;
         for (let i = 0; i < results.content.length; i++) {
           const result = results.content[i];
           this.routines.push({
