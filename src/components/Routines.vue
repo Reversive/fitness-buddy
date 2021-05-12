@@ -1,12 +1,12 @@
 <template>
-  <div class="p-relative fullWidth">
+  <v-container class="p-relative fullWidth">
     <v-row class="justify-start mb-10">
       <v-col v-for="routine in routines" :key="routine.id" :routine="routine" cols="3">
         <RoutinePreviewCard :routine="routine" v-on="mine?{onDeleteRoutine: deleteRoutine}:null"/>
       </v-col>
     </v-row>
     <v-btn v-if="showLoadMore" v-on:click="getRoutines" class="loadMoreBtn">Load More</v-btn>
-  </div>
+  </v-container>
 </template>
 <script>
 import RoutinePreviewCard from "@/components/RoutinePreviewCard";
