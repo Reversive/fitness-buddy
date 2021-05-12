@@ -265,64 +265,61 @@ export default {
     source:String
   },
   methods: {
-     packageData(){
-      let data={
-        username:this.email_signup,
-        email:this.email_signup,
-        password:this.password_signup,
-        firstName:this.name,
-        gender:undefined,
-        birthdate:undefined,
-        metadata:undefined
-      }
-     let metadata={'height':undefined,'weight':undefined};
-      if(this.sex!=null) {
-        data.gender=this.sex;
-      }
-      if(this.age!=null){
-        data.birthdate=this.age;
-      }if(this.weight!=null){
-        metadata.Weight=this.weight;
-      }if(this.height!=null){
-        metadata.Height=this.height;
-      }
-      if(metadata.Height!=null||metadata.Weight!=null){
+     packageData() {
+        let data={
+          username:this.email_signup,
+          email:this.email_signup,
+          password:this.password_signup,
+          firstName:this.name
+        }
+        let metadata= {};
+        if(this.sex!=null) {
+          data.gender=this.sex;
+        }
+        if(this.age!=null) {
+          data.birthdate=this.age;
+        }
+        if(this.weight!=null) {
+          metadata.weight=this.weight;
+        }
+        if(this.height!=null) {
+          metadata.height=this.height;
+        }
         data.metadata=metadata;
-      }
-      return data
-      },
+        return data;
+     },
     async handleSignIn() {
-      try{
-        const credentials = new Credentials(this.email_login, this.password_login);
-        await UserApi.login(credentials, null);
-        await this.$router.push('/community-routines');
-      }catch (e) {
-       this.cycleFail.text=e.details;
-       this.cycleFail.visible = !this.cycleFail.visible;
-      }
+        try{
+          const credentials = new Credentials(this.email_login, this.password_login);
+          await UserApi.login(credentials, null);
+          await this.$router.push('/community-routines');
+        }catch (e) {
+         this.cycleFail.text=e.details;
+         this.cycleFail.visible = !this.cycleFail.visible;
+        }
     },
     async handleSignUp() {
-      try{
-        await UserApi.register(this.packageData());
-        this.step++;
-      }catch (e) {
-        this.cycleFail.text=e.details;
-        this.cycleFail.visible = !this.cycleFail.visible;
-      }
+        try{
+          await UserApi.register(this.packageData());
+          this.step++;
+        }catch (e) {
+          this.cycleFail.text=e.details;
+          this.cycleFail.visible = !this.cycleFail.visible;
+        }
     },
     async confirmRegister(){
-      try{
-        const credentials = new Verification(this.email_signup,this.code);
-        await UserApi.verifyCode(credentials);
-        this.step = 1;
-        this.cycleRegisterSuccess.visible = !this.cycleRegisterSuccess.visible;
-      }catch(e){
-        this.cycleFail.text=e.details;
-        this.cycleFail.visible = !this.cycleFail.visible;
-      }
+        try{
+          const credentials = new Verification(this.email_signup,this.code);
+          await UserApi.verifyCode(credentials);
+          this.step = 1;
+          this.cycleRegisterSuccess.visible = !this.cycleRegisterSuccess.visible;
+        }catch(e){
+          this.cycleFail.text=e.details;
+          this.cycleFail.visible = !this.cycleFail.visible;
+        }
     },
     async resendCode() {
-      await UserApi.resendVerificationCode(this.email_signup);
+        await UserApi.resendVerificationCode(this.email_signup);
     }
   }
 }
