@@ -161,6 +161,11 @@
         >
             SAVE CHANGES
           </v-btn>
+      </span>
+      <v-container v-if="isDetail()" class="text-center mb-0 pb-0">
+        <h2 class="font-weight-bold white--text">
+          RATE THIS ROUTINE
+        </h2>
         <v-rating
             empty-icon="mdi-star-outline"
             full-icon="mdi-star"
@@ -174,8 +179,8 @@
             length="5"
             size="32"
             :value="score"
-        ></v-rating>
-      </span>
+        />
+      </v-container>
 
     </v-container>
 
