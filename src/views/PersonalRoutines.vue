@@ -8,6 +8,9 @@
         <h2 class="text-left ml-5 pt-5 white--text d-inline-block">
           <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-account-outline</v-icon>MY ROUTINES
         </h2>
+      <v-overlay v-bind:value="loading" absolute opacity="0.5">
+        <v-progress-circular indeterminate size="64"/>
+      </v-overlay>
       <v-btn class="rounded-pill createBtn font-weight-bold" color="success" @click="$router.push('/create-routine')">CREATE ROUTINE</v-btn>
       <Routines v-bind:routines="routines" v-bind:showLoadMore="showLoadMore" :getRoutines="getRoutines" :deleteRoutine="deleteRoutine" :mine="true"/>
       <v-snackbar v-model="successSnackbar.visible" :color="successSnackbar.color" :multi-line="successSnackbar.mode === 'multi-line'" :timeout="successSnackbar.timeout" :top="successSnackbar.position === 'top'">
@@ -39,9 +42,10 @@ export default {
   data: () => {
     return {
       routines: [],
-      pageSize: 3,
+      pageSize: 8,
       page: 0,
       showLoadMore: false,
+      loading: true,
       successSnackbar: {
         color: "success",
         icon: "mdi-check-circle",
@@ -68,6 +72,7 @@ export default {
       }
     },
     getRoutines() {
+      this.loading = true;
       UserApi.getRoutines({page: this.page, size: this.pageSize}).then((results) => {
         this.showLoadMore = !results.isLastPage;
         for (let i = 0; i < results.content.length; i++) {
@@ -81,6 +86,7 @@ export default {
             link: '/profile'
           });
         }
+        this.loading = false;
         this.page++;
       }).catch((e) => {
         console.log(e);

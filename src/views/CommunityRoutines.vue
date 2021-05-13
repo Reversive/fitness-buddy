@@ -9,6 +9,9 @@
       <h2 class="text-left ml-5 pt-5 d-inline-block white--text">
         <v-icon large color="white" class="pr-3 mb-1" >mdi-account-group</v-icon>COMMUNITY ROUTINES
       </h2>
+      <v-overlay v-bind:value="loading" absolute opacity="0.5">
+        <v-progress-circular indeterminate size="64"/>
+      </v-overlay>
       <v-container fill-height>
         <v-layout row wrap align-center class="mx-2">
           <v-flex class="mt-5 align-center">
@@ -129,6 +132,7 @@ export default {
       routines: [],
       searchBy: 'none',
       searchTerm: null,
+      loading: true,
       searchFilter: [
         {text: 'NONE', value: 'none'},
         {text: 'NAME', value: 'search'},
@@ -174,7 +178,7 @@ export default {
       model: null,
       page: 0,
       showLoadMore: false,
-      pageSize: 3
+      pageSize: 8
     }
   },
   mounted() {
@@ -183,6 +187,7 @@ export default {
       this.routines = [];
       this.page = 0;
       this.search = false;
+      this.loading = true;
       this.getRoutines();
     }).catch((e) => {
       alert("Unable to retireve categories with error: " + e.message);
@@ -195,6 +200,7 @@ export default {
       this.getRoutines();
     },
     getRoutines() {
+      this.loading = true;
       let req = {page: this.page, size: this.pageSize, orderBy: this.orderBy, direction: this.order};
       if (this.search) {
         req[this.searchBy] = this.searchTerm;
@@ -221,6 +227,7 @@ export default {
           });
         }
         this.page++;
+        this.loading = false;
       }).catch((e) => {
         console.log(e);
       });
