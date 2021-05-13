@@ -553,6 +553,11 @@ export default {
         }
         return;
       }
+      if(this.areCyclesEmpty()) {
+        this.missingFieldSnackbar.text = "All cycles must have at least one exercise.";
+        this.missingFieldSnackbar.visible = !this.missingFieldSnackbar.visible;
+        return;
+      }
       this.loading = true;
       if(isEditing) {
         let deleteResponse = RoutineApi.delete(this.query);
@@ -583,6 +588,15 @@ export default {
       });
       if(isEditing) await this.$router.push({ path: '/personal-routines', query: { q: 'edit' } });
       else await this.$router.push({ path: '/personal-routines', query: { q: 'create' } });
+    },
+    areCyclesEmpty() {
+      let cycles = this.routine.cycles;
+      let found = false;
+      for(let i = 0; i < cycles.length && !found; i++) {
+        let cycle = cycles[i].cycle;
+        if(cycle.exercises.length === 0) found = true;
+      }
+      return found;
     },
     isRoutineFieldMissing() {
       this.missingFieldSnackbar.text = "Please fill ";

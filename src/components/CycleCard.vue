@@ -121,7 +121,7 @@ export default {
         position: "bot",
         timeout: 3500,
         title: "Success",
-        text: "Exercise added successfully.",
+        text: null,
         visible: false
       }
     }
@@ -139,6 +139,18 @@ export default {
   methods: {
     addExerciseToCycleArray(payload) {
       this.exerciseSuccessSnackbar.visible = true;
+      if(this.isExerciseAlreadyPresent(payload)) {
+        this.exerciseSuccessSnackbar.icon = "mdi-close-circle";
+        this.exerciseSuccessSnackbar.color = "error";
+        this.exerciseSuccessSnackbar.title = "Error";
+        this.exerciseSuccessSnackbar.text = "You can't add the same exercise in a cycle.";
+        return;
+      } else {
+        this.exerciseSuccessSnackbar.icon = "mdi-check-circle";
+        this.exerciseSuccessSnackbar.title = "Success";
+        this.exerciseSuccessSnackbar.color = "success";
+        this.exerciseSuccessSnackbar.text = "Exercise added successfully.";
+      }
       this.exercises = this.getCycleExercises();
       this.getCycleExercises().push(payload);
     },
@@ -147,7 +159,10 @@ export default {
       if(result) {
         this.$emit('cycleTrashClicked', this.identifier);
       }
-
+    },
+    isExerciseAlreadyPresent(payload) {
+      let exercise = payload.exercise;
+      return this.getCycleExercises().findIndex(e => e.exercise === exercise) >= 0;
     },
     getCycle() {
       let index = RoutineStore.cycles.findIndex(c => c.cycle.order === this.identifier);

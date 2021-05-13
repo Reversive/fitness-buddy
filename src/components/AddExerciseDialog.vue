@@ -111,7 +111,7 @@ export default {
         position: "bot",
         timeout: 4000,
         title: "Error",
-        text: "Please select an exercise and input either the exercise duration or the amount of repetitions.",
+        text: null,
         visible: false
       },
       exerciseStore: ExerciseStore,
@@ -129,9 +129,11 @@ export default {
   methods: {
     addExerciseClicked() {
       if(!this.areRequirementsMet()) {
+        this.errorSnackbar.text = "Please select an exercise and input either the exercise duration or the amount of repetitions.";
         this.errorSnackbar.visible = true;
         return null;
       }
+
       let currentExerciseIndex = this.exerciseStore.exercises.findIndex(e => e.id === this.selectedExercise);
       let currentExercise = this.exerciseStore.exercises[currentExerciseIndex];
       let payload = { duration: this.duration, repetitions: this.repetitions, exercise: currentExercise};
