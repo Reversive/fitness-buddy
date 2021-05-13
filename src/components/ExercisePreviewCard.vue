@@ -16,7 +16,7 @@
           <v-icon color="error">mdi-trash-can</v-icon>
         </v-btn>
       </div>
-    <v-card-text class="text-center white--text">
+    <v-card-text class="text-center white--text text-uppercase">
       <h3 class="ml-5" v-if="exercise.builtIn === false">{{exercise.name}}</h3>
       <h3 v-if="exercise.builtIn === true">{{exercise.name}}</h3>
     </v-card-text>
