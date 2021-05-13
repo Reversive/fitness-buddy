@@ -29,6 +29,7 @@
             />
             <v-select
                 :items="searchOrder"
+                v-if="orderBy !== 'none'"
                 v-on:change="orderRoutines"
                 v-model="order"
                 item-color="primary"
@@ -158,6 +159,7 @@ export default {
       author: null,
       search: false,
       orderItems: [
+        {text: 'NONE', value: 'none'},
         {text: 'RATING', value: 'averageRating'},
         {text: 'NAME', value: 'name'},
         {text: 'DATE', value: 'date'},
@@ -200,7 +202,11 @@ export default {
     },
     getRoutines() {
       this.loading = true;
-      let req = {page: this.page, size: this.pageSize, orderBy: this.orderBy, direction: this.order};
+      let req = {page: this.page, size: this.pageSize};
+      if (this.orderBy !== 'none') {
+        req.orderBy = this.orderBy;
+        req.direction = this.order;
+      }
       if (this.search) {
         req[this.searchBy] = this.searchTerm;
         if (this.searchBy === 'userId' && this.author) {
