@@ -59,6 +59,7 @@
         readonly
         hide-details
     />
+
     </v-container>
       <v-container class="mt-2">
 
@@ -93,34 +94,48 @@
         />
 
         <span class="pl-2 float-right mr-5 ">
-        <h3 v-if="!isDetail()" class="white--text d-inline-block">
-          SELECT DIFFICULTY:
-        </h3>
-        <h3 v-if="isDetail()" class="white--text d-inline-block">
-          DIFFICULTY:
-        </h3>
-        <v-autocomplete
-            :items="types.difficulties"
-            v-model="routine.difficulty"
-            class="white--text d-inline-block ml-2 text-uppercase"
-            full-width
-            v-if="!isDetail()"
-            hide-details
-            hide-no-data
-            hide-selected
-            outlined
-            single-line
-        />
-        <v-text-field
-            v-model="routine.difficulty"
-            class="white--text d-inline-block ml-2 text-uppercase"
-            color="white"
-            v-if="isDetail()"
-            outlined
-            readonly
-            hide-details
-        />
-    </span>
+          <h3 v-if="!isDetail()" class="white--text d-inline-block">
+            SELECT DIFFICULTY:
+          </h3>
+          <h3 v-if="isDetail()" class="white--text d-inline-block">
+            DIFFICULTY:
+          </h3>
+          <v-autocomplete
+              :items="types.difficulties"
+              v-model="routine.difficulty"
+              class="white--text d-inline-block ml-2 text-uppercase"
+              full-width
+              v-if="!isDetail()"
+              hide-details
+              hide-no-data
+              hide-selected
+              outlined
+              single-line
+          />
+          <v-text-field
+              v-model="routine.difficulty"
+              class="white--text d-inline-block ml-2 text-uppercase"
+              color="white"
+              v-if="isDetail()"
+              outlined
+              readonly
+              hide-details
+          />
+        </span>
+      </v-container>
+      <v-container>
+        <span class="float-right">
+          <v-switch
+              v-model="routine.isPublic"
+              color="white"
+              class="mr-5"
+              inset
+          >
+           <template v-slot:label>
+             <span style="color: white" class="font-weight-bold text-uppercase">PUBLISH ROUTINE</span>
+           </template>
+          </v-switch>
+        </span>
       </v-container>
     <div v-for="cycle_type in types.cycleTypes" :key="cycle_type.name" class="mt-0">
       <CCycleCardTitle :text="cycle_type.name" :icon="cycle_type.icon" />
@@ -597,7 +612,7 @@ export default {
         deleteResponse.then(() => console.log('success'));
       }
       let category = this.getRoutineCategory(isEditing);
-      let routinePayload = new Routine(this.routine.name, "", true, this.routine.difficulty.toLowerCase(), category.id);
+      let routinePayload = new Routine(this.routine.name, "", this.routine.isPublic, this.routine.difficulty.toLowerCase(), category.id);
       let routineResponse = RoutineApi.add(routinePayload);
       await routineResponse.then(routine => {
         this.routine.cycles.forEach(c => {
@@ -717,6 +732,7 @@ export default {
   .v-text-field--outlined >>> input {
     color: white;
   }
+
 
 
 </style>

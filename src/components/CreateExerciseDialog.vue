@@ -67,6 +67,9 @@
                 label="IMAGE LINK"
                 required
             />
+
+            <v-img :src="imageLink" contain height="200"/>
+
             <v-text-field
                 v-model="videoLink"
                 :rules="nameRules"
@@ -207,8 +210,10 @@ export default {
         }
         return ID;
       }
-      let videoId=getId(this.videoLink);
-      this.parsedURL="https://www.youtube.com/embed/"+videoId;
+      let videoId;
+      if(this.isEdit) videoId = getId(this.exerciseCache.video);
+      else videoId = getId(this.videoLink);
+      this.parsedURL="https://www.youtube.com/embed/" + videoId;
     },
     async editExercise() {
       let exercisePayload = new Exercise(this.exerciseCache.name, this.exerciseCache.detail, this.exerciseCache.type.toLowerCase());
