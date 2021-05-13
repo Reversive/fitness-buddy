@@ -123,7 +123,7 @@
           />
         </span>
       </v-container>
-      <v-container>
+      <v-container v-if="!isDetail()">
         <span class="float-right">
           <v-switch
               v-model="routine.isPublic"
