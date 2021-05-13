@@ -14,102 +14,106 @@
       </v-overlay>
       <v-container fill-height>
         <v-layout row wrap align-center class="mx-2">
-          <v-flex class="d-inline-block mt-5 align-baseline">
-            <v-select
-                :items="orderItems"
-                v-on:change="orderRoutines"
-                v-model="orderBy"
-                item-color="primary"
-                dark
-                label="ORDER BY"
-                class="sort-by-px d-inline-block white--text"
-                color="white"
-                dense
-                outlined
-            />
-            <v-select
-                :items="searchOrder"
-                v-if="orderBy !== 'none'"
-                v-on:change="orderRoutines"
-                v-model="order"
-                item-color="primary"
-                dark
-                label="ORDER"
-                class="sort-by-px d-inline-block white--text ml-5"
-                color="white"
-                dense
-                outlined
-            />
-            <v-select
-                :items="searchFilter"
-                v-model="searchBy"
-                v-on:change="resetSearch"
-                item-color="primary"
-                dark
-                label="SEARCH BY"
-                class="sort-by-px d-inline-block white--text ml-5"
-                color="white"
-                dense
-                outlined
-            />
-            <v-text-field
-                v-if="searchBy === 'search' || searchBy === 'userId'"
-                id="searchInput"
-                class="ml-5 d-inline-block search-bar"
-                dark
-                label="SEARCH"
-                v-model="searchTerm"
-                v-on:keyup="validateSearch"
-                v-on:keyup.enter.prevent="searchRoutines"
-                v-on:click:append="searchRoutines"
-                v-bind:error-messages="errorMessages"
-                append-icon="mdi-magnify"
-                out
-                color="white"
+          <v-row class="mt-5 align-center">
+            <v-col class="text-left">
+              <v-select
+                  :items="searchFilter"
+                  v-model="searchBy"
+                  v-on:change="resetSearch"
+                  item-color="primary"
+                  dark
+                  label="SEARCH BY"
+                  class="sort-by-px d-inline-block white--text"
+                  color="white"
+                  dense
+                  outlined
+              />
+              <v-text-field
+                  v-if="searchBy === 'search' || searchBy === 'userId'"
+                  id="searchInput"
+                  class="ml-5 d-inline-block search-bar"
+                  dark
+                  label="SEARCH"
+                  v-model="searchTerm"
+                  v-on:keyup="validateSearch"
+                  v-on:keyup.enter.prevent="searchRoutines"
+                  v-on:click:append="searchRoutines"
+                  v-bind:error-messages="errorMessages"
+                  append-icon="mdi-magnify"
+                  out
+                  color="white"
+              />
+              <span v-if="searchBy === 'categoryId'">
+                <v-select
+                    :items="categories"
+                    v-model="searchTerm"
+                    item-color="primary"
+                    v-on:change="searchRoutines"
+                    dark
+                    label="SELECT"
+                    class="sort-by-px ml-5 d-inline-block white--text"
+                    color="white"
+                    dense
+                    outlined
                 />
-            <span v-if="searchBy === 'categoryId'">
+              </span>
+              <span v-if="searchBy === 'difficulty'">
+                <v-select
+                    :items="difficulties"
+                    v-model="searchTerm"
+                    item-color="primary"
+                    v-on:change="searchRoutines"
+                    dark
+                    label="SELECT"
+                    class="sort-by-px ml-5 d-inline-block white--text"
+                    color="white"
+                    dense
+                    outlined
+                />
+              </span>
+              <span v-if="searchBy === 'averageRating'">
+                <v-select
+                    :items="ratings"
+                    v-model="searchTerm"
+                    item-color="primary"
+                    v-on:change="searchRoutines"
+                    dark
+                    label="SELECT"
+                    class="sort-by-px ml-5 d-inline-block white--text"
+                    color="white"
+                    dense
+                    outlined
+                />
+              </span>
+            </v-col>
+            <v-col class="text-right">
               <v-select
-                  :items="categories"
-                  v-model="searchTerm"
+                  :items="orderItems"
+                  v-on:change="orderRoutines"
+                  v-model="orderBy"
                   item-color="primary"
-                  v-on:change="searchRoutines"
                   dark
-                  label="SELECT"
-                  class="sort-by-px ml-5 d-inline-block white--text"
+                  label="ORDER BY"
+                  class="sort-by-px d-inline-block white--text"
                   color="white"
                   dense
                   outlined
               />
-            </span>
-            <span v-if="searchBy === 'difficulty'">
               <v-select
-                  :items="difficulties"
-                  v-model="searchTerm"
+                  :items="searchOrder"
+                  v-if="orderBy !== 'none'"
+                  v-on:change="orderRoutines"
+                  v-model="order"
                   item-color="primary"
-                  v-on:change="searchRoutines"
                   dark
-                  label="SELECT"
-                  class="sort-by-px ml-5 d-inline-block white--text"
+                  label="ORDER"
+                  class="sort-by-px d-inline-block white--text ml-5"
                   color="white"
                   dense
                   outlined
               />
-            </span>
-            <span v-if="searchBy === 'averageRating'">
-              <v-select
-                  :items="ratings"
-                  v-model="searchTerm"
-                  item-color="primary"
-                  v-on:change="searchRoutines"
-                  dark
-                  label="SELECT"
-                  class="sort-by-px ml-5 d-inline-block white--text"
-                  color="white"
-                  dense
-                  outlined
-              />
-            </span>
-          </v-flex>
+            </v-col>
+          </v-row>
           <Routines v-bind:routines="routines" v-bind:showLoadMore="showLoadMore" :getRoutines="getRoutines"/>
         </v-layout>
       </v-container>
