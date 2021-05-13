@@ -1,5 +1,8 @@
 <template>
     <v-container class="fill-height" fluid>
+      <v-overlay v-bind:value="loading" absolute opacity="0.5">
+        <v-progress-circular indeterminate size="64"/>
+      </v-overlay>
       <v-row align="center" justify="center">
         <v-col cols="12" sm="8" md="8">
           <v-card class="elevation-12">
@@ -224,6 +227,7 @@ export default {
   data: () => {
     return{
       step: 1,
+      loading: false,
       show1: false,
       show2: false,
       valid: false,
@@ -290,32 +294,41 @@ export default {
      },
     async handleSignIn() {
         try{
+          this.loading = true;
           const credentials = new Credentials(this.email_login, this.password_login);
           await UserApi.login(credentials, null);
+          this.loading = false;
           await this.$router.push('/community-routines');
         }catch (e) {
          this.cycleFail.text=e.details;
          this.cycleFail.visible = !this.cycleFail.visible;
+         this.loading = false;
         }
     },
     async handleSignUp() {
         try{
+          this.loading = true;
           await UserApi.register(this.packageData());
+          this.loading = false;
           this.step++;
         }catch (e) {
           this.cycleFail.text=e.details;
           this.cycleFail.visible = !this.cycleFail.visible;
+          this.loading = false;
         }
     },
     async confirmRegister(){
         try{
+          this.loading = true;
           const credentials = new Verification(this.email_signup,this.code);
           await UserApi.verifyCode(credentials);
           this.step = 1;
           this.cycleRegisterSuccess.visible = !this.cycleRegisterSuccess.visible;
+          this.loading = false;
         }catch(e){
           this.cycleFail.text=e.details;
           this.cycleFail.visible = !this.cycleFail.visible;
+          this.loading = false;
         }
     },
     async resendCode() {
