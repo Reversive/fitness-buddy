@@ -363,8 +363,6 @@ export default {
         };
         this.routine.cycles.push({cycle: localCycle});
       }
-
-
     }
 
     if(this.isEditing() || this.isDetail()) {
@@ -541,7 +539,6 @@ export default {
       this.missingFieldSnackbar.visible = !this.missingFieldSnackbar.visible;
     },
     async handleRoutineCreation(isEditing) {
-      this.loading = true;
       if(this.isRoutineFieldMissing()) {
         if(this.routine.name !== null) {
           if(this.routine.name.length < 3) {
@@ -553,6 +550,7 @@ export default {
         }
         return;
       }
+      this.loading = true;
       if(isEditing) {
         let deleteResponse = RoutineApi.delete(this.query);
         deleteResponse.then(() => console.log('success'));
