@@ -4,6 +4,7 @@ const RoutineStore = {
     name: null,
     difficulty: null,
     cycles: [],
+    isPublic: false,
 
     clearRoutine() {
         this.id = null;
