@@ -348,7 +348,7 @@ export default {
     this.loading = true;
     RoutineStore.clearRoutine();
     this.routineId = this.query;
-    this.getCategories().then(() => {
+    await this.getCategories().then(() => {
       this.getExercises().then(() => this.loading = false);
     });
 
@@ -387,9 +387,12 @@ export default {
         CategoryApi.get().then(response => {
           if(response.totalCount === 0) {
             TypeStore.categories.forEach(e => {
-              let category = new Category(e.name, "");
-              let response = CategoryApi.add(category);
-              e.id = response.id;
+              let categoryPayload = new Category(e.name, "");
+              let categoryResponse = CategoryApi.add(categoryPayload);
+              categoryResponse.then(category => {
+                e.id = category.id;
+              });
+
             });
           } else {
             TypeStore.categories.forEach(e => {
