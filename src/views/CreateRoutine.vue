@@ -22,9 +22,6 @@
         width="100%"
     >
     <v-container style="position: relative">
-      <v-overlay v-bind:value="loading" absolute opacity="0.5">
-        <v-progress-circular indeterminate size="64"/>
-      </v-overlay>
       <h2 v-if="!isEditing() && !isDetail()" class="text-left pt-2 d-inline-block" style="color: white">
         <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-text</v-icon>CREATE ROUTINE
       </h2>
@@ -124,6 +121,9 @@
         </span>
       </v-container>
       <v-container>
+        <v-overlay v-bind:value="loading" absolute opacity="0.5">
+          <v-progress-circular indeterminate size="64"/>
+        </v-overlay>
         <span class="float-right">
           <v-switch
               v-model="routine.isPublic"
