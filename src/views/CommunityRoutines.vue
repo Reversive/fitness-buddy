@@ -14,7 +14,7 @@
       </v-overlay>
       <v-container fill-height>
         <v-layout row wrap align-center class="mx-2">
-          <v-flex class="mt-5 align-center">
+          <v-flex class="d-inline-block mt-5 align-baseline">
             <v-select
                 :items="orderItems"
                 v-on:change="orderRoutines"
@@ -51,22 +51,21 @@
                 dense
                 outlined
             />
-            <span v-if="searchBy === 'search' || searchBy === 'userId'">
-              <v-text-field
-                  id="searchInput"
-                  class="d-inline-block ml-5 search-bar"
-                  dark
-                  label="SEARCH"
-                  v-model="searchTerm"
-                  v-on:keyup="validateSearch"
-                  v-on:keyup.enter.prevent="searchRoutines"
-                  v-on:click:append="searchRoutines"
-                  v-bind:error-messages="errorMessages"
-                  append-icon="mdi-magnify"
-                  out
-                  color="white"
-                  />
-            </span>
+            <v-text-field
+                v-if="searchBy === 'search' || searchBy === 'userId'"
+                id="searchInput"
+                class="ml-5 d-inline-block search-bar"
+                dark
+                label="SEARCH"
+                v-model="searchTerm"
+                v-on:keyup="validateSearch"
+                v-on:keyup.enter.prevent="searchRoutines"
+                v-on:click:append="searchRoutines"
+                v-bind:error-messages="errorMessages"
+                append-icon="mdi-magnify"
+                out
+                color="white"
+                />
             <span v-if="searchBy === 'categoryId'">
               <v-select
                   :items="categories"
@@ -159,8 +158,8 @@ export default {
       author: null,
       search: false,
       orderItems: [
-        {text: 'NAME', value: 'name'},
         {text: 'RATING', value: 'averageRating'},
+        {text: 'NAME', value: 'name'},
         {text: 'DATE', value: 'date'},
         {text: 'DIFFICULTY', value: 'difficulty'},
         {text: 'CATEGORY', value: 'categoryId'},
@@ -170,9 +169,9 @@ export default {
         {text: 'ASCENDING', value: 'asc'},
         {text: 'DESCENDING', value: 'desc'}
       ],
-      order: 'asc',
+      order: 'desc',
       errorMessages: undefined,
-      orderBy: 'name',
+      orderBy: 'averageRating',
       categories: [],
       filteredRoutines: [],
       model: null,
