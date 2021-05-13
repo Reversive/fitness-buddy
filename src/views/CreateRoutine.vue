@@ -22,6 +22,9 @@
         width="100%"
     >
     <v-container style="position: relative">
+      <v-overlay v-bind:value="loading" absolute opacity="0.5">
+        <v-progress-circular indeterminate size="64"/>
+      </v-overlay>
       <h2 v-if="!isEditing() && !isDetail()" class="text-left pt-2 d-inline-block" style="color: white">
         <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-text</v-icon>CREATE ROUTINE
       </h2>
@@ -120,10 +123,7 @@
           />
         </span>
       </v-container>
-      <v-container>
-        <v-overlay v-bind:value="loading" absolute opacity="0.5">
-          <v-progress-circular indeterminate size="64"/>
-        </v-overlay>
+      <v-container v-if="!isDetail()">
         <span class="float-right">
           <v-switch
               v-model="routine.isPublic"
@@ -351,6 +351,62 @@ export default {
     this.getCategories().then(() => {
       this.getExercises().then(() => this.loading = false);
     });
+    /*CategoryApi.get().then(response => {
+      if(response.totalCount === 0) {
+        TypeStore.categories.forEach(e => {
+          let category = new Category(e.name, "");
+          let response = CategoryApi.add(category);
+          e.id = response.id;
+        });
+      } else {
+        TypeStore.categories.forEach(e => {
+          let idx = response.content.findIndex(c => c.name === e.name);
+          e.id = response.content[idx].id;
+        });
+      }
+      this.loading = false;
+    }).catch(() => {
+      console.error('Something went wrong setting up categories');
+      this.loading = false;
+    });
+
+    ExerciseApi.get().then(response => {
+      if(response.totalCount === 0) {
+        ExerciseStore.exercises.forEach(e => {
+          let exercisePayload = new Exercise(e.name, e.detail, e.type.toLowerCase());
+          let exerciseResponse = ExerciseApi.add(exercisePayload);
+          exerciseResponse.then(exercise => {
+            e.id = exercise.id;
+            let image = new Image(e.image);
+            ExerciseApi.addImage(e.id, image);
+            let video = new Video(e.video);
+            ExerciseApi.addVideo(e.id, video);
+          });
+
+        });
+      } else {
+        response.content.forEach(e => {
+          let exerciseImageResponse = ExerciseApi.getImage(e.id);
+          exerciseImageResponse.then(image => {
+            let currentImage = image.content[0].url;
+            let exerciseVideoResponse = ExerciseApi.getVideos(e.id);
+            exerciseVideoResponse.then(video => {
+              let currentVideo = video.content[0].url;
+              let idx = ExerciseStore.exercises.findIndex(ex => ex.name === e.name);
+              if(idx === -1) {
+                ExerciseStore.exercises.push({id: e.id, name: e.name, image: currentImage, video: currentVideo, detail: e.detail, type: e.type.toUpperCase(), builtIn: false});
+              } else {
+                ExerciseStore.exercises[idx].id = e.id;
+              }
+            });
+
+          });
+
+        });
+      }
+    }).catch(() => {
+      console.error('Something went wrong setting up exercises');
+    });*/
 
     if(!this.isEditing() && !this.isDetail()) {
       for(let i = 0; i < 3; i++) {
@@ -552,13 +608,8 @@ export default {
         return;
       }
       if(isEditing) {
-        const result = await this.$confirm('Do you really want to save changes? This will delete all ratings', { title: 'WARNING' });
-        if (result) {
-          let deleteResponse = RoutineApi.delete(this.query);
-          deleteResponse.then(() => console.log('success'));
-        } else {
-          return;
-        }
+        let deleteResponse = RoutineApi.delete(this.query);
+        deleteResponse.then(() => console.log('success'));
       }
       let category = this.getRoutineCategory(isEditing);
       let routinePayload = new Routine(this.routine.name, "", this.routine.isPublic, this.routine.difficulty.toLowerCase(), category.id);
