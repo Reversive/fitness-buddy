@@ -22,6 +22,9 @@
         width="100%"
     >
     <v-container style="position: relative">
+      <v-overlay v-bind:value="loading" absolute opacity="0.5">
+        <v-progress-circular indeterminate size="64"/>
+      </v-overlay>
       <h2 v-if="!isEditing() && !isDetail()" class="text-left pt-2 d-inline-block" style="color: white">
         <v-icon large color="white" class="pr-3 mb-1" >mdi-clipboard-text</v-icon>CREATE ROUTINE
       </h2>
@@ -271,6 +274,7 @@ export default {
   data : function () {
     return {
       routineId: undefined,
+      loading: true,
       types : TypeStore,
       fab: false,
       routine: RoutineStore,
@@ -326,9 +330,13 @@ export default {
     RoutineStore.clearRoutine();
   },
   async mounted() {
+    this.loading = true;
     RoutineStore.clearRoutine();
     this.routineId = this.query;
-    CategoryApi.get().then(response => {
+    this.getCategories().then(() => {
+      this.getExercises().then(() => this.loading = false);
+    });
+    /*CategoryApi.get().then(response => {
       if(response.totalCount === 0) {
         TypeStore.categories.forEach(e => {
           let category = new Category(e.name, "");
@@ -341,8 +349,10 @@ export default {
           e.id = response.content[idx].id;
         });
       }
+      this.loading = false;
     }).catch(() => {
       console.error('Something went wrong setting up categories');
+      this.loading = false;
     });
 
     ExerciseApi.get().then(response => {
@@ -381,7 +391,7 @@ export default {
       }
     }).catch(() => {
       console.error('Something went wrong setting up exercises');
-    });
+    });*/
 
     if(!this.isEditing() && !this.isDetail()) {
       for(let i = 0; i < 3; i++) {
@@ -415,6 +425,71 @@ export default {
       this.routine.cycles.splice(index, 0, ({cycle: cycle, exists: false}));
       this.routine.cycles.reverse();
     },
+    getCategories() {
+      return new Promise(resolve => {
+        CategoryApi.get().then(response => {
+          if(response.totalCount === 0) {
+            TypeStore.categories.forEach(e => {
+              let category = new Category(e.name, "");
+              let response = CategoryApi.add(category);
+              e.id = response.id;
+            });
+          } else {
+            TypeStore.categories.forEach(e => {
+              let idx = response.content.findIndex(c => c.name === e.name);
+              e.id = response.content[idx].id;
+            });
+          }
+          resolve();
+        }).catch(() => {
+          console.error('Something went wrong setting up categories');
+          resolve();
+        });
+      });
+    },
+    getExercises() {
+      return new Promise(resolve => {
+        ExerciseApi.get().then(response => {
+          if(response.totalCount === 0) {
+            ExerciseStore.exercises.forEach(e => {
+              let exercisePayload = new Exercise(e.name, e.detail, e.type.toLowerCase());
+              let exerciseResponse = ExerciseApi.add(exercisePayload);
+              exerciseResponse.then(exercise => {
+                e.id = exercise.id;
+                let image = new Image(e.image);
+                ExerciseApi.addImage(e.id, image);
+                let video = new Video(e.video);
+                ExerciseApi.addVideo(e.id, video);
+              });
+
+            });
+          } else {
+            response.content.forEach(e => {
+              let exerciseImageResponse = ExerciseApi.getImage(e.id);
+              exerciseImageResponse.then(image => {
+                let currentImage = image.content[0].url;
+                let exerciseVideoResponse = ExerciseApi.getVideos(e.id);
+                exerciseVideoResponse.then(video => {
+                  let currentVideo = video.content[0].url;
+                  let idx = ExerciseStore.exercises.findIndex(ex => ex.name === e.name);
+                  if(idx === -1) {
+                    ExerciseStore.exercises.push({id: e.id, name: e.name, image: currentImage, video: currentVideo, detail: e.detail, type: e.type.toUpperCase(), builtIn: false});
+                  } else {
+                    ExerciseStore.exercises[idx].id = e.id;
+                  }
+                });
+
+              });
+
+            });
+          }
+          resolve();
+        }).catch(() => {
+          console.error('Something went wrong setting up exercises');
+          resolve();
+        });
+      });
+    },
     getCycleTypeObject(type) {
       let idx = TypeStore.cycleTypes.findIndex(c => c.name === type.toUpperCase());
       return TypeStore.cycleTypes[idx];
@@ -426,6 +501,7 @@ export default {
       return this.$router.currentRoute.name === 'detail';
     },
     async fillRoutineData() {
+      this.loading = true;
       let routineResponse = RoutineApi.getById(this.routineId);
       await routineResponse.then(routine => {
         this.routine.category = routine.category.name;
@@ -466,8 +542,15 @@ export default {
             });
           this.addLocalCycle(localCycle);
           });
-        }).catch(() => console.error("Error retrieving cycles data"));
-      }).catch(() => console.error("Error retrieving routine data"));
+          this.loading = false;
+        }).catch(() => {
+          console.error("Error retrieving cycles data");
+          this.loading = false;
+        });
+      }).catch(() => {
+        console.error("Error retrieving routine data");
+        this.loading = false;
+      });
     },
     addLocalCycle(localCycle) {
       let index = this.routine.cycles.reverse().findIndex(c => c.cycle.type === localCycle.type);
@@ -482,7 +565,7 @@ export default {
     },
     onScroll (e) {
       if (typeof window === 'undefined') return
-      const top = window.pageYOffset ||   e.target.scrollTop || 0
+      const top = window.pageYOffset || e.target.scrollTop || 0
       this.fab = top > 20
     },
     toTop () {
@@ -497,6 +580,7 @@ export default {
       this.missingFieldSnackbar.visible = !this.missingFieldSnackbar.visible;
     },
     async handleRoutineCreation(isEditing) {
+      this.loading = true;
       if(this.isRoutineFieldMissing()) {
         if(this.routine.name !== null) {
           if(this.routine.name.length < 3) {
@@ -530,8 +614,10 @@ export default {
               console.error(e);
             });
         });
+        this.loading = false;
       }).catch(() => {
         console.error('Something went wrong setting up the routine');
+        this.loading = false;
       });
       if(isEditing) await this.$router.push({ path: '/personal-routines', query: { q: 'edit' } });
       else await this.$router.push({ path: '/personal-routines', query: { q: 'create' } });
@@ -599,14 +685,18 @@ export default {
       if (!this.isDetail())
         return;
 
+      this.loading = true;
+
       Api.post(Api.baseUrl+'/reviews/'+this.routineId, true, {
         score: this.score,
         review: ''
       }, null).then((response) => {
         console.log(response);
         this.successRatingSnackbar.visible = true;
+        this.loading = false;
       }).catch((e) => {
         console.log(e);
+        this.loading = false;
       });
     }
   }

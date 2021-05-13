@@ -21,7 +21,8 @@ const router = new Router({
             props: route => ({ query: route.query.id }), name: 'edit'},
         { path: '/routine-detail', component: () => import('../views/CreateRoutine'), meta: {requiresLogin: true},
             props: route => ({ query: route.query.id }), name: 'detail'},
-        {path: '/logout', component: () => import('../views/Login'), name: 'logout'}
+        {path: '/logout', component: () => import('../views/Login'), name: 'logout'},
+        {path: '*', component: () => import('../views/NotFound'), name: 'notfound'}
     ]
 });
 
