@@ -152,8 +152,8 @@ export default {
         {text: '2', value: 2},
         {text: '3', value: 3},
         {text: '4', value: 4},
-        {text: '5', value: 5},
-        {text: 'UNRATED', value: 0},
+        {text: '5', value: 5}/*,
+        {text: 'UNRATED', value: 0}, <-- No funciona*/
       ],
       author: null,
       search: false,
