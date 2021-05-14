@@ -349,7 +349,8 @@ export default {
     RoutineStore.clearRoutine();
     this.routineId = this.query;
     await this.getCategories().then(() => {
-      this.getExercises().then(() => this.loading = false);
+      ExerciseStore.exercises = [];
+      this.getExercises(0).then(() => this.loading = false);
     });
 
     if(!this.isEditing() && !this.isDetail()) {
@@ -407,9 +408,9 @@ export default {
         });
       });
     },
-    getExercises() {
+    getExercises(page) {
       return new Promise(resolve => {
-        ExerciseApi.get().then(response => {
+        ExerciseApi.get({page: page}).then(response => {
           if(response.totalCount === 0) {
             ExerciseStore.exercises.forEach(e => {
               let exercisePayload = new Exercise(e.name, e.detail, e.type.toLowerCase());
@@ -421,8 +422,8 @@ export default {
                 let video = new Video(e.video);
                 ExerciseApi.addVideo(e.id, video);
               });
-
             });
+            resolve();
           } else {
             response.content.forEach(e => {
               let exerciseImageResponse = ExerciseApi.getImage(e.id);
@@ -438,12 +439,14 @@ export default {
                     ExerciseStore.exercises[idx].id = e.id;
                   }
                 });
-
               });
-
             });
+            if (!response.isLastPage) {
+              this.getExercises(page + 1).then(resolve);
+            } else {
+              resolve();
+            }
           }
-          resolve();
         }).catch(() => {
           console.error('Something went wrong setting up exercises');
           resolve();
@@ -467,11 +470,14 @@ export default {
         this.routine.category = routine.category.name;
         this.routine.difficulty = routine.difficulty.toUpperCase();
         this.routine.name = routine.name;
-        console.log(routine.isPublic);
         this.routine.isPublic = routine.isPublic;
         let cyclesResponse = CycleApi.getCycles(this.routineId);
+        let maxIdentifier = -1;
         cyclesResponse.then(cycles => {
           cycles.content.forEach(cycle => {
+            if (cycle.order > maxIdentifier) {
+              maxIdentifier = cycle.order;
+            }
             let localCycle = {
               name: cycle.name,
               type: this.getCycleTypeObject(cycle.type),
@@ -504,6 +510,7 @@ export default {
             });
           this.addLocalCycle(localCycle);
           });
+          this.cycleNumber = maxIdentifier + 1;
           this.loading = false;
         }).catch(() => {
           console.error("Error retrieving cycles data");

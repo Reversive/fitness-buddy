@@ -12,8 +12,8 @@ class CycleApi {
         return await Api.post(CycleApi.url(routine_id), true, cycle);
     }
 
-    static async getCycles(routine_id) {
-        return await Api.get(`${CycleApi.url(routine_id)}`, true, null);
+    static async getCycles(routine_id, body) {
+        return await Api.get(`${CycleApi.url(routine_id)}?${new URLSearchParams(body)}`, true, null);
     }
 
     static async getCycleById(routine_id, cycle_id) {
