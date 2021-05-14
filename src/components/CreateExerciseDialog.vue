@@ -68,7 +68,8 @@
                 required
             />
 
-            <v-img :src="imageLink" contain height="200"/>
+            <v-img v-if="!isEdit" :src="imageLink" contain height="200"/>
+            <v-img v-if="isEdit" :src="exerciseCache.image" contain height="200"/>
 
             <v-text-field
                 v-model="videoLink"
@@ -87,7 +88,7 @@
             />
       </v-container>
       <div class="text-center">
-        <iframe id="videoPreview" :src=parsedURL height="200" width="340" allowfullscreen></iframe>
+        <iframe :src=parsedURL height="200" width="340" allowfullscreen></iframe>
       </div>
     </v-form>
 
@@ -144,6 +145,7 @@ export default {
       this.bImage = this.exerciseCache.image;
       this.bVideo = this.exerciseCache.video;
       this.bType = this.exerciseCache.type;
+      this.parseUrl();
     }
   },
   data: () => ({
@@ -211,8 +213,11 @@ export default {
         return ID;
       }
       let videoId;
-      if(this.isEdit) videoId = getId(this.exerciseCache.video);
-      else videoId = getId(this.videoLink);
+      if(this.isEdit) {
+        videoId = getId(this.exerciseCache.video);
+      } else {
+        videoId = getId(this.videoLink);
+      }
       this.parsedURL="https://www.youtube.com/embed/" + videoId;
     },
     async editExercise() {
