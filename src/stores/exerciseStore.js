@@ -6,7 +6,8 @@ const ExerciseStore = {
         {id: null, name: "Rope Jump", image: "https://i.imgur.com/OR8IBOM.png", video:"https://www.youtube.com/watch?v=fV73Ce3RiiQ&ab_channel=RushAthleticsTVRushAthleticsTV", detail:"Jump in that rope!", type: "EXERCISE", builtIn: true},
         {id: null, name: "Cardio", image: "https://i.imgur.com/AegXXLI.png", video:"https://www.youtube.com/watch?v=x5BuK8JqODU&ab_channel=FaustoMurilloFaustoMurillo", detail:"Run!!", type: "EXERCISE", builtIn: true},
         //{id: 5, name: "Bench Press", image: "https://i.imgur.com/IlLsEsE.png"},
-    ]
+    ],
+    baseExercisesLength: 5
 };
 
 

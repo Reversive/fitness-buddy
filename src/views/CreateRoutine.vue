@@ -349,7 +349,7 @@ export default {
     RoutineStore.clearRoutine();
     this.routineId = this.query;
     await this.getCategories().then(() => {
-      ExerciseStore.exercises = [];
+      ExerciseStore.exercises = ExerciseStore.exercises.slice(0, ExerciseStore.baseExercisesLength);
       this.getExercises(0).then(() => this.loading = false);
     });
 

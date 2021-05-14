@@ -218,22 +218,24 @@ export default {
         }
       }
       RoutineApi.get(req).then((results) => {
-        if (this.searchBy === 'search' && results.content.length === 0) {
+        if (this.searchBy === 'search' && results.content && results.content.length === 0) {
           this.errorMessages = 'No routines found for given routine name';
         }
         this.showLoadMore = !results.isLastPage;
-        for (let i = 0; i < results.content.length; i++) {
-          const result = results.content[i];
-          console.log(result);
-          this.routines.push({
-            id: result.id,
-            title: result.name,
-            target: result.category.name,
-            difficulty: result.difficulty,
-            rating: result.averageRating,
-            link: '/profile',
-            username: result.user.username
-          });
+        if (results.content) {
+          for (let i = 0; i < results.content.length; i++) {
+            const result = results.content[i];
+            console.log(result);
+            this.routines.push({
+              id: result.id,
+              title: result.name,
+              target: result.category.name,
+              difficulty: result.difficulty,
+              rating: result.averageRating,
+              link: '/profile',
+              username: result.user.username
+            });
+          }
         }
         this.page++;
         this.loading = false;
